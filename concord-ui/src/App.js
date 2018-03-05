@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import Navbar from './navbar'
+import AppDrawer from './drawer'
+import Login from './login'
+//import Feed from './feed_basic'
 
 class App extends Component {
+  state = { drawer: false, login: false }
+
+  drawerToggle = () => { this.setState( { ...this.state, drawer: !this.state.drawer } ); console.log("d toggle"); }
+  loginToggle = () => { this.setState( { ...this.state, login: !this.state.login } ) }
+    
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <div>
+       <Navbar toggle={this.drawerToggle} login={this.loginToggle}/>
+       <Login opened={this.state.login} toggle={this.loginToggle}/>
+       <AppDrawer opened={this.state.drawer}/>
+                
+          <p>test</p>
+       </div>
     );
   }
 }
