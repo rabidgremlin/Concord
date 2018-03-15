@@ -1,0 +1,41 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+apply plugin: 'application'
+
+version = "1.0.0"
+
+jar {
+  manifest {
+    attributes(
+      'Main-Class': 'com.rabidgremlin.concord.ConcordServerApplication'
+    )
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+}
+
+
+repositories {    
+    mavenCentral()
+}
+
+
+dependencies {
+    compile 'io.dropwizard:dropwizard-core:1.1.0'
+    compile "io.dropwizard:dropwizard-assets:1.1.0"
+    compile "io.dropwizard:dropwizard-auth:1.1.0"
+    compile('io.swagger:swagger-jersey2-jaxrs:1.5.13') {
+      exclude group: 'com.sun.jersey'
+    }
+    compile 'com.amazonaws:aws-java-sdk-logs:1.11.119'
+    compile 'com.github.toastshaman:dropwizard-auth-jwt:1.1.0-0'
+        
+    
+    testCompile 'junit:junit:4.11'
+}
+
+
+build.dependsOn shadowJar
