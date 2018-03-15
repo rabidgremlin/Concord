@@ -5,7 +5,7 @@ import Login from './login'
 //import Feed from './feed_basic'
 
 class App extends Component {
-  state = { drawer: false, login: false }
+  state = { drawer: false, login: true }
 
   drawerToggle = () => { this.setState( { ...this.state, drawer: !this.state.drawer } ); console.log("d toggle"); }
   loginToggle = () => { this.setState( { ...this.state, login: !this.state.login } ) }
