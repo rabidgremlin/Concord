@@ -13,6 +13,10 @@ import {
   DialogBackdrop
 } from 'rmwc/Dialog';
 
+import { 
+  Link  
+} from 'react-router-dom'
+
 class Login extends Component {
   state = {email: "", password: ""}
   handleChange = (val) => (evt) => { this.setState( {...this.state, [val]: evt.target.value} ) }
@@ -27,7 +31,7 @@ class Login extends Component {
     
 }*/
 
-  render() {
+ /* render() {
     return (
       <Dialog
         open={this.props.opened}
@@ -50,6 +54,14 @@ class Login extends Component {
     </DialogSurface>
     <DialogBackdrop />
     </Dialog>
+    )
+  }*/
+
+  render(){
+    return(
+    <div>On Login <Link to="/labelphrase">Label</Link>
+
+    </div>
     )
   }
 }

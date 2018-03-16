@@ -1,16 +1,28 @@
 import React, { Component } from 'react'
-import Navbar from './navbar'
-import AppDrawer from './drawer'
-import Login from './login'
+
 //import Feed from './feed_basic'
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+
+//import Navbar from './navbar'
+//import AppDrawer from './drawer'
+import Login from './login'
+import LabelPhrase from './labelphrase'
+
+
 class App extends Component {
-  state = { drawer: false, login: true }
+  state = { drawer: false, login: false }
 
   drawerToggle = () => { this.setState( { ...this.state, drawer: !this.state.drawer } ); console.log("d toggle"); }
   loginToggle = () => { this.setState( { ...this.state, login: !this.state.login } ) }
     
-  render() {
+ /* render() {
     return (
       <div>
        <Navbar toggle={this.drawerToggle} login={this.loginToggle}/>
@@ -20,6 +32,17 @@ class App extends Component {
           <p>test</p>
        </div>
     );
+  }*/
+
+  render(){
+    return(
+      <Router>
+        <Switch>
+          <Route exact  path="/" component={Login} />
+          <Route path="/labelphrase" component={LabelPhrase} />
+        </Switch>
+      </Router>
+    )
   }
 }
 
