@@ -13,7 +13,7 @@ import {
 //import Navbar from './navbar'
 //import AppDrawer from './drawer'
 import Login from './login'
-import LabelPhrase from './labelphrase'
+import LabelPhrase from './labelphrase' 
 
 
 class App extends Component {

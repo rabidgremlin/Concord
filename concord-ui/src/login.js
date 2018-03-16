@@ -1,67 +1,42 @@
-import React, {Component} from 'react'
-import { TextField} from 'rmwc';
-
-import {
-  Dialog,
-  DefaultDialogTemplate,
-  DialogSurface,
-  DialogHeader,
-  DialogHeaderTitle,
-  DialogBody,
-  DialogFooter,
-  DialogFooterButton,
-  DialogBackdrop
-} from 'rmwc/Dialog';
-
-import { 
-  Link  
-} from 'react-router-dom'
+import React, { Component } from 'react'
+import { TextField } from 'rmwc';
+import { Grid, GridCell } from 'rmwc/Grid';
+import { Card} from 'rmwc/Card';
+import { Typography } from 'rmwc/Typography';
+import { Button } from 'rmwc/Button';
 
 class Login extends Component {
-  state = {email: "", password: ""}
-  handleChange = (val) => (evt) => { this.setState( {...this.state, [val]: evt.target.value} ) }
+  state = { email: "", password: "", invalidData: true }
+  handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
 
-  /*loginForm = () => {
+  componentWillUpdate(nextProps, nextState) {
+    nextState.invalidData = !(nextState.email && nextState.password);
+  }
+  
+
+  // see https://tylermcginnis.com/react-router-programmatically-navigate/ redirect 
+
+  render() {
     return (
-      <div>
-        <TextField label="email" fullwidth onChange={this.handleChange('email')}/>
-        <TextField label="Password" type="password" fullwidth onChange={this.handleChange('password')}/>
+      <div>        
+        <Typography use="display4" tag="h1">Concord</Typography>
+        <Grid>
+          <GridCell desktop="4" tablet="2" phone="0"></GridCell>
+          <GridCell desktop="4" tablet="4" phone="4">          
+            <Card>
+              <Typography use="subheading2" tag="div" style={{ padding: '0.5rem 1rem' }} theme="text-secondary-on-background">Login</Typography>
+
+              <div style={{padding: '1rem'}}>
+                <TextField label="user name" fullwidth required value={this.state.email} onChange={this.handleChange('email')}/>
+                <TextField label="password" fullwidth required value={this.state.password} type="password" onChange={this.handleChange('password')}/>
+              </div>
+
+              <Button raised style={{ margin: '1rem 1rem 1rem 1rem' }} disabled={this.state.invalidData} onClick={() => { this.props.history.push('/labelphrase') }}>Login</Button>
+
+            </Card>
+          </GridCell>
+        </Grid>
       </div>
-    )
-    
-}*/
-
- /* render() {
-    return (
-      <Dialog
-        open={this.props.opened}
-        onClose={this.props.toggle}
-        title={"Login please!"}
-        onAccept={() => { console.log( this.state ) }}        
-        >
-        <DialogSurface>
-      <DialogHeader>
-        <DialogHeaderTitle>Dialog Title</DialogHeaderTitle>
-      </DialogHeader>
-      <DialogBody>This is a standard dialog.
-      <TextField label="email" fullwidth onChange={this.handleChange('email')}/>
-        <TextField label="Password" type="password" fullwidth onChange={this.handleChange('password')}/>
-      </DialogBody>
-      <DialogFooter>
-          <DialogFooterButton cancel>Cancel</DialogFooterButton>
-          <DialogFooterButton accept>Sweet!</DialogFooterButton>
-      </DialogFooter>
-    </DialogSurface>
-    <DialogBackdrop />
-    </Dialog>
-    )
-  }*/
-
-  render(){
-    return(
-    <div>On Login <Link to="/labelphrase">Label</Link>
-
-    </div>
     )
   }
 }
