@@ -17,6 +17,11 @@ shadowJar {
   mergeServiceFiles()
 }
 
+run {
+    args = ["server", "src/main/yml/server.yml"]
+    main = 'com.rabidgremlin.concord.ConcordServerApplication'
+}
+
 
 repositories {    
     mavenCentral()
