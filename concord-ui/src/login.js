@@ -5,6 +5,9 @@ import { Card} from 'rmwc/Card';
 import { Typography } from 'rmwc/Typography';
 import { Button } from 'rmwc/Button';
 
+import { connect } from 'react-redux'
+import { callCreateSession } from './actions'
+
 class Login extends Component {
   state = { email: "", password: "", invalidData: true }
   handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
@@ -31,7 +34,13 @@ class Login extends Component {
                 <TextField label="password" fullwidth required value={this.state.password} type="password" onChange={this.handleChange('password')}/>
               </div>
 
-              <Button raised style={{ margin: '1rem 1rem 1rem 1rem' }} disabled={this.state.invalidData} onClick={() => { this.props.history.push('/labelphrase') }}>Login</Button>
+              <Button raised style={{ margin: '1rem 1rem 1rem 1rem' }} disabled={this.state.invalidData} onClick={() => { 
+                
+                //this.props.history.push('/labelphrase') 
+                //alert('hello');
+                this.props.dispatch(callCreateSession(this.state.email,this.state.password));
+              
+              }}>Login</Button>
 
             </Card>
           </GridCell>
@@ -41,4 +50,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect()(Login);
