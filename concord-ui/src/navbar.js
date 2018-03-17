@@ -6,12 +6,11 @@ export default class Navbar extends Component {
     return (
       <Toolbar>
         <ToolbarRow>
-          <ToolbarSection alignStart>
-            <ToolbarMenuIcon use="menu" onClick={this.props.toggle}/>
+          <ToolbarSection alignStart>           
             <ToolbarTitle>Concord</ToolbarTitle>
           </ToolbarSection>
           <ToolbarSection alignEnd>
-            <ToolbarIcon use="account_circle" onClick={this.props.login}/>
+            <ToolbarIcon use="account_circle" onClick={this.props.logout}/>
           </ToolbarSection>
         </ToolbarRow>
       </Toolbar>

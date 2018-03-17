@@ -15,7 +15,8 @@ class Login extends Component {
   componentWillUpdate(nextProps, nextState) {
     nextState.invalidData = !(nextState.email && nextState.password);
   }
-  
+
+   
 
   // see https://tylermcginnis.com/react-router-programmatically-navigate/ redirect 
 
@@ -50,4 +51,4 @@ class Login extends Component {
   }
 }
 
-export default connect()(Login);
+export default connect((state) => ({ logged_in: state.session.logged_in }))(Login);

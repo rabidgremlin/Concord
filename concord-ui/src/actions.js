@@ -16,3 +16,7 @@ export const callCreateSessionSucceeded = (token) => ({
     type: 'CALL_CREATE_SESSION_SUCCEEDED',
     token
 })
+
+export const killSession = () => ({
+    type: 'KILL_SESSION'
+})

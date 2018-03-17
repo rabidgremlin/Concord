@@ -4,6 +4,8 @@ const sessionReducer = (state = { logged_in: false }, action) => {
             return { logged_in: true, token: action.token }
         case 'CALL_CREATE_SESSION_FAILED':
             return { logged_in: false }
+        case 'KILL_SESSION':
+            return { logged_in: false }    
         case 'CALL_CREATE_SESSION':
             if (action.userId == 'bob' && action.password == 'secret') {
                 return { logged_in: true, token: 'adummytoken' }
