@@ -10,7 +10,7 @@ export default class Navbar extends Component {
             <ToolbarTitle>Concord</ToolbarTitle>
           </ToolbarSection>
           <ToolbarSection alignEnd>
-            <ToolbarIcon use="account_circle" onClick={this.props.logout}/>
+            <ToolbarIcon use="power_settings_new" onClick={this.props.logout}/>
           </ToolbarSection>
         </ToolbarRow>
       </Toolbar>

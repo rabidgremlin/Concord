@@ -16,8 +16,10 @@ import Login from './login'
 import LabelPhrase from './labelphrase'
 
 
-import { connect } from 'react-redux'
+import { connect} from 'react-redux'
 import { killSession } from './actions'
+
+
 
 class App extends Component {
   state = { drawer: false, login: false }
