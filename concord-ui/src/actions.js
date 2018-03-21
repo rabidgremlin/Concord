@@ -20,3 +20,18 @@ export const callCreateSessionSucceeded = (token) => ({
 export const killSession = () => ({
     type: 'KILL_SESSION'
 })
+
+
+export const callGetNextPhrase = () => ({
+    type: 'CALL_GET_NEXT_PHRASE'   
+})
+
+export const callGetNextPhraseFailed = (error)=> ({
+    type: 'CALL_GET_NEXT_PHRASE_FAILED',
+    error   
+})
+
+export const callGetNextPhraseSucceeded = (phraseData)=> ({
+    type: 'CALL_GET_NEXT_PHRASE_SUCCEEDED',
+    phraseData   
+})
