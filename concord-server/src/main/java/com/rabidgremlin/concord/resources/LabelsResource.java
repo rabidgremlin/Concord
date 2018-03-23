@@ -67,4 +67,27 @@ public class LabelsResource
 	    
 	   return Response.ok().entity(labels).build();
 	}
+	
+	@POST
+	@Path("bulk")
+    @Consumes("text/csv")
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels) {
+        
+		 log.info("Caller {} uploading csv of labels {}",caller, labels);
+		 
+		 // TODO Transaction...
+		 labelsDao.deleteAllLabels();
+
+		 for(Label label:labels)
+		 {
+		   // skip header	 
+		   if (label.getLabel().equals("label")){
+			   continue;
+		   }
+		   labelsDao.upsert(label);
+		 }
+		
+        
+        return Response.ok().build();
+    }
 }

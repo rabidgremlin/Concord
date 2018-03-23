@@ -1,5 +1,9 @@
 package com.rabidgremlin.concord.api;
 
+import io.github.binout.jaxrs.csv.CsvSchema;
+
+
+@CsvSchema(separator=',', columns = { "label", "shortDescription", "longDescription" })
 public class Label
 {
 	private String label;

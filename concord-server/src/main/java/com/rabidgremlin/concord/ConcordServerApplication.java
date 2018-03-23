@@ -27,6 +27,7 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.github.binout.jaxrs.csv.CsvMessageBodyProvider;
 
 import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
@@ -129,6 +130,8 @@ public class ConcordServerApplication
   {
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
+    
+    environment.jersey().register(CsvMessageBodyProvider.class);
 
     
     environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret()));    

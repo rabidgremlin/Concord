@@ -11,6 +11,8 @@ import com.rabidgremlin.concord.api.Label;
 
 public interface LabelsDao 
 {
+	@SqlUpdate("DELETE from labels")
+	void deleteAllLabels();
 	
 	@SqlUpdate("REPLACE INTO labels(label, shortDescription, longDescription) VALUES (:label, :shortDescription,:longDescription)")
     void upsert(@BindBean Label label);
