@@ -8,6 +8,7 @@ import javax.servlet.FilterRegistration.Dynamic;
 
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.jdbi.v3.core.Jdbi;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -22,6 +23,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -29,6 +31,8 @@ import io.dropwizard.setup.Environment;
 import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
 import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.LabelsDao;
+import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
@@ -130,6 +134,13 @@ public class ConcordServerApplication
     environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret()));    
     environment.jersey().register(new RedirectResource());
     
+    final JdbiFactory factory = new JdbiFactory();
+    final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
+       
+    
+    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+    
+    environment.jersey().register(labelsResource);
     environment.jersey().register(new PhrasesResource());
 
     setupJwtAuth(configuration, environment);
