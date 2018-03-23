@@ -1,0 +1,9 @@
+label,short_description,long_description
+CancelTaxi,Cancel Taxi, Ok your Taxi has been ordered
+OrderTaxi,Order Taxi, Where would you like your taxi to be sent ?
+Help,Help, Try saying 'order a taxi' or 'where is my taxi'
+FavColor,Favourite Color, My favourite color is red!
+GaveAddress,Gave Address, Got it. Sending your cab to ...
+Stop,Stop, Ok I have reset my self lets start again
+Shouting,Shouting, Why are you shouting ?
+WhereTaxi,Where Taxi, Your taxi is ... minutes away.

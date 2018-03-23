@@ -10,3 +10,7 @@ https://www.sohamkamani.com/blog/2016/06/05/redux-apis/
 Redux tutorial
 https://redux.js.org/basics/example-todo-list
 
+
+
+# Start up
+docker run --name concorddb -e MYSQL_ROOT_PASSWORD=concordpwd -d mysql:latest

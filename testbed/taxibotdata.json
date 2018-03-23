@@ -1,0 +1,272 @@
+﻿{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "text": "Order me a cab",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Send a cab to 123 Mountain Drive",
+        "intent": "OrderTaxi",
+        "entities": [
+          {
+            "start": 14,
+            "end": 32,
+            "value": "123 Mountain Drive",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "Book a cab",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Order me a taxi",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Book a taxi",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Get me a cab",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Order a taxi",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Get me a taxi",
+        "intent": "OrderTaxi",
+        "entities": []
+      },
+      {
+        "text": "Pick me up at 456 Queen Street",
+        "intent": "OrderTaxi",
+        "entities": [
+          {
+            "start": 14,
+            "end": 30,
+            "value": "456 Queen Street",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "Cancel my taxi",
+        "intent": "CancelTaxi",
+        "entities": []
+      },
+      {
+        "text": "Cancel my cab",
+        "intent": "CancelTaxi",
+        "entities": []
+      },
+      {
+        "text": "Cancel my order",
+        "intent": "CancelTaxi",
+        "entities": []
+      },
+      {
+        "text": "Where is my taxi",
+        "intent": "WhereTaxi",
+        "entities": []
+      },
+      {
+        "text": "Where is my cab ?",
+        "intent": "WhereTaxi",
+        "entities": []
+      },
+      {
+        "text": "How far away is my taxi",
+        "intent": "WhereTaxi",
+        "entities": []
+      },
+      {
+        "text": "How long until my taxi is here?",
+        "intent": "WhereTaxi",
+        "entities": []
+      },
+      {
+        "text": "My address is 173 Essex Drive",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 14,
+            "end": 29,
+            "value": "173 Essex Drive",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "The address is 1407 Graymalkin Lane , Salem Center",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 15,
+            "end": 50,
+            "value": "1407 Graymalkin Lane , Salem Center",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "52 Festive Road",
+        "intent": "WhereTaxi",
+        "entities": [
+          {
+            "start": 0,
+            "end": 15,
+            "value": "52 Festive Road",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "it's 6151 Richmond Street",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 5,
+            "end": 25,
+            "value": "6151 Richmond Street",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "The pick up is at 740 Evergreen Terrace",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 18,
+            "end": 39,
+            "value": "740 Evergreen Terrace",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "890 Fifth Avenue",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 0,
+            "end": 16,
+            "value": "890 Fifth Avenue",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "The address is 13 China Ave",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 15,
+            "end": 27,
+            "value": "13 China Ave",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "136 River Road",
+        "intent": "GaveAddress",
+        "entities": [
+          {
+            "start": 0,
+            "end": 14,
+            "value": "136 River Road",
+            "entity": "address"
+          }
+        ]
+      },
+      {
+        "text": "Help",
+        "intent": "Help",
+        "entities": []
+      },
+      {
+        "text": "help",
+        "intent": "Help",
+        "entities": []
+      },
+      {
+        "text": "help me",
+        "intent": "Help",
+        "entities": []
+      },
+      {
+        "text": "How do you work ?",
+        "intent": "Help",
+        "entities": []
+      },
+      {
+        "text": "Stop",
+        "intent": "Stop",
+        "entities": []
+      },
+      {
+        "text": "Stop it",
+        "intent": "Stop",
+        "entities": []
+      },
+      {
+        "text": "Quit",
+        "intent": "Stop",
+        "entities": []
+      },
+      {
+        "text": "My favorite color is blue",
+        "intent": "FavColor",
+        "entities": [
+          {
+            "start": 21,
+            "end": 25,
+            "value": "blue",
+            "entity": "color"
+          }
+        ]
+      },
+      {
+        "text": "I like green",
+        "intent": "FavColor",
+        "entities": [
+          {
+            "start": 7,
+            "end": 12,
+            "value": "green",
+            "entity": "color"
+          }
+        ]
+      },
+      {
+        "text": "Purple is the best color",
+        "intent": "FavColor",
+        "entities": [
+          {
+            "start": 0,
+            "end": 6,
+            "value": "Purple",
+            "entity": "color"
+          }
+        ]
+      },
+      {
+        "text": "i am shouting",
+        "intent": "Shouting",
+        "entities": []
+      }
+    ]
+  }
+}
