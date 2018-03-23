@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
 
 public class ConcordServerConfiguration
     extends Configuration
@@ -26,4 +27,20 @@ public class ConcordServerConfiguration
   public byte[] getJwtTokenSecret() throws UnsupportedEncodingException {
     return jwtTokenSecret.getBytes("UTF-8");
 }
+  
+  
+    @Valid
+	@NotNull
+	private DataSourceFactory database = new DataSourceFactory();
+
+	
+	public DataSourceFactory getDatabase() {
+		return database;
+	}
+	
+	
+
+	public void getDataSourceFactory(DataSourceFactory database) {
+		this.database = database;
+	}
 }

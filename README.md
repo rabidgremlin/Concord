@@ -13,4 +13,4 @@ https://redux.js.org/basics/example-todo-list
 
 
 # Start up
-docker run --name concorddb -e MYSQL_ROOT_PASSWORD=concordpwd -d mysql:latest
+docker run --rm -it -p 3306:3306 -e MYSQL_DATABASE=concorddb -e MYSQL_USER=concorduser -e MYSQL_PASSWORD=concordpwd -e MYSQL_ROOT_PASSWORD=password123 -d mysql:5.7

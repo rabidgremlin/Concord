@@ -21,8 +21,11 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
 import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
 import com.rabidgremlin.concord.auth.Caller;
@@ -50,6 +53,13 @@ public class ConcordServerApplication
   {
     // serve up swagger stuff as assets
     bootstrap.addBundle(new AssetsBundle("/ui", "/", "index.html"));
+    
+    bootstrap.addBundle(new MigrationsBundle<ConcordServerConfiguration>() {
+        @Override
+        public DataSourceFactory getDataSourceFactory(ConcordServerConfiguration configuration) {
+            return configuration.getDatabase();
+        }
+    });
   }
 
   private void configureCors(Environment environment)

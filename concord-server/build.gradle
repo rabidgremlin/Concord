@@ -32,12 +32,14 @@ dependencies {
     compile 'io.dropwizard:dropwizard-core:1.1.0'
     compile "io.dropwizard:dropwizard-assets:1.1.0"
     compile "io.dropwizard:dropwizard-auth:1.1.0"
+    compile "io.dropwizard:dropwizard-db:1.1.0"
+    compile "io.dropwizard:dropwizard-migrations:1.1.0"    
     compile('io.swagger:swagger-jersey2-jaxrs:1.5.13') {
       exclude group: 'com.sun.jersey'
     }
     compile 'com.amazonaws:aws-java-sdk-logs:1.11.119'
     compile 'com.github.toastshaman:dropwizard-auth-jwt:1.1.0-0'
-        
+    compile 'mysql:mysql-connector-java:6.0.6'    
     
     testCompile 'junit:junit:4.11'
 }
