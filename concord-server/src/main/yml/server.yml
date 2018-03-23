@@ -2,7 +2,7 @@ jwtTokenSecret: jkfhgkjfdhgur8943flkds3@#$^UYGJHKJHKK
 
 database:  
   driverClass: com.mysql.jdbc.Driver 
-  url: jdbc:mysql://localhost:3306/concorddb
+  url: jdbc:mysql://localhost:3306/concorddb?nullNamePatternMatchesAll=true
   user: concorduser
   password: concordpwd
 
