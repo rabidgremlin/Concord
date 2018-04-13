@@ -17,7 +17,7 @@
 				<constraints nullable="true" />
 			</column>
 		</createTable>
-		<createTable tableName="phrase">
+		<createTable tableName="phrases">
 			<column name="phraseId" type="varchar(32)">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -30,7 +30,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet id="2" author="rabidgremlin">
-		<createTable tableName="vote">
+		<createTable tableName="votes">
 			<column name="phraseId" type="varchar(32)">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -44,8 +44,8 @@
 	</changeSet>
 	<changeSet id="3" author="rabidgremlin">
 		<addForeignKeyConstraint baseColumnNames="phraseId"
-			baseTableName="vote" constraintName="fk_vote_phrase" onDelete="RESTRICT"
+			baseTableName="votes" constraintName="fk_vote_phrase" onDelete="RESTRICT"
 			onUpdate="RESTRICT" referencedColumnNames="phraseId"
-			referencedTableName="phrase" />
+			referencedTableName="phrases" />
 	</changeSet>
 </databaseChangeLog>

@@ -33,6 +33,7 @@ import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
+import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
@@ -142,9 +143,10 @@ public class ConcordServerApplication
        
     
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class));
     
     environment.jersey().register(labelsResource);
-    environment.jersey().register(new PhrasesResource());
+    environment.jersey().register(phrasesResource);
 
     setupJwtAuth(configuration, environment);
   }
