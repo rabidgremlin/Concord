@@ -9,7 +9,7 @@ curl -v -X POST http://127.0.0.1:8080/api/sessions --header "Content-Type: appli
 curl -v -X GET http://127.0.0.1:8080/api/phrases/next --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCb2IiLCJleHAiOjE1MjQxOTI1NjR9.2ha9vFc8J2wQhVHM9xKLY_XS3y8amyQDecHESQ0__vM"
 
 ### Upload phrases
-curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCb2IiLCJleHAiOjE1MjQxODgwNTl9.v1psWokees7Ykk93zHlZvcvxf-GelJ5GZxx3wLYSWPs" --data-binary '@unlabelled_phrases.csv'
+curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib2IiLCJleHAiOjE1MjQyMDQ2MTl9.8n3ii4RAsCntfvL6OUTDTERiAyPSXST7Gm8ZMTk7r7E" --data-binary '@unlabelled_phrases.csv'
 
 ### Get all labels
 curl -v -X GET http://127.0.0.1:8080/api/labels --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCb2IiLCJleHAiOjE1MjQxODgwNTl9.v1psWokees7Ykk93zHlZvcvxf-GelJ5GZxx3wLYSWPs"

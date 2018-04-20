@@ -6,6 +6,8 @@ import { callCreateSessionFailed } from './actions'
 import { callGetNextPhrase } from './actions'
 import { callGetNextPhraseSucceeded } from './actions'
 import { callGetNextPhraseFailed } from './actions'
+import { callVoteForPhraseLabelSucceeded } from './actions'
+import { callVoteForPhraseLabelFailed } from './actions'
 
 export const apiService = store => next => action => {
 
@@ -13,7 +15,7 @@ export const apiService = store => next => action => {
     /*
     Pass all actions through by default
     */
-   console.log('ACTION is before ' + action.type);
+    console.log('ACTION is before ' + action.type);
     next(action);
     console.log('ACTION is after ' + action.type);
     switch (action.type) {
@@ -37,7 +39,7 @@ export const apiService = store => next => action => {
                     Once data is received, dispatch an action telling the application
                     that data was received successfully, along with the parsed data
                     */
-                    next(callCreateSessionSucceeded(data.token))                    
+                    next(callCreateSessionSucceeded(data.token))
                 });
             break;
         case 'CALL_GET_NEXT_PHRASE':
@@ -59,6 +61,24 @@ export const apiService = store => next => action => {
                     that data was received successfully, along with the parsed data
                     */
                     next(callGetNextPhraseSucceeded(data))
+                });
+            break;
+        case 'CALL_VOTE_FOR_PHRASE_LABEL':
+            /*
+            In case we receive an action to send an API request, send the appropriate request
+            */
+            request
+                .post('/api/phrases/' + action.phraseId + '/votes/')
+                .send({ label:action.label })
+                .set('Accept', 'application/json')
+                .end((err, res) => {
+                    if (err) {
+                        /*
+                        in case there is any error, dispatch an action containing the error
+                        */
+                        return next(callVoteForPhraseLabelFailed(err))
+                    }                    
+                    next(callVoteForPhraseLabelSucceeded())
                 });
             break;
         /*

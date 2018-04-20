@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { callGetNextPhrase } from './actions'
+import { callVoteForPhraseLabel } from './actions'
 
 
 import {
@@ -31,15 +32,25 @@ import {
 
 
 class LabelPhrase extends Component {
-  //state = { phrase: "" }
+  //state = { dirty: false }
   //handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
 
+
   componentDidMount() {
-    this.props.dispatch(callGetNextPhrase())
+    this.props.dispatch(callGetNextPhrase());
   }
 
+
   makeVote(label) {
-    alert('voting ' + label + ' for ' + this.props.phraseData.id);
+    //alert('voting ' + label + ' for ' + this.props.phraseData.id);
+
+    this.props.dispatch(callVoteForPhraseLabel(this.props.phraseData.id, label));
+    
+    // HACk HACK need to move to react-thunk
+    setTimeout(() => {
+      this.props.dispatch(callGetNextPhrase());
+    }, 1500)
+    
   }
 
 

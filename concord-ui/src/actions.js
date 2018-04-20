@@ -35,3 +35,19 @@ export const callGetNextPhraseSucceeded = (phraseData)=> ({
     type: 'CALL_GET_NEXT_PHRASE_SUCCEEDED',
     phraseData   
 })
+
+
+export const callVoteForPhraseLabel = (phraseId,label) => ({
+    type: 'CALL_VOTE_FOR_PHRASE_LABEL',
+    phraseId,
+    label   
+})
+
+export const callVoteForPhraseLabelFailed = (error)=> ({
+    type: 'CALL_VOTE_FOR_PHRASE_LABEL_FAILED',
+    error   
+})
+
+export const callVoteForPhraseLabelSucceeded = ()=> ({
+    type: 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED'
+})
