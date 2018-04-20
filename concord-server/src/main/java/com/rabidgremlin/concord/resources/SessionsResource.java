@@ -46,7 +46,7 @@ public class SessionsResource
       {
 
         final JwtClaims claims = new JwtClaims();
-        claims.setSubject(newSessionRequest.getUserId());
+        claims.setSubject(newSessionRequest.getUserId().toLowerCase());
         claims.setExpirationTimeMinutesInTheFuture(60);
 
         final JsonWebSignature jws = new JsonWebSignature();

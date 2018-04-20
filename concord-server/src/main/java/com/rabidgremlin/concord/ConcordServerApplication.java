@@ -35,6 +35,8 @@ import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.integration.AllLabelsSuggester;
+import com.rabidgremlin.concord.integration.LabelSuggester;
 import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
@@ -133,7 +135,7 @@ public class ConcordServerApplication
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
     
-    environment.jersey().register(CsvMessageBodyProvider.class);
+    environment.jersey().register(CsvMessageBodyProvider.class); 
 
     
     environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret()));    
@@ -142,9 +144,10 @@ public class ConcordServerApplication
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
        
+    LabelSuggester labelsSuggester = new AllLabelsSuggester(jdbi.onDemand(LabelsDao.class));
     
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
-    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class));
+    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class), labelsSuggester);
     
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);

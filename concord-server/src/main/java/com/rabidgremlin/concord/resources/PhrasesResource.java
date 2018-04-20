@@ -22,11 +22,13 @@ import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.PhraseToLabel;
+import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.integration.LabelSuggester;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
@@ -43,11 +45,13 @@ public class PhrasesResource
 	private Logger log = LoggerFactory.getLogger(PhrasesResource.class);
 	private PhrasesDao phrasesDao;
 	private VotesDao votesDao;
+	private LabelSuggester labelSuggester;
 	
-	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao)
+	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, LabelSuggester labelSuggester)
 	{
 		this.phrasesDao = phrasesDao;
 		this.votesDao = votesDao;
+		this.labelSuggester = labelSuggester;
 	}
 	
 	
@@ -64,6 +68,10 @@ public class PhrasesResource
 	   PhraseToLabel phraseToLabel = new PhraseToLabel();
 	   phraseToLabel.setId(nextPhrase.getPhraseId());
 	   phraseToLabel.setPhrase(nextPhrase.getText());
+	   
+	   phraseToLabel.setPossibleLabels(labelSuggester.suggestLabels(nextPhrase.getText()));
+	   
+	   
 	    
 	   return Response.ok().entity(phraseToLabel).build();
 	}
