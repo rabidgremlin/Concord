@@ -4,9 +4,10 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux'
-import { createStore , applyMiddleware, compose  } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from './reducers'
-
+import { addLocaleData, IntlProvider} from 'react-intl';
+import englishLocaleData from 'react-intl/locale-data/en';
 
 import { apiService } from './api-service'
 
@@ -21,11 +22,15 @@ WebFont.load({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(apiService))  )
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(apiService)))
+
+addLocaleData([...englishLocaleData]);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <IntlProvider locale="en">
+      <App />
+    </IntlProvider>
   </Provider>
   , document.getElementById('root'));
 registerServiceWorker();
