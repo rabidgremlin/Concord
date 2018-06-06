@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { callGetNextPhrase } from './actions'
-import { callVoteForPhraseLabel } from './actions'
+import { callGetNextPhrase } from './api'
+import { callVoteForPhraseLabel } from './api'
 
 
 import {
@@ -47,9 +47,9 @@ class LabelPhrase extends Component {
     this.props.dispatch(callVoteForPhraseLabel(this.props.phraseData.id, label));
     
     // HACk HACK need to move to react-thunk
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.props.dispatch(callGetNextPhrase());
-    }, 1500)
+    }, 1500)*/
     
   }
 

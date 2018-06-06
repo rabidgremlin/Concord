@@ -6,7 +6,9 @@ import { Typography } from 'rmwc/Typography';
 import { Button } from 'rmwc/Button';
 
 import { connect } from 'react-redux'
-import { callCreateSession } from './actions'
+//import { callCreateSession } from './actions'
+
+import { callCreateSession } from './api'
 
 class Login extends Component {
   state = { email: "", password: "", invalidData: true }
@@ -40,6 +42,7 @@ class Login extends Component {
                 //this.props.history.push('/labelphrase') 
                 //alert('hello');
                 this.props.dispatch(callCreateSession(this.state.email,this.state.password));
+                //callCreateSession(this.state.email,this.state.password);
               
               }}>Login</Button>
 

@@ -8,8 +8,9 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from './reducers'
 import { addLocaleData, IntlProvider} from 'react-intl';
 import englishLocaleData from 'react-intl/locale-data/en';
+import thunk from 'redux-thunk';
 
-import { apiService } from './api-service'
+//import { apiService } from './api-service'
 
 import 'material-components-web/dist/material-components-web.min.css';
 import WebFont from 'webfontloader'
@@ -22,7 +23,9 @@ WebFont.load({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(apiService)))
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+
+//const store = createStore(rootReducer, composeEnhancers());
 
 addLocaleData([...englishLocaleData]);
 
