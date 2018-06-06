@@ -1,11 +1,9 @@
 //https://redux.js.org/basics/example-todo-list
 
 
-/*export const callCreateSession = (userId, password) => ({
-    type: 'CALL_CREATE_SESSION',
-    userId,
-    password
-})*/
+export const callCreateSession = () => ({
+    type: 'CALL_CREATE_SESSION'
+})
 
 export const callCreateSessionFailed = (error) => ({
     type: 'CALL_CREATE_SESSION_FAILED',
@@ -22,9 +20,9 @@ export const killSession = () => ({
 })
 
 
-/*export const callGetNextPhrase = () => ({
+export const callGetNextPhrase = () => ({
     type: 'CALL_GET_NEXT_PHRASE'   
-})*/
+})
 
 export const callGetNextPhraseFailed = (error)=> ({
     type: 'CALL_GET_NEXT_PHRASE_FAILED',
@@ -37,11 +35,9 @@ export const callGetNextPhraseSucceeded = (phraseData)=> ({
 })
 
 
-/*export const callVoteForPhraseLabel = (phraseId,label) => ({
-    type: 'CALL_VOTE_FOR_PHRASE_LABEL',
-    phraseId,
-    label   
-})*/
+export const callVoteForPhraseLabel = () => ({
+    type: 'CALL_VOTE_FOR_PHRASE_LABEL'
+})
 
 export const callVoteForPhraseLabelFailed = (error)=> ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL_FAILED',

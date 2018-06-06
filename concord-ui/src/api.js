@@ -1,18 +1,21 @@
 import request from 'superagent'
 
 
+import { callCreateSession } from './actions'
 import { callCreateSessionSucceeded } from './actions'
 import { callCreateSessionFailed } from './actions'
 
+import { callGetNextPhrase } from './actions'
 import { callGetNextPhraseSucceeded } from './actions'
 import { callGetNextPhraseFailed } from './actions'
 
+import { callVoteForPhraseLabel } from './actions'
 import { callVoteForPhraseLabelSucceeded } from './actions'
 import { callVoteForPhraseLabelFailed } from './actions'
 
-export function callCreateSession(userId, password) {
+export function createSession(userId, password) {
     return (dispatch) => {
-        // TODO: dispatch(itemsIsLoading(true));
+        dispatch(callCreateSession());
         request
             .post('/api/sessions')
             .send({ userId: userId, password: password })
@@ -32,9 +35,9 @@ export function callCreateSession(userId, password) {
 };
 
 
-export function callGetNextPhrase() {
+export function getNextPhrase() {
     return (dispatch) => {
-        // TODO: dispatch(itemsIsLoading(true));
+        dispatch(callGetNextPhrase());
         request
             .get('/api/phrases/next')
             //.send({ userId: userId, password: password })
@@ -53,15 +56,15 @@ export function callGetNextPhrase() {
     }
 };
 
-export function callVoteForPhraseLabel(phraseId,label) {
+export function voteForPhraseLabel(phraseId,label) {
     return (dispatch) => {
-        // TODO: dispatch(itemsIsLoading(true));
+        dispatch(callVoteForPhraseLabel());
         request
             .post('/api/phrases/' + phraseId + '/votes/')
             .send({ label: label })
             .set('Accept', 'application/json')
             .then((res) => dispatch(callVoteForPhraseLabelSucceeded()))
-            .then(() => dispatch(callGetNextPhrase()))
+            .then(() => dispatch(getNextPhrase()))
             .catch((err) => {
                 //dispatch(itemsIsLoading(false));
                 dispatch(callVoteForPhraseLabelFailed(err));

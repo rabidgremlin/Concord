@@ -1,5 +1,7 @@
 const errorReducer = (state = { hasError: false }, action) => {
     switch (action.type) {
+        case 'KILL_SESSION':
+            return { hasError: false }
         case 'CALL_CREATE_SESSION':
             return { hasError: false }
         case 'CALL_GET_NEXT_PHRASE':

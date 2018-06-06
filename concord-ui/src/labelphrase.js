@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { callGetNextPhrase } from './api'
-import { callVoteForPhraseLabel } from './api'
+import { getNextPhrase } from './api'
+import { voteForPhraseLabel } from './api'
 
 
 import {
@@ -37,20 +37,20 @@ class LabelPhrase extends Component {
 
 
   componentDidMount() {
-    this.props.dispatch(callGetNextPhrase());
+    this.props.dispatch(getNextPhrase());
   }
 
 
   makeVote(label) {
     //alert('voting ' + label + ' for ' + this.props.phraseData.id);
 
-    this.props.dispatch(callVoteForPhraseLabel(this.props.phraseData.id, label));
-    
+    this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
+
     // HACk HACK need to move to react-thunk
     /*setTimeout(() => {
       this.props.dispatch(callGetNextPhrase());
     }, 1500)*/
-    
+
   }
 
 
@@ -61,50 +61,57 @@ class LabelPhrase extends Component {
         <div><p>loading.....</p></div>
       )
     } else {
-      return (
-        <div>
-          <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab style={{ bottom: '0.5rem' }} onClick={() => {
-            this.makeVote('TRASH');
-          }}>delete</Fab><br /><Fab mini onClick={() => {
-            this.makeVote('SKIPPED');
-          }}>skip_next</Fab></div>
-          <div><Typography style={{ width: '100%', textAlign: 'center' }} use="display3" tag="h1">{this.props.phraseData.phrase}</Typography></div>
-          <Grid>
-            {this.props.phraseData.possibleLabels.map((label, i) => (
-              <GridCell span="3" phone="4" tablet="2" desktop="3" key={i}>
-                <Card style={{ width: '100%' }}>
-                  <CardPrimaryAction onClick={() => {
-                    this.makeVote(label.label);
-                  }}>
-                    <div style={{ padding: '0 1rem 1rem 1rem' }}>
-                      <Typography use="title" tag="h2">{label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%</Typography>
-                      <Typography
-                        use="subheading1"
-                        tag="h3"
-                        theme="text-secondary-on-background"
-                        style={{ marginTop: '-1rem' }}
-                      >
-                        {label.shortDescription}
-                      </Typography>
-                      <Typography use="body1" tag="div" theme="text-secondary-on-background">{label.longDescription}</Typography>
-                    </div>
-                  </CardPrimaryAction>
-                  <CardActions fullBleed>
-                    <CardAction onClick={() => {
+      if (this.props.phraseData) {
+        return (
+          <div>
+            <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab style={{ bottom: '0.5rem' }} onClick={() => {
+              this.makeVote('TRASH');
+            }}>delete</Fab><br /><Fab mini onClick={() => {
+              this.makeVote('SKIPPED');
+            }}>skip_next</Fab></div>
+            <div><Typography style={{ width: '100%', textAlign: 'center' }} use="display3" tag="h1">{this.props.phraseData.phrase}</Typography></div>
+            <Grid>
+              {this.props.phraseData.possibleLabels.map((label, i) => (
+                <GridCell span="3" phone="4" tablet="2" desktop="3" key={i}>
+                  <Card style={{ width: '100%' }}>
+                    <CardPrimaryAction onClick={() => {
                       this.makeVote(label.label);
-                    }}>Label phrase as {label.label} <Icon use="arrow_forward" /></CardAction>
-                  </CardActions>
-                </Card>
-              </GridCell>
+                    }}>
+                      <div style={{ padding: '0 1rem 1rem 1rem' }}>
+                        <Typography use="title" tag="h2">{label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%</Typography>
+                        <Typography
+                          use="subheading1"
+                          tag="h3"
+                          theme="text-secondary-on-background"
+                          style={{ marginTop: '-1rem' }}
+                        >
+                          {label.shortDescription}
+                        </Typography>
+                        <Typography use="body1" tag="div" theme="text-secondary-on-background">{label.longDescription}</Typography>
+                      </div>
+                    </CardPrimaryAction>
+                    <CardActions fullBleed>
+                      <CardAction onClick={() => {
+                        this.makeVote(label.label);
+                      }}>Label phrase as {label.label} <Icon use="arrow_forward" /></CardAction>
+                    </CardActions>
+                  </Card>
+                </GridCell>
 
-            ))}
+              ))}
 
-          </Grid>
+            </Grid>
 
-        </div>
-      )
+          </div>
+        )
+      } else {
+        return (
+          <div><p>No more phrases</p></div>
+        )
+      }
     }
   }
+
 }
 
 export default connect((state) => ({ error: state.nextPhrase.error, loading: state.nextPhrase.loading, phraseData: state.nextPhrase.phraseData }))(LabelPhrase);
