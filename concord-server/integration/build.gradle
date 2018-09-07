@@ -1,0 +1,18 @@
+plugins {
+  id 'java'  
+}
+
+
+version = '0.0.1'
+group = 'com.rabidgremlin.concord'
+
+
+repositories {    
+    mavenCentral()
+}
+
+
+dependencies {    
+    
+    testCompile 'junit:junit:4.11'
+}
