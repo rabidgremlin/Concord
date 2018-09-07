@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -27,6 +28,7 @@ import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
+import com.rabidgremlin.concord.dao.PhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
@@ -66,6 +68,11 @@ public class PhrasesResource
 	   
 	   Phrase nextPhrase = phrasesDao.getNextPhraseToLabelForUser(caller.getToken());	   
 	   
+	   if (nextPhrase == null)
+	   {
+		   return Response.status(Status.NOT_FOUND).build();
+	   }
+	   
 
 	   PhraseToLabel phraseToLabel = new PhraseToLabel();
 	   phraseToLabel.setId(nextPhrase.getPhraseId());
@@ -100,7 +107,7 @@ public class PhrasesResource
 	@Timed
     public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases) {
         
-		 log.info("Caller {} uploading csv of labels {}",caller, unlabelledPhrases);
+		 log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
 		 
 		 
 		 for(UnlabelledPhrase unlabelledPhrase:unlabelledPhrases)
@@ -120,6 +127,24 @@ public class PhrasesResource
 		
         
         return Response.ok().build();
+    }
+	
+	@GET
+	@Path("completed")
+    @Produces("text/csv")
+	@Timed
+    public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
+        
+		 log.info("Caller {} downloading csv of completedPhrases {}",caller);
+		 
+		 
+		 List<PhraseVote> phraseVotes = phrasesDao.getUncompletedPhraseVotes();
+		 
+		 // TODO mark as complete those downloaded
+		 // TODO handle opposing votes. Need to only complete votes when clear majority for a particular label 
+		
+        
+        return Response.ok().entity(phraseVotes).build();
     }
 	
 	@POST
