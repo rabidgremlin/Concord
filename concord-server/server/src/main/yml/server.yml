@@ -7,7 +7,8 @@ database:
   password: concordpwd
 
 labelSuggester:
-  class: com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester
+#  class: com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester
+   class: com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester
   
 credentialsValidator:
   class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator
