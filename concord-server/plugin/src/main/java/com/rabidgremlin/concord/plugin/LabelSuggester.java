@@ -1,4 +1,4 @@
-package com.rabidgremlin.concord.integration;
+package com.rabidgremlin.concord.plugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,15 +7,18 @@ import java.util.List;
 public abstract class LabelSuggester 
 {
 	protected HashMap<String,Object> configProperties;
+	protected SystemLabelStore systemLabelStore;
 	
-	public LabelSuggester()
+	public LabelSuggester(SystemLabelStore systemLabelStore)
 	{
 		configProperties = new HashMap<String,Object>();
+		this.systemLabelStore = systemLabelStore;
 	}
 	
-	public LabelSuggester(HashMap<String,Object> configProperties)
+	public LabelSuggester(SystemLabelStore systemLabelStore, HashMap<String,Object> configProperties)
 	{
 		this.configProperties = configProperties;
+		this.systemLabelStore = systemLabelStore;
 	}
 	
 	public abstract List<SuggestedLabel> suggestLabels(String phrase);

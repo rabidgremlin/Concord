@@ -29,8 +29,8 @@ import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
-import com.rabidgremlin.concord.integration.LabelSuggester;
-import com.rabidgremlin.concord.integration.SuggestedLabel;
+import com.rabidgremlin.concord.plugin.LabelSuggester;
+import com.rabidgremlin.concord.plugin.SuggestedLabel;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;

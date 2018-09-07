@@ -7,10 +7,10 @@ database:
   password: concordpwd
 
 labelSuggester:
-  class: com.rabidgremlin.concord.integration.AllLabelsSuggester
+  class: com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester
   
 credentialsValidator:
-  class: com.rabidgremlin.concord.integration.ConfigCredentialsValidator
+  class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator
   config:
     bob: secret
     alice: garden 

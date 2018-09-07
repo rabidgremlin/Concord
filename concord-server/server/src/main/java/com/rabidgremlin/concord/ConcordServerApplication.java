@@ -1,11 +1,17 @@
 package com.rabidgremlin.concord;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -29,6 +35,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.binout.jaxrs.csv.CsvMessageBodyProvider;
 
+import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
 import com.rabidgremlin.concord.auth.Caller;
@@ -36,8 +43,11 @@ import com.rabidgremlin.concord.config.ConcordServerConfiguration;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
-import com.rabidgremlin.concord.integration.AllLabelsSuggester;
-import com.rabidgremlin.concord.integration.LabelSuggester;
+import com.rabidgremlin.concord.plugin.CredentialsValidator;
+import com.rabidgremlin.concord.plugin.LabelSuggester;
+import com.rabidgremlin.concord.plugin.SystemLabel;
+import com.rabidgremlin.concord.plugin.SystemLabelStore;
+import com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester;
 import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
@@ -131,21 +141,54 @@ public class ConcordServerApplication
   @Override
   public void run(ConcordServerConfiguration configuration,
     Environment environment)
-    throws UnsupportedEncodingException
+    throws UnsupportedEncodingException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
   {
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
     
     environment.jersey().register(CsvMessageBodyProvider.class); 
+    
+    
+	// TODO: Clean this up with type system and wrap exceptions
+	Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
+	Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
+	CredentialsValidator credentialsValidator = (CredentialsValidator)credentialsValidatorConstructor.newInstance(configuration.getCredentialsValidator().getConfigProperties());
 
     
-    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret()));    
+    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));    
     environment.jersey().register(new RedirectResource());
     
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
+    
+    
+    // TODO: Very ugly needs to be refactored out
+    SystemLabelStore systemLabelStore = new SystemLabelStore() {
+		
+		@Override
+		public List<SystemLabel> getSystemLabels() {
+			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
+			
+			List<Label> labels = dao.getLabels();
+			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
+			
+			for (Label label: labels)
+			{
+				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+			}
+			
+			return systemLabels;
+		}
+	};
+    
        
-    LabelSuggester labelsSuggester = new AllLabelsSuggester(jdbi.onDemand(LabelsDao.class));
+    
+	// TODO: Clean this up with type system and wrap exceptions
+	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
+	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
+	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
+	
+	
     
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class), labelsSuggester);

@@ -8,8 +8,9 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import com.rabidgremlin.concord.api.Label;
+import com.rabidgremlin.concord.plugin.SystemLabelStore;
 
-public interface LabelsDao 
+public interface LabelsDao
 {
 	@SqlUpdate("DELETE from labels")
 	void deleteAllLabels();

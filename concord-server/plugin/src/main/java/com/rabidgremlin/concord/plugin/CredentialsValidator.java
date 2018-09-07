@@ -1,4 +1,4 @@
-package com.rabidgremlin.concord.integration;
+package com.rabidgremlin.concord.plugin;
 
 import java.util.HashMap;
 

@@ -21,28 +21,30 @@ import org.slf4j.LoggerFactory;
 import com.rabidgremlin.concord.api.Error;
 import com.rabidgremlin.concord.api.ErrorError;
 import com.rabidgremlin.concord.api.NewSessionRequest;
+import com.rabidgremlin.concord.plugin.CredentialsValidator;
 
 @Path("/sessions")
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionsResource
 {
   private Logger log = LoggerFactory.getLogger(SessionsResource.class);
+  private CredentialsValidator credentialsValidator;
 
   private byte[] jwtTokenSecret;
 
-  public SessionsResource(byte[] jwtTokenSecret)
+  public SessionsResource(byte[] jwtTokenSecret, CredentialsValidator credentialsValidator)
   {
     super();
     this.jwtTokenSecret = jwtTokenSecret;
+    this.credentialsValidator = credentialsValidator;
   }
 
   @POST
   public Response generateExpiredToken(NewSessionRequest newSessionRequest)
   {
     try
-    {
-      // TODO put real password check here
-      if (newSessionRequest.getPassword().equals("secret"))
+    {      
+      if (credentialsValidator.validateCredentials(newSessionRequest.getUserId(), newSessionRequest.getPassword()) )
       {
 
         final JwtClaims claims = new JwtClaims();
