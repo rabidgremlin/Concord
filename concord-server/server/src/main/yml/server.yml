@@ -6,3 +6,11 @@ database:
   user: concorduser
   password: concordpwd
 
+labelSuggester:
+  class: com.rabidgremlin.concord.integration.AllLabelsSuggester
+  
+credentialsValidator:
+  class: com.rabidgremlin.concord.integration.ConfigCredentialsValidator
+  config:
+    bob: secret
+    alice: garden 

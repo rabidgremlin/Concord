@@ -7,12 +7,13 @@ import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.dao.LabelsDao;
 
-public class AllLabelsSuggester implements LabelSuggester 
+public class AllLabelsSuggester extends LabelSuggester 
 {
 	private LabelsDao labelsDao;
 
 	public AllLabelsSuggester(LabelsDao labelsDao) 
-	{		
+	{
+		super();
 		this.labelsDao = labelsDao;
 	}
 

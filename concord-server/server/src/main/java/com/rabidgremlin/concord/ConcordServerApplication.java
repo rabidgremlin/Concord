@@ -32,6 +32,7 @@ import io.github.binout.jaxrs.csv.CsvMessageBodyProvider;
 import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
 import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.config.ConcordServerConfiguration;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
