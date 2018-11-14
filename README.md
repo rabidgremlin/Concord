@@ -1,34 +1,75 @@
 # Concord
 
-https://codex.happyfuncorp.com/styling-and-theming-with-rmwc-react-material-design-d260bec3b644
+> concord. noun. agreement or harmony between people
 
-https://medium.freecodecamp.org/beginners-guide-to-react-router-4-8959ceb3ad58
+Concord is a web application designed to easily crowd source labbeling of text data for NLP. It's focus is on labeling text for training text calssification models such as in chatbots.
 
-Simple redux with APIs..
-https://www.sohamkamani.com/blog/2016/06/05/redux-apis/
+ **NOTE: This is still a work in progress**
 
-Redux tutorial
-https://redux.js.org/basics/example-todo-list
+## get up and running (for developers)
 
+### 1. Create database
 
-
-# Start up
+```
 docker run --rm -it -p 3306:3306 -e MYSQL_DATABASE=concorddb -e MYSQL_USER=concorduser -e MYSQL_PASSWORD=concordpwd -e MYSQL_ROOT_PASSWORD=password123 -d mysql:5.7
+```
 
-docker exec -it blissful_knuth bash
-mysql -u concorduser -p
+### 2. Setup  RASA NLU Server
 
+By default Concord is configured to use a RASA server for testing. See *concord-server/server/src/main/server.yml*
 
-use concorddb;
+#### 2a. Start server
+```
+docker run -p 5000:5000 rasa/rasa_nlu:latest-full
+```
 
-select p.phraseId, p.text from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE v.userId NOT IN ('Bob');
+#### 2b. Populate RASA NLU server
+In a new terminal window:
+```
+curl -XPOST --header "Content-Type: application/json" localhost:5000/train?project=taxibot -d @testbed/taxibotdata.json
+```
 
-select * from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false AND (v.userId IS NULL OR v.userId <> 'Bob') limit 1;
+#### 2c. Check status of model build
+```
+curl localhost:5000/status
+```
+When status of taxibot model is listed as ready, execute:
+```
+curl -XPOST localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"}'
+```
+**NOTE: Wait for this response to retunrn before running other queries againsst RASA. May take several minutes.**
 
-INSERT into votes values ('38cf518a1dc66eba104eaec4e5e21fa6','Help','Alice');
-INSERT into votes values ('38cf518a1dc66eba104eaec4e5e21fa6','Help','Bob');
+### 3. Start up server
 
-update phrases set completed = true where phraseId = '082f2ce2d8fa15fcf60189796c126d55';
+TBC: Create database tables
 
+In a new terminal window:
+```
+cd concord-server/server
+./gradlew run
+```
 
-select p.phraseId, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, p.text;
+### 4. Load test data
+
+#### 4a. Get Token for API calls
+By default Concord is configured to use a list of usernames/passwords held in it's config file. See *concord-server/server/src/main/server.yml*
+
+```
+curl -v -X POST http://127.0.0.1:8080/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
+```
+Extract token from response and use in place of XXXXXX in the following commands.
+
+#### 4b. Load classification labels
+```
+curl -v -X POST http://127.0.0.1:8080/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary 'testbed/@labels.csv'
+```
+
+#### 4c. Load unlabelled training data
+```
+curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib2IiLCJleHAiOjE1MzYzMDI5MjZ9.SGIrgw6py4RDd6v2dI5sP_l3N5ajzP5IMoBt_N6uoOA" --data-binary 'testbed/@unlabelled_phrases.csv'
+```
+
+### 5. Launch front end
+
+TBD
+
