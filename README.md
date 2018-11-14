@@ -2,7 +2,7 @@
 
 > concord. noun. agreement or harmony between people
 
-Concord is a web application designed to easily crowd source labbeling of text data for NLP. It's focus is on labeling text for training text calssification models such as in chatbots.
+Concord is a web application designed to easily crowd source labelling of text data for NLP. It's focus is on labeling text for training text classification models such as in chatbots.
 
  **NOTE: This is still a work in progress**
 
@@ -16,7 +16,7 @@ docker run --rm -it -p 3306:3306 -e MYSQL_DATABASE=concorddb -e MYSQL_USER=conco
 
 ### 2. Setup  RASA NLU Server
 
-By default Concord is configured to use a RASA server for testing. See *concord-server/server/src/main/server.yml*
+By default Concord is configured to use a Rasa NLU server for testing. See *concord-server/server/src/main/server.yml*
 
 #### 2a. Start server
 ```
@@ -37,7 +37,7 @@ When status of taxibot model is listed as ready, execute:
 ```
 curl -XPOST localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"}'
 ```
-**NOTE: Wait for this response to retunrn before running other queries againsst RASA. May take several minutes.**
+**NOTE: Wait for this response to return before running other queries against the Rasa NLU server. May take several minutes.**
 
 ### 3. Create database and Start up server
 In a new terminal window:
@@ -61,18 +61,18 @@ cd concord-server/server
 By default Concord is configured to use a list of usernames/passwords held in it's config file. See *concord-server/server/src/main/server.yml*
 
 ```
-curl -v -X POST http://127.0.0.1:8080/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
+curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
 ```
 Extract token from response and use in place of XXXXXX in the following commands.
 
 #### 4b. Load classification labels
 ```
-curl -v -X POST http://127.0.0.1:8080/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/labels.csv'
+curl -v -X POST http://127.0.0.1:9000/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/labels.csv'
 ```
 
 #### 4c. Load unlabelled training data
 ```
-curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/unlabelled_phrases.csv'
+curl -v -X POST http://127.0.0.1:9000/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/unlabelled_phrases.csv'
 ```
 
 ### 5. Install and start up front end
