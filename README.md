@@ -39,11 +39,17 @@ curl -XPOST localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"
 ```
 **NOTE: Wait for this response to retunrn before running other queries againsst RASA. May take several minutes.**
 
-### 3. Start up server
-
-TBC: Create database tables
-
+### 3. Create database and Start up server
 In a new terminal window:
+
+#### 3a. Create the database
+```
+cd concord-server/server
+./gradlew createDatabase
+```
+
+#### 3b. Run server
+
 ```
 cd concord-server/server
 ./gradlew run
@@ -61,15 +67,31 @@ Extract token from response and use in place of XXXXXX in the following commands
 
 #### 4b. Load classification labels
 ```
-curl -v -X POST http://127.0.0.1:8080/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary 'testbed/@labels.csv'
+curl -v -X POST http://127.0.0.1:8080/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/labels.csv'
 ```
 
 #### 4c. Load unlabelled training data
 ```
-curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib2IiLCJleHAiOjE1MzYzMDI5MjZ9.SGIrgw6py4RDd6v2dI5sP_l3N5ajzP5IMoBt_N6uoOA" --data-binary 'testbed/@unlabelled_phrases.csv'
+curl -v -X POST http://127.0.0.1:8080/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/unlabelled_phrases.csv'
 ```
 
-### 5. Launch front end
+### 5. Install and start up front end
+In a new terminal window:
 
-TBD
+#### 5a. Install dependencies
+```
+cd concord-server/
+npm install
+```
+
+#### 5b. Start up front end
+```
+cd concord-server/
+npm start
+```
+
+### 5c. Login
+Login as **bob**, password **secret** or as **alice**, password **garden**
+
+
 

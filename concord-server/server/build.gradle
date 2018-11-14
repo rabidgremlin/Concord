@@ -31,6 +31,17 @@ run {
     main = 'com.rabidgremlin.concord.ConcordServerApplication'
 }
 
+task createDatabase(type: JavaExec) {
+  classpath sourceSets.main.runtimeClasspath
+  args = ["db", "migrate", "src/main/yml/server.yml"]
+  main = 'com.rabidgremlin.concord.ConcordServerApplication'
+}
+
+task dropDatabase(type: JavaExec) {
+  classpath sourceSets.main.runtimeClasspath  
+  args = ["db", "drop-all", "--confirm-delete-everything", "src/main/yml/server.yml"]
+  main = 'com.rabidgremlin.concord.ConcordServerApplication'
+}
 
 repositories {    
     mavenCentral()
