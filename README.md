@@ -26,16 +26,16 @@ docker run -p 5000:5000 rasa/rasa_nlu:latest-full
 #### 2b. Populate RASA NLU server
 In a new terminal window:
 ```
-curl -XPOST --header "Content-Type: application/json" localhost:5000/train?project=taxibot -d @testbed/taxibotdata.json
+curl -XPOST --header "Content-Type: application/json" http://localhost:5000/train?project=taxibot -d @testbed/taxibotdata.json
 ```
 
 #### 2c. Check status of model build
 ```
-curl localhost:5000/status
+curl http://localhost:5000/status
 ```
 When status of taxibot model is listed as ready, execute:
 ```
-curl -XPOST localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"}'
+curl -XPOST http://localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"}'
 ```
 **NOTE: Wait for this response to return before running other queries against the Rasa NLU server. May take several minutes.**
 
