@@ -25,12 +25,12 @@ class Login extends Component {
   render() {
     return (
       <div>        
-        <Typography use="display4" tag="h1">Concord</Typography>
+        <Typography use="headline1" tag="h1">Concord</Typography>
         <Grid>
           <GridCell desktop="4" tablet="2" phone="0"></GridCell>
           <GridCell desktop="4" tablet="4" phone="4">          
             <Card>
-              <Typography use="subheading2" tag="div" style={{ padding: '0.5rem 1rem' }} theme="text-secondary-on-background">Login</Typography>
+              <Typography use="subtitle2" tag="div" style={{ padding: '0.5rem 1rem' }} theme="text-secondary-on-background">Login</Typography>
 
               <div style={{padding: '1rem'}}>
                 <TextField label="user name" fullwidth required value={this.state.email} onChange={this.handleChange('email')}/>

@@ -64,12 +64,12 @@ class LabelPhrase extends Component {
       if (this.props.phraseData) {
         return (
           <div>
-            <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab style={{ bottom: '0.5rem' }} onClick={() => {
+            <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab icon='delete' style={{ bottom: '0.5rem' }} onClick={() => {
               this.makeVote('TRASH');
-            }}>delete</Fab><br /><Fab mini onClick={() => {
+            }}/><br /><Fab icon='skip_next' mini onClick={() => {
               this.makeVote('SKIPPED');
-            }}>skip_next</Fab></div>
-            <div><Typography style={{ width: '100%', textAlign: 'center' }} use="display3" tag="h1">{this.props.phraseData.phrase}</Typography></div>
+            }}/></div>
+            <div><Typography style={{ width: '100%', textAlign: 'center' }} use="headline3" tag="h1">{this.props.phraseData.phrase}</Typography></div>
             <Grid>
               {this.props.phraseData.possibleLabels.map((label, i) => (
                 <GridCell span="3" phone="4" tablet="2" desktop="3" key={i}>
@@ -78,9 +78,9 @@ class LabelPhrase extends Component {
                       this.makeVote(label.label);
                     }}>
                       <div style={{ padding: '0 1rem 1rem 1rem' }}>
-                        <Typography use="title" tag="h2">{label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%</Typography>
+                        <Typography use="headline6" tag="h2">{label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%</Typography>
                         <Typography
-                          use="subheading1"
+                          use="subtitle2"
                           tag="h3"
                           theme="text-secondary-on-background"
                           style={{ marginTop: '-1rem' }}
@@ -93,7 +93,7 @@ class LabelPhrase extends Component {
                     <CardActions fullBleed>
                       <CardAction onClick={() => {
                         this.makeVote(label.label);
-                      }}>Label phrase as {label.label} <Icon use="arrow_forward" /></CardAction>
+                      }}>Label phrase as {label.label} <Icon icon="arrow_forward" /></CardAction>
                     </CardActions>
                   </Card>
                 </GridCell>
