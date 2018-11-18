@@ -80,13 +80,13 @@ In a new terminal window:
 
 #### 5a. Install dependencies
 ```
-cd concord-server/
+cd concord-ui/
 npm install
 ```
 
 #### 5b. Start up front end
 ```
-cd concord-server/
+cd concord-ui/
 npm start
 ```
 
