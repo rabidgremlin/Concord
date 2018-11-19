@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-intl": "^2.4.0",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-intl": "2.4.0",
+    "react-redux": "5.0.7",
+    "react-router-dom": "4.2.2",
     "react-scripts": "2.1.1",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "rmwc": "^3.0.10",
-    "superagent": "^4.0.0",
-    "webfontloader": "^1.6.28"
+    "redux": "4.0.1",
+    "redux-thunk": "2.3.0",
+    "rmwc": "3.0.10",
+    "superagent": "4.0.0",
+    "webfontloader": "1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
