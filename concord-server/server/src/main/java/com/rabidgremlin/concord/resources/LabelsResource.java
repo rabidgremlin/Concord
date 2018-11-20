@@ -71,23 +71,12 @@ public class LabelsResource
 	@POST
 	@Path("bulk")
     @Consumes("text/csv")
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels) {
-        
-		 log.info("Caller {} uploading csv of labels {}",caller, labels);
-		 
-		 // TODO Transaction...
-		 labelsDao.deleteAllLabels();
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels)
+	{
+		log.info("Caller {} uploading csv of labels {}",caller, labels);
 
-		 for(Label label:labels)
-		 {
-		   // skip header	 
-		   if (label.getLabel().equals("label")){
-			   continue;
-		   }
-		   labelsDao.upsert(label);
-		 }
-		
-        
+		labelsDao.updateLabels(labels);
+
         return Response.ok().build();
     }
 }
