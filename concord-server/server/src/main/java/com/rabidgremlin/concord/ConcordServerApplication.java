@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import com.rabidgremlin.concord.dao.UploadDao;
 import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -191,7 +192,8 @@ public class ConcordServerApplication
 	
     
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
-    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class), labelsSuggester);
+    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
+            jdbi.onDemand(UploadDao.class), labelsSuggester);
     
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
