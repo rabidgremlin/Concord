@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.toastshaman:dropwizard-auth-jwt:1.1.0-0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.toastshaman/dropwizard-auth-jwt/1.1.0-0/56bdac374a132ba0befb20a17c6a6971b947b307/dropwizard-auth-jwt-1.1.0-0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.toastshaman/dropwizard-auth-jwt/1.1.0-0/6174fc869fd4074e9d001a3bb14763258b7eee43/dropwizard-auth-jwt-1.1.0-0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

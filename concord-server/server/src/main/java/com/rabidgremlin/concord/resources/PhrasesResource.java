@@ -1,7 +1,9 @@
 package com.rabidgremlin.concord.resources;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
@@ -27,8 +29,7 @@ import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.LabelsDao;
-import com.rabidgremlin.concord.dao.PhraseVote;
+import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
@@ -136,15 +137,40 @@ public class PhrasesResource
     public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
         
 		 log.info("Caller {} downloading csv of completedPhrases {}",caller);
-		 
-		 
-		 List<PhraseVote> phraseVotes = phrasesDao.getUncompletedPhraseVotes();
-		 
-		 // TODO mark as complete those downloaded
-		 // TODO handle opposing votes. Need to only complete votes when clear majority for a particular label 
-		
+
+		 //TODO link this to server.yml
+		 int margin = 1;
+
+		 LinkedList<Phrase> completedPhrases = new LinkedList<>();
+
+		 List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(margin);
+
+		 for(GroupedPhraseVote vote : phraseVotes)
+		 {
+		 	String phraseId = vote.getPhraseId();
+			String text = vote.getText();
+		 	String designatedLabel = vote.getLabel();
+
+		 	int highestContenderCount = 0;
+		 	Optional<GroupedPhraseVote> highestContenderObject = votesDao.getHighestContender(phraseId);
+			GroupedPhraseVote highestContender = highestContenderObject.orElse(null);
+
+			if(highestContender != null)
+			{
+				highestContenderCount = highestContender.getVoteCount();
+			}
+
+			if(vote.getVoteCount() - highestContenderCount >= margin)
+			{
+				Phrase curr = new Phrase();
+				curr.setLabel(designatedLabel);
+				curr.setText(text);
+				completedPhrases.add(curr);
+				phrasesDao.markPhrasesComplete(phraseId, true, designatedLabel);
+			}
+		 }
         
-        return Response.ok().entity(phraseVotes).build();
+        return Response.ok().entity(completedPhrases).build();
     }
 	
 	@POST

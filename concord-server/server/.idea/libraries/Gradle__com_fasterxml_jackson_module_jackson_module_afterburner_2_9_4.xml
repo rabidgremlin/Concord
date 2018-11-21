@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.fasterxml.jackson.module:jackson-module-afterburner:2.9.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-afterburner/2.9.4/5e31e36e0ed6f0af1017251ddb00575d760725a9/jackson-module-afterburner-2.9.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-afterburner/2.9.4/3463fa6bfeb60b901d7fcd8131b6f0b8c1efdbe3/jackson-module-afterburner-2.9.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

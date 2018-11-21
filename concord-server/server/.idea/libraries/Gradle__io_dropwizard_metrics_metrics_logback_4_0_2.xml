@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.dropwizard.metrics:metrics-logback:4.0.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.dropwizard.metrics/metrics-logback/4.0.2/cf32cce38dc3c9f07273780fd3a0740c234686b8/metrics-logback-4.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.dropwizard.metrics/metrics-logback/4.0.2/e2b722c9b1f3420280125c1db766db024839c7c5/metrics-logback-4.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
