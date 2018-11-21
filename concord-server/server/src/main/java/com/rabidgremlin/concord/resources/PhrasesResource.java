@@ -51,12 +51,14 @@ public class PhrasesResource
 	private PhrasesDao phrasesDao;
 	private VotesDao votesDao;
 	private LabelSuggester labelSuggester;
+	private int consensusLevel;
 	
-	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, LabelSuggester labelSuggester)
+	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, LabelSuggester labelSuggester, int consensusLevel)
 	{
 		this.phrasesDao = phrasesDao;
 		this.votesDao = votesDao;
 		this.labelSuggester = labelSuggester;
+		this.consensusLevel = consensusLevel;
 	}
 	
 	
@@ -137,13 +139,10 @@ public class PhrasesResource
     public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
         
 		 log.info("Caller {} downloading csv of completedPhrases {}",caller);
-
-		 //TODO link this to server.yml
-		 int margin = 1;
-
+		 
 		 LinkedList<Phrase> completedPhrases = new LinkedList<>();
 
-		 List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(margin);
+		 List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
 
 		 for(GroupedPhraseVote vote : phraseVotes)
 		 {
@@ -160,7 +159,7 @@ public class PhrasesResource
 				highestContenderCount = highestContender.getVoteCount();
 			}
 
-			if(vote.getVoteCount() - highestContenderCount >= margin)
+			if(vote.getVoteCount() - highestContenderCount >= consensusLevel)
 			{
 				Phrase curr = new Phrase();
 				curr.setLabel(designatedLabel);
