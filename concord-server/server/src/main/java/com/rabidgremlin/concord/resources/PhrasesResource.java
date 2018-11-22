@@ -106,26 +106,12 @@ public class PhrasesResource
 	@Path("bulk")
     @Consumes("text/csv")
 	@Timed
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases) {
-        
-		 log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
+	{
+		log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
 		 
-		 
-		 for(UnlabelledPhrase unlabelledPhrase:unlabelledPhrases)
-		 {
-		   // skip header	 
-		   if (unlabelledPhrase.getText().equals("text")){
-			   continue;
-		   }
-		   //labelsDao.upsert(label);
-		   
-		   String phraseId = DigestUtils.md5Hex(unlabelledPhrase.getText());
-		   
-		   // remove any existing votes in case we are reloading data
-		   uploadDao.deleteExistingVotesAndUploadPhrase(phraseId, unlabelledPhrase);
-		 }
-		
-        
+		uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
+
         return Response.ok().build();
     }
 	
