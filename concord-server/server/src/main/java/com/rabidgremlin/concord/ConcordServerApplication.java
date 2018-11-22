@@ -3,10 +3,8 @@ package com.rabidgremlin.concord;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
@@ -101,13 +99,8 @@ public class ConcordServerApplication
   private void configureAssetsSecurityHeaders(Environment environment)
   {
     Dynamic filter = environment.servlets().addFilter("AssetsSecurityHeaders", AssetsSecurityHeadersFilter.class);
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.html");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.css");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.js");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.png");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.ttf");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.ico");
+    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true,
+            "/","*.html","*.css","*.js","*.png","*.ttf","*.ico");
   }
 
   private void setupJwtAuth(ConcordServerConfiguration configuration,
@@ -161,25 +154,20 @@ public class ConcordServerApplication
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
     
-    
-    // TODO: Very ugly needs to be refactored out
-    SystemLabelStore systemLabelStore = new SystemLabelStore() {
-		
-		@Override
-		public List<SystemLabel> getSystemLabels() {
-			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
-			
-			List<Label> labels = dao.getLabels();
-			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
-			
-			for (Label label: labels)
-			{
-				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
-			}
-			
-			return systemLabels;
-		}
-	};
+
+    SystemLabelStore systemLabelStore = () -> {
+        LabelsDao dao = jdbi.onDemand(LabelsDao.class);
+
+        List<Label> labels = dao.getLabels();
+        ArrayList<SystemLabel> systemLabels = new ArrayList<>();
+
+        for (Label label: labels)
+        {
+            systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+        }
+
+        return systemLabels;
+    };
     
        
     
