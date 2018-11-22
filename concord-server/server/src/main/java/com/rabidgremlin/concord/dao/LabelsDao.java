@@ -25,7 +25,7 @@ public interface LabelsDao
     List<Label> getLabels();
 
 	@Transaction
-	default void replaceLabels(List<Label> labels) {
+	default void updateLabels(List<Label> labels) {
 		deleteAllLabels();
 
 		for(Label label:labels)
