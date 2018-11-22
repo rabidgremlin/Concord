@@ -1,14 +1,12 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -124,7 +122,7 @@ public class PhrasesResource
 		   String phraseId = DigestUtils.md5Hex(unlabelledPhrase.getText());
 		   
 		   // remove any existing votes in case we are reloading data
-		   votesDao.deleteAllVotesForPhrase(phraseId);
+		   votesDao.deleteAllVotesForPhrase(Collections.singletonList(phraseId));
 		   phrasesDao.upsert(phraseId, unlabelledPhrase.getText(), false);
 		 }
 		
@@ -138,7 +136,7 @@ public class PhrasesResource
 	@Timed
     public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
         
-		 log.info("Caller {} downloading csv of completedPhrases {}",caller);
+		 log.info("Caller {} marking phrases and downloading csv of completedPhrases {}",caller);
 		 
 		 LinkedList<Phrase> completedPhrases = new LinkedList<>();
 
@@ -171,6 +169,28 @@ public class PhrasesResource
         
         return Response.ok().entity(completedPhrases).build();
     }
+
+	@DELETE
+	@Path("completed")
+	@Timed
+	public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller) {
+
+		log.info("Caller {} purging completed votes and phrases {}",caller);
+
+		List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
+		int amount = phraseIdentifiers.size();
+
+		votesDao.deleteAllVotesForPhrase(phraseIdentifiers);
+		phrasesDao.deleteCompletedPhrases(phraseIdentifiers);
+
+		log.info(amount + " phrases purged from database.");
+
+		//TODO - what to return here?
+		return Response.ok().build();
+	}
+
+
+
 	
 	@POST
     @Timed

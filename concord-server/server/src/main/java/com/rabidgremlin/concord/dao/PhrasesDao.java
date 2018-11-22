@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -21,4 +22,10 @@ public interface PhrasesDao
 
 	@SqlUpdate("update phrases set completed = :completed, label = :label where phraseId = :phraseId")
 	void markPhrasesComplete(@Bind("phraseId") String phraseId, @Bind("completed") Boolean completed, @Bind("label") String label);
+
+	@SqlQuery("select p.phraseId from phrases p where p.completed = True")
+	List<String> getCompletedPhraseIdentifiers();
+
+	@SqlBatch("DELETE from phrases where phrases.phraseId = :phraseId")
+	void deleteCompletedPhrases(@Bind("phraseId") List<String> phraseId);
 }
