@@ -49,7 +49,7 @@ repositories {
 
 
 dependencies {
-    compile 'com.rabidgremlin.concord:concord-plugin:0.0.1'
+    compile project(':plugin')
     compile 'io.dropwizard:dropwizard-core:1.3.0'
     compile "io.dropwizard:dropwizard-assets:1.3.0"
     compile "io.dropwizard:dropwizard-auth:1.3.0"

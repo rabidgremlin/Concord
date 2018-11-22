@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.dropwizard:dropwizard-jetty:1.3.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.dropwizard/dropwizard-jetty/1.3.0/6a2792063ff75cacaf76be2710834f82352f5e2b/dropwizard-jetty-1.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.dropwizard/dropwizard-jetty/1.3.0/fb509c163ed6315dab97d140eb2fe9f2a8e28dbe/dropwizard-jetty-1.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
