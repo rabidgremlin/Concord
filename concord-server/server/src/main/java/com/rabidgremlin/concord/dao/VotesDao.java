@@ -6,7 +6,6 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
-import java.util.Optional;
 
 public interface VotesDao 
 {
@@ -23,6 +22,6 @@ public interface VotesDao
 
 	@SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING phraseId = :phraseId ORDER BY voteCount Desc limit 1 offset 1")
 	@RegisterBeanMapper(GroupedPhraseVote.class)
-	Optional<GroupedPhraseVote> getHighestContender(@Bind("phraseId") String phraseId);
+	GroupedPhraseVote getHighestContender(@Bind("phraseId") String phraseId);
 
 }

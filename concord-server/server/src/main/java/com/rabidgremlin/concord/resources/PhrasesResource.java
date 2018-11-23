@@ -1,6 +1,7 @@
 package com.rabidgremlin.concord.resources;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
@@ -149,8 +150,7 @@ public class PhrasesResource
 		 	String designatedLabel = vote.getLabel();
 
 		 	int highestContenderCount = 0;
-		 	Optional<GroupedPhraseVote> highestContenderObject = votesDao.getHighestContender(phraseId);
-			GroupedPhraseVote highestContender = highestContenderObject.orElse(null);
+		 	GroupedPhraseVote highestContender = votesDao.getHighestContender(phraseId);
 
 			if(highestContender != null)
 			{
@@ -162,10 +162,13 @@ public class PhrasesResource
 				Phrase curr = new Phrase();
 				curr.setLabel(designatedLabel);
 				curr.setText(text);
+				curr.setPhraseId(phraseId);
 				completedPhrases.add(curr);
-				phrasesDao.markPhrasesComplete(phraseId, true, designatedLabel);
 			}
 		 }
+
+		 phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
+				 completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
         
         return Response.ok().entity(completedPhrases).build();
     }
