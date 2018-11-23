@@ -3,10 +3,10 @@
 # Build UI
 cd concord-ui
 npm run build
+rm -rfv ../concord-server/server/src/main/resources/ui/*
 cp -rf build ../concord-server/server/src/main/resources/ui
 
 # Build server
-set https_proxy=https://proxy2.isis.airnz.co.nz:5865
 cd ../concord-server/server
 chmod +x gradlew
 ./gradlew build
