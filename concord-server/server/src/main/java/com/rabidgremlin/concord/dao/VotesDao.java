@@ -22,6 +22,6 @@ public interface VotesDao
 
 	@SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING phraseId = :phraseId ORDER BY voteCount Desc limit 1 offset 1")
 	@RegisterBeanMapper(GroupedPhraseVote.class)
-	GroupedPhraseVote getHighestContender(@Bind("phraseId") String phraseId);
+	GroupedPhraseVote getSecondHighestContender(@Bind("phraseId") String phraseId);
 
 }

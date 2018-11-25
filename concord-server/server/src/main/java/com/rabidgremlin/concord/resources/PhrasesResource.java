@@ -149,15 +149,15 @@ public class PhrasesResource
 			String text = vote.getText();
 		 	String designatedLabel = vote.getLabel();
 
-		 	int highestContenderCount = 0;
-		 	GroupedPhraseVote highestContender = votesDao.getHighestContender(phraseId);
+		 	int secondHighestContenderCount = 0;
+		 	GroupedPhraseVote secondHighestContender = votesDao.getSecondHighestContender(phraseId);
 
-			if(highestContender != null)
+			if(secondHighestContender != null)
 			{
-				highestContenderCount = highestContender.getVoteCount();
+				secondHighestContenderCount = secondHighestContender.getVoteCount();
 			}
 
-			if(vote.getVoteCount() - highestContenderCount >= consensusLevel)
+			if(vote.getVoteCount() - secondHighestContenderCount >= consensusLevel)
 			{
 				Phrase curr = new Phrase();
 				curr.setLabel(designatedLabel);
@@ -188,7 +188,6 @@ public class PhrasesResource
 
 		log.info(amount + " phrases purged from database.");
 
-		//TODO - what to return here?
 		return Response.ok().build();
 	}
 
