@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,39 +136,16 @@ public class PhrasesResource
 	@Path("completed")
     @Produces("text/csv")
 	@Timed
-    public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
+    public synchronized Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
         
-		 log.info("Caller {} marking phrases and downloading csv of completedPhrases {}",caller);
-		 
-		 LinkedList<Phrase> completedPhrases = new LinkedList<>();
+		log.info("Caller {} marking phrases and downloading csv of completedPhrases {}",caller);
 
-		 List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
+		List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
 
-		 for(GroupedPhraseVote vote : phraseVotes)
-		 {
-		 	String phraseId = vote.getPhraseId();
-			String text = vote.getText();
-		 	String designatedLabel = vote.getLabel();
+		GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(votesDao, phraseVotes, consensusLevel);
+		LinkedList<Phrase> completedPhrases = getPhrases.execute();
 
-		 	int secondHighestContenderCount = 0;
-		 	GroupedPhraseVote secondHighestContender = votesDao.getSecondHighestContender(phraseId);
-
-			if(secondHighestContender != null)
-			{
-				secondHighestContenderCount = secondHighestContender.getVoteCount();
-			}
-
-			if(vote.getVoteCount() - secondHighestContenderCount >= consensusLevel)
-			{
-				Phrase curr = new Phrase();
-				curr.setLabel(designatedLabel);
-				curr.setText(text);
-				curr.setPhraseId(phraseId);
-				completedPhrases.add(curr);
-			}
-		 }
-
-		 phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
+		phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
 				 completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
         
         return Response.ok().entity(completedPhrases).build();
