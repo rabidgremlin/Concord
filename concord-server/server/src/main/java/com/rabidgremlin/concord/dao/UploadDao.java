@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface UploadDao {
 
@@ -17,28 +19,25 @@ public interface UploadDao {
     PhrasesDao phrasesDao();
 
     @Transaction
-    default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases) {
+    default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases)
+    {
+        List<UnlabelledPhrase> batchedPhrases = unlabelledPhrases.stream()
+                .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equals("text"))
+                .collect(Collectors.toList());
 
-        for(UnlabelledPhrase unlabelledPhrase : unlabelledPhrases)
-        {
-            // skip header
-            if (unlabelledPhrase.getText().equals("text")){
-                continue;
-            }
+        List<String> phraseIds = batchedPhrases.stream()
+                .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
+                .collect(Collectors.toList());
 
-            String phraseId = DigestUtils.md5Hex(unlabelledPhrase.getText());
+        phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream().map(UnlabelledPhrase::getText).collect(Collectors.toList()), false);
 
-            // remove any existing votes in case we are reloading data
-            votesDao().deleteAllVotesForPhrase(phraseId);
+        // Add vote to phrases with user choice
+        List<String> phraseIdsToVote = batchedPhrases.stream()
+                .filter(unlabelledPhrase -> StringUtils.isNotEmpty(unlabelledPhrase.getPossibleLabel()))
+                .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
+                .collect(Collectors.toList());
 
-            // User choice counts as one vote
-            if (StringUtils.isNotEmpty(unlabelledPhrase.getPossibleLabel()))
-            {
-                votesDao().upsert(phraseId, unlabelledPhrase.getPossibleLabel(), "User");
-            }
-
-            phrasesDao().upsert(phraseId, unlabelledPhrase.getText(), false);
-        }
+        votesDao().deleteAllVotesForPhrases(phraseIdsToVote);
     }
 }
 
