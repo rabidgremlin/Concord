@@ -14,8 +14,8 @@ const errorReducer = (state = { hasError: false }, action) => {
             return { hasError: true, msg: 'Failed save vote' }
         case 'CALL_GET_ALL_LABELS':
             return { hasError: false }
-//        case 'CALL_GET_ALL_LABELS_FAILED':
-//            return { hasError: true, msg: 'Failed to get available labels'}
+        case 'CALL_GET_ALL_LABELS_FAILED':
+            return { hasError: true, msg: 'Failed to get available labels'}
         default:
             return state
     }
