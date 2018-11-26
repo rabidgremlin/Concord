@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.rabidgremlin.concord.dao.UploadDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
@@ -49,15 +49,16 @@ public class PhrasesResource
 	private Logger log = LoggerFactory.getLogger(PhrasesResource.class);
 	private PhrasesDao phrasesDao;
 	private VotesDao votesDao;
+	private UploadDao uploadDao;
 	private LabelSuggester labelSuggester;
 	
-	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, LabelSuggester labelSuggester)
+	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester)
 	{
 		this.phrasesDao = phrasesDao;
 		this.votesDao = votesDao;
+		this.uploadDao = uploadDao;
 		this.labelSuggester = labelSuggester;
 	}
-	
 	
 	@GET
     @Timed
@@ -105,27 +106,12 @@ public class PhrasesResource
 	@Path("bulk")
     @Consumes("text/csv")
 	@Timed
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases) {
-        
-		 log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
+	{
+		log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
 		 
-		 
-		 for(UnlabelledPhrase unlabelledPhrase:unlabelledPhrases)
-		 {
-		   // skip header	 
-		   if (unlabelledPhrase.getText().equals("text")){
-			   continue;
-		   }
-		   //labelsDao.upsert(label);
-		   
-		   String phraseId = DigestUtils.md5Hex(unlabelledPhrase.getText());
-		   
-		   // remove any existing votes in case we are reloading data
-		   votesDao.deleteAllVotesForPhrase(phraseId);
-		   phrasesDao.upsert(phraseId, unlabelledPhrase.getText(), false);
-		 }
-		
-        
+		uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
+
         return Response.ok().build();
     }
 	

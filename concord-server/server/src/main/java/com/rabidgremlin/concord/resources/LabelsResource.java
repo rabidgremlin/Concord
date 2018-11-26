@@ -6,7 +6,6 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.Label;
-import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
 
@@ -71,23 +69,12 @@ public class LabelsResource
 	@POST
 	@Path("bulk")
     @Consumes("text/csv")
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels) {
-        
-		 log.info("Caller {} uploading csv of labels {}",caller, labels);
-		 
-		 // TODO Transaction...
-		 labelsDao.deleteAllLabels();
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels)
+	{
+		log.info("Caller {} uploading csv of labels {}",caller, labels);
 
-		 for(Label label:labels)
-		 {
-		   // skip header	 
-		   if (label.getLabel().equals("label")){
-			   continue;
-		   }
-		   labelsDao.upsert(label);
-		 }
-		
-        
+		labelsDao.replaceLabels(labels);
+
         return Response.ok().build();
     }
 }
