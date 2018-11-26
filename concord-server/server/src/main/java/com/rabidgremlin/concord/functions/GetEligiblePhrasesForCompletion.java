@@ -25,9 +25,9 @@ public class GetEligiblePhrasesForCompletion {
         this.consensusLevel = consensusLevel;
     }
 
-    public LinkedList<Phrase> execute()
+    public List<Phrase> execute()
     {
-        LinkedList<Phrase> completedPhrases = new LinkedList<>();
+        List<Phrase> completedPhrases = new LinkedList<>();
 
         for(GroupedPhraseVote vote : phraseVotes)
         {

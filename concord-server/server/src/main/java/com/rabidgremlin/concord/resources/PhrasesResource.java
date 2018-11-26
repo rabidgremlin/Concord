@@ -143,7 +143,7 @@ public class PhrasesResource
 		List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
 
 		GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(votesDao, phraseVotes, consensusLevel);
-		LinkedList<Phrase> completedPhrases = getPhrases.execute();
+		List<Phrase> completedPhrases = getPhrases.execute();
 
 		phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
 				 completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
