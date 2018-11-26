@@ -1,12 +1,13 @@
 package com.rabidgremlin.concord.resources;
 
+import java.beans.Transient;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -14,12 +15,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.Label;
-import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.LabelsDao;
 
@@ -71,23 +72,19 @@ public class LabelsResource
 	@POST
 	@Path("bulk")
     @Consumes("text/csv")
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels) {
-        
-		 log.info("Caller {} uploading csv of labels {}",caller, labels);
-		 
-		 // TODO Transaction...
-		 labelsDao.deleteAllLabels();
+	@Transaction
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels)
+	{
+		log.info("Caller {} uploading csv of labels {}",caller, labels);
 
-		 for(Label label:labels)
-		 {
-		   // skip header	 
-		   if (label.getLabel().equals("label")){
-			   continue;
-		   }
-		   labelsDao.upsert(label);
-		 }
-		
-        
+		labelsDao.deleteAllLabels();
+
+		List<Label> labelsToReplace = labels.stream()
+				.filter(label -> !label.getLabel().equals("label"))
+				.collect(Collectors.toList());
+
+		labelsDao.upsert(labelsToReplace);
+
         return Response.ok().build();
     }
 }

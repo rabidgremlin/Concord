@@ -15,7 +15,10 @@ public interface PhrasesDao
 	
 	@SqlUpdate("REPLACE INTO phrases(phraseId, text, completed, label) VALUES (:phraseId, :text,:completed, NULL)")
     void upsert(@Bind("phraseId") String phraseId, @Bind("text") String text, @Bind("completed") Boolean completed);
-	
+
+	@SqlBatch("REPLACE INTO phrases(phraseId, text, completed) VALUES (:phraseId, :text,:completed)")
+	void upsertBatch(@Bind("phraseId") List<String> phraseIds, @Bind("text") List<String> phrases, @Bind("completed") Boolean completed);
+
 	@SqlQuery("select p.* from phrases p where p.phraseId not in (select v.phraseId from votes v where v.userId = :userId) limit 1")
     @RegisterBeanMapper(Phrase.class)
     Phrase getNextPhraseToLabelForUser(@Bind("userId") String userId);

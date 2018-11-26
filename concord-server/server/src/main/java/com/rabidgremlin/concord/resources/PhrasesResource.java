@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
+import com.rabidgremlin.concord.dao.UploadDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,18 +51,19 @@ public class PhrasesResource
 	private Logger log = LoggerFactory.getLogger(PhrasesResource.class);
 	private PhrasesDao phrasesDao;
 	private VotesDao votesDao;
+	private UploadDao uploadDao;
 	private LabelSuggester labelSuggester;
 	private int consensusLevel;
-	
-	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, LabelSuggester labelSuggester, int consensusLevel)
+
+	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel)
 	{
 		this.phrasesDao = phrasesDao;
 		this.votesDao = votesDao;
+		this.uploadDao = uploadDao;
 		this.labelSuggester = labelSuggester;
 		this.consensusLevel = consensusLevel;
 	}
-	
-	
+
 	@GET
     @Timed
 	@Path("/next")
@@ -108,27 +110,12 @@ public class PhrasesResource
 	@Path("bulk")
     @Consumes("text/csv")
 	@Timed
-    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases) {
-        
-		 log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
+    public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
+	{
+		log.info("Caller {} uploading csv of phrases {}",caller, unlabelledPhrases);
 		 
-		 
-		 for(UnlabelledPhrase unlabelledPhrase:unlabelledPhrases)
-		 {
-		   // skip header	 
-		   if (unlabelledPhrase.getText().equals("text")){
-			   continue;
-		   }
-		   //labelsDao.upsert(label);
-		   
-		   String phraseId = DigestUtils.md5Hex(unlabelledPhrase.getText());
-		   
-		   // remove any existing votes in case we are reloading data
-		   votesDao.deleteAllVotesForPhrase(Collections.singletonList(phraseId));
-		   phrasesDao.upsert(phraseId, unlabelledPhrase.getText(), false);
-		 }
-		
-        
+		uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
+
         return Response.ok().build();
     }
 	
@@ -147,7 +134,7 @@ public class PhrasesResource
 
 		phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
 				 completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
-        
+
         return Response.ok().entity(completedPhrases).build();
     }
 
