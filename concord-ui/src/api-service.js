@@ -8,6 +8,10 @@ import { callGetNextPhraseSucceeded } from './actions'
 import { callGetNextPhraseFailed } from './actions'
 import { callVoteForPhraseLabelSucceeded } from './actions'
 import { callVoteForPhraseLabelFailed } from './actions'
+import { callGetAllLabels } from './actions'
+import { callGetAllLabelsSucceeded } from './actions'
+import { callGetAllLabelsFailed } from './actions'
+
 
 export const apiService = store => next => action => {
 
@@ -79,6 +83,20 @@ export const apiService = store => next => action => {
                         return next(callVoteForPhraseLabelFailed(err))
                     }                    
                     next(callVoteForPhraseLabelSucceeded())
+                });
+            break;
+        case 'CALL_GET_ALL_LABELS':
+            console.log("getting labels");
+            request
+                .get('/api/labels')
+                .set('Accept', 'application/json')
+                .end((err, res) => {
+                    if (err) {
+
+                        return next(callGetAllLabelsFailed(err))
+                    }
+                    const data = JSON.parse(res.text)
+                    next(callGetAllLabelsSucceeded(data))
                 });
             break;
         /*

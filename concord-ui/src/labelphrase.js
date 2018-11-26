@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getNextPhrase } from './api'
 import { voteForPhraseLabel } from './api'
+import { getAllLabels } from './api'
 
 
 import {
@@ -15,7 +16,8 @@ import {
 } from 'rmwc/Card';
 
 import { Typography } from 'rmwc/Typography';
-
+import { Select } from '@rmwc/select';
+import { Button, ButtonIcon } from'@rmwc/button';
 
 import { Grid, GridCell } from 'rmwc/Grid';
 import { FormattedNumber, FormattedDate } from 'react-intl';
@@ -38,6 +40,7 @@ class LabelPhrase extends Component {
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
+    this.props.dispatch(getAllLabels());
   }
 
 
@@ -62,6 +65,7 @@ class LabelPhrase extends Component {
       )
     } else {
       if (this.props.phraseData) {
+        console.log(this.props.labelData);
         return (
           <div>
             <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab icon='delete' style={{ bottom: '0.5rem' }} onClick={() => {
@@ -101,7 +105,14 @@ class LabelPhrase extends Component {
               ))}
 
             </Grid>
-
+              <Select
+              style={{width: '300px'}}
+                label="Other labels"
+                outlined
+                placeholder=""
+                options={['Cookies', 'Pizza', 'Icecream']}
+              />
+              <Button outlined>LABEL PHRASE AS .....</Button>
           </div>
         )
       } else {
@@ -130,3 +141,5 @@ export default connect((state) => ({ error: state.nextPhrase.error, loading: sta
                 </GridTileSecondary>
               </GridTile>
               */
+
+
