@@ -94,4 +94,24 @@ npm start
 Login as **bob**, password **secret** or as **alice**, password **garden**
 
 
+***************************************************
+## Viewing your Database 
+
+```
+docker exec -it [docker-image-name] bash
+```
+
+```
+mysql -u concorduser -p
+```
+
+password: concordpwd
+
+```
+use concorddb
+```
+
+
+
+
 
