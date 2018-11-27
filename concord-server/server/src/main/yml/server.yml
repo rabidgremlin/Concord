@@ -7,11 +7,9 @@ database:
   password: concordpwd
 
 labelSuggester:
-   class: nz.co.airnz.convlabel.ConvLabelSuggester
-   config:
-     apiUrl: https://localhost:8080/
-     bearerToken: 204CD838337F46F7A8EFDF4E50611361
-
+#  class: com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester
+   class: com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester
+  
 credentialsValidator:
   class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator
   config:
