@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public abstract class LabelSuggester 
+public abstract class LabelSuggester
 {
 	protected HashMap<String,Object> configProperties;
 	protected SystemLabelStore systemLabelStore;
@@ -16,10 +16,16 @@ public abstract class LabelSuggester
 	}
 	
 	public LabelSuggester(SystemLabelStore systemLabelStore, HashMap<String,Object> configProperties)
+			throws InvalidConfigPropertiesException
 	{
+		if (configProperties.isEmpty())
+		{
+			throw new InvalidConfigPropertiesException("No configuration provided");
+		}
+
 		this.configProperties = configProperties;
 		this.systemLabelStore = systemLabelStore;
 	}
 	
-	public abstract List<SuggestedLabel> suggestLabels(String phrase);
+	public abstract List<SuggestedLabel> suggestLabels(String phrase) throws UnableToGetSuggestionsException;
 }
