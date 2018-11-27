@@ -1,12 +1,13 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
 import com.rabidgremlin.concord.dao.UploadDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.PhraseVote;
+import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
@@ -51,15 +53,17 @@ public class PhrasesResource
 	private VotesDao votesDao;
 	private UploadDao uploadDao;
 	private LabelSuggester labelSuggester;
-	
-	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester)
+	private int consensusLevel;
+
+	public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel)
 	{
 		this.phrasesDao = phrasesDao;
 		this.votesDao = votesDao;
 		this.uploadDao = uploadDao;
 		this.labelSuggester = labelSuggester;
+		this.consensusLevel = consensusLevel;
 	}
-	
+
 	@GET
     @Timed
 	@Path("/next")
@@ -119,19 +123,41 @@ public class PhrasesResource
 	@Path("completed")
     @Produces("text/csv")
 	@Timed
-    public Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
+    public synchronized Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller) {
         
-		 log.info("Caller {} downloading csv of completedPhrases {}",caller);
-		 
-		 
-		 List<PhraseVote> phraseVotes = phrasesDao.getUncompletedPhraseVotes();
-		 
-		 // TODO mark as complete those downloaded
-		 // TODO handle opposing votes. Need to only complete votes when clear majority for a particular label 
-		
-        
-        return Response.ok().entity(phraseVotes).build();
+		log.info("Caller {} marking phrases and downloading csv of completedPhrases {}",caller);
+
+		List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
+
+		GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(votesDao, phraseVotes, consensusLevel);
+		List<Phrase> completedPhrases = getPhrases.execute();
+
+		phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
+				 completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
+
+        return Response.ok().entity(completedPhrases).build();
     }
+
+	@DELETE
+	@Path("completed")
+	@Timed
+	public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller) {
+
+		log.info("Caller {} purging completed votes and phrases {}",caller);
+
+		List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
+		int amount = phraseIdentifiers.size();
+
+		votesDao.deleteAllVotesForPhrase(phraseIdentifiers);
+		phrasesDao.deleteCompletedPhrases(phraseIdentifiers);
+
+		log.info(amount + " phrases purged from database.");
+
+		return Response.ok().build();
+	}
+
+
+
 	
 	@POST
     @Timed

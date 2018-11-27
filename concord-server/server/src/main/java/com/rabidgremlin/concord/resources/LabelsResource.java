@@ -1,6 +1,8 @@
 package com.rabidgremlin.concord.resources;
 
+import java.beans.Transient;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,11 +72,18 @@ public class LabelsResource
 	@POST
 	@Path("bulk")
     @Consumes("text/csv")
+	@Transaction
     public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels)
 	{
 		log.info("Caller {} uploading csv of labels {}",caller, labels);
 
-		labelsDao.replaceLabels(labels);
+		labelsDao.deleteAllLabels();
+
+		List<Label> labelsToReplace = labels.stream()
+				.filter(label -> !label.getLabel().equals("label"))
+				.collect(Collectors.toList());
+
+		labelsDao.upsert(labelsToReplace);
 
         return Response.ok().build();
     }

@@ -3,6 +3,7 @@ package com.rabidgremlin.concord.config;
 import java.io.UnsupportedEncodingException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,19 +18,31 @@ public class ConcordServerConfiguration
 {  
   @NotEmpty
   private String jwtTokenSecret;
-   
+
+  @Min(value=1)
+  private int consensusLevel;
+
   @JsonProperty("jwtTokenSecret")
   public void setJwtTokenSecret(String secret)
   {
-    jwtTokenSecret = secret;
+	jwtTokenSecret = secret;
   }
-  
+
   public byte[] getJwtTokenSecret() throws UnsupportedEncodingException {
-    return jwtTokenSecret.getBytes("UTF-8");
-}
-  
-  
-    @Valid
+	return jwtTokenSecret.getBytes("UTF-8");
+  }
+
+	@JsonProperty("consensusLevel")
+	public void setConsensusLevel(int level)
+	{
+		consensusLevel = level;
+	}
+
+	public int getConsensusLevel() {
+		return consensusLevel;
+	}
+
+	@Valid
 	@NotNull
 	private DataSourceFactory database = new DataSourceFactory();
 

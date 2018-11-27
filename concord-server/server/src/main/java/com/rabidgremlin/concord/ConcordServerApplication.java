@@ -188,13 +188,13 @@ public class ConcordServerApplication
 	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
 	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
 	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
-	
-	
-    
-    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+
+	int consensusLevel = configuration.getConsensusLevel();
+
+	LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
-            jdbi.onDemand(UploadDao.class), labelsSuggester);
-    
+            jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
+
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
 

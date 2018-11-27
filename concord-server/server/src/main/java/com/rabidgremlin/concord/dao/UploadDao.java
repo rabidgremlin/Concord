@@ -37,7 +37,7 @@ public interface UploadDao {
                 .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
                 .collect(Collectors.toList());
 
-        votesDao().deleteAllVotesForPhrases(phraseIdsToVote);
+        votesDao().deleteAllVotesForPhrase(phraseIdsToVote);
     }
 }
 
