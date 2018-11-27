@@ -12,6 +12,7 @@ import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
 import com.rabidgremlin.concord.dao.UploadDao;
+import com.rabidgremlin.concord.plugin.InvalidConfigPropertiesException;
 import nz.co.airnz.convlabel.ConvLabelSuggester;
 import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -54,10 +55,15 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
 {
+
+  private Logger log = LoggerFactory.getLogger(ConcordServerApplication.class);
+
   public static void main(String[] args)
     throws Exception
   {
@@ -183,19 +189,27 @@ public class ConcordServerApplication
 		}
 	};
 
+    LabelSuggester labelsSuggester = null;
 
-
-//	// TODO: Clean this up with type system and wrap exceptions
-//	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
-//	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
-//	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
-
+    try
+    {
       Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
       Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class, HashMap.class);
-      LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore, configuration.getLabelSuggester().getConfigProperties());
+      labelsSuggester = (LabelSuggester) labelSuggesterConstructor.newInstance(systemLabelStore, configuration.getLabelSuggester().getConfigProperties());
+    }
+    catch (InvocationTargetException e)
+    {
+      if (e.getCause() instanceof InvalidConfigPropertiesException)
+      {
+        log.error("Invalid configuration provided for label suggestor", e);
+      }
+      else
+      {
+        log.error("Unknown error ");
+      }
+    }
 
-
-      LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
             jdbi.onDemand(UploadDao.class), labelsSuggester);
 
