@@ -199,14 +199,7 @@ public class ConcordServerApplication
     }
     catch (InvocationTargetException e)
     {
-      if (e.getCause() instanceof InvalidConfigPropertiesException)
-      {
-        log.error("Invalid configuration provided for label suggestor", e);
-      }
-      else
-      {
-        log.error("Unknown error ");
-      }
+      log.error("Error loading label suggester", e);
     }
 
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
