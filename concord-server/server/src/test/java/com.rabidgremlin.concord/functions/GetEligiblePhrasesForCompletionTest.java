@@ -1,26 +1,19 @@
 package com.rabidgremlin.concord.functions;
 
-import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
-import com.rabidgremlin.concord.api.PhraseVote;
-import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.VotesDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class GetEligiblePhrasesForCompletionTest
@@ -57,9 +50,7 @@ public class GetEligiblePhrasesForCompletionTest
 
             phraseVotes.add(new GroupedPhraseVote("126","CelineDion","And my heart will go on and on",1));
 
-
             functionUnderTest = new GetEligiblePhrasesForCompletion(votesDaoMock, phraseVotes, 2);
-
         }
 
         @Test
@@ -71,7 +62,6 @@ public class GetEligiblePhrasesForCompletionTest
 
             List<Phrase> result = functionUnderTest.execute();
 
-
             assertEquals(3, result.size());
 
             assertEquals("123",result.get(0).getPhraseId());
@@ -82,7 +72,6 @@ public class GetEligiblePhrasesForCompletionTest
 
             assertEquals("125",result.get(2).getPhraseId());
             assertEquals("EltonJohn",result.get(2).getLabel());
-
         }
 }
 
