@@ -2,11 +2,12 @@ package com.rabidgremlin.concord.plugin;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public abstract class LabelSuggester
 {
-	protected HashMap<String,Object> configProperties;
+	protected Map<String,Object> configProperties;
 	protected SystemLabelStore systemLabelStore;
 	
 	public LabelSuggester(SystemLabelStore systemLabelStore)
@@ -15,7 +16,7 @@ public abstract class LabelSuggester
 		this.systemLabelStore = systemLabelStore;
 	}
 	
-	public LabelSuggester(SystemLabelStore systemLabelStore, HashMap<String,Object> configProperties)
+	public LabelSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties)
 			throws InvalidConfigPropertiesException
 	{
 		if (configProperties.isEmpty())

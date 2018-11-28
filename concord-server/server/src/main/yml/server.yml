@@ -9,7 +9,7 @@ database:
 labelSuggester:
    class: nz.co.airnz.convlabel.ConvLabelSuggester
    config:
-     apiUrl: https://localhost:8080/
+     apiUrl: http://localhost:8080/
      bearerToken: 204CD838337F46F7A8EFDF4E50611361
 
 credentialsValidator:
