@@ -3,11 +3,13 @@ package com.rabidgremlin.concord.plugin.labelsuggesters;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;
 import com.rabidgremlin.concord.plugin.SystemLabelStore;
+import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,12 +38,13 @@ public class AllLabelsSuggesterTest
 
     }
 
-    // WIP
-//    public void canReturnSuggestedLabels()
-//    {
-//        when(labelStoreMock.getSystemLabels()).thenReturn(systemLabels);
-//
-//        List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(phrase);
-//    }
+    @Test
+    public void canReturnSuggestedLabels()
+    {
+        when(labelStoreMock.getSystemLabels()).thenReturn(systemLabels);
+
+        List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(phrase);
+        
+    }
 
 }

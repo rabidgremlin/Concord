@@ -3,9 +3,6 @@ package com.rabidgremlin.concord.plugin.labelsuggesters;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rabidgremlin.concord.api.Label;
-import com.rabidgremlin.concord.api.PossibleLabel;
-import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;

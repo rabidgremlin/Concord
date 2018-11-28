@@ -1,18 +1,19 @@
 package com.rabidgremlin.concord.resources;
 
-import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.PhrasesDao;
+import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 
 import javax.ws.rs.core.Response;
@@ -22,9 +23,10 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.*;
 
 public class PhrasesResourceTest
 {
@@ -48,6 +50,9 @@ public class PhrasesResourceTest
     @Mock
     LabelSuggester labelSuggestMock;
 
+    @Mock
+    UploadDao uploadDaoMock;
+
     @Before
     public void setUp()
     {
@@ -55,7 +60,9 @@ public class PhrasesResourceTest
         votesDaoMock = mock(VotesDao.class);
         labelSuggestMock = mock(LabelSuggester.class);
         callerMock = mock(Caller.class);
-        resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, labelSuggestMock);
+        uploadDaoMock = mock(UploadDao.class);
+
+        resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1);
 
         SuggestedLabel label1 = new SuggestedLabel("WhereTaxi","Where Taxi","Your taxi is ... minutes away.", 0.5);
         SuggestedLabel label2 = new SuggestedLabel("CancelTaxi","Cancel Taxi","Ok your Taxi has been ordered", 0.25);
@@ -108,36 +115,19 @@ public class PhrasesResourceTest
         assertThat(response, instanceOf(Response.class));
         assertEquals(404, response.getStatus());
         assertEquals("Not Found", response.getStatusInfo().toString());
-
     }
 
-//    // WIP
-//    @Test
-//    public void canVoteForAPhrase()
-//    {
-//        String phraseId = "1234";
-//        Label label = new Label();
-//        label.setLabel("OrderTaxi");
-//        label.setShortDescription("Order Taxi");
-//        label.setLongDescription("Where would you like your taxi to be sent ?");
-//
-//        Response response = resource.voteForPhrase(callerMock, phraseId, label);
-//    }
-//
-//    // WIP
-//    @Test
-//    public void canUploadCSVOfPhrases()
-//    {
-//        Response response = resource.uploadCsv(callerMock, unlabelledPhrases);
-//
-//    }
-//
-//    // WIP
-//    @Test
-//    public void canDownloadCSVOfPhrases()
-//    {
-//        Response response = resource.downloadCsv(callerMock);
-//    }
+    @Test
+    public void canUploadPhrases()
+    {
+        Response response = resource.uploadCsv(callerMock, unlabelledPhrases);
+
+        verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases);
+
+        assertThat(response, instanceOf(Response.class));
+        assertEquals(200, response.getStatus());
+        assertEquals("OK", response.getStatusInfo().toString());
+    }
 
 }
 

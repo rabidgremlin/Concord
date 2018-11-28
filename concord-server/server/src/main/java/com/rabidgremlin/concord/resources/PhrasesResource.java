@@ -19,7 +19,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
 import com.rabidgremlin.concord.dao.UploadDao;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
