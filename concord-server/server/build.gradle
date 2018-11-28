@@ -43,6 +43,13 @@ task dropDatabase(type: JavaExec) {
   main = 'com.rabidgremlin.concord.ConcordServerApplication'
 }
 
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+    }
+}
+
 repositories {    
     mavenCentral()
 }
