@@ -202,9 +202,11 @@ public class ConcordServerApplication
       log.error("Error loading label suggester", e);
     }
 
+    int consensusLevel = configuration.getConsensusLevel();
+
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
-            jdbi.onDemand(UploadDao.class), labelsSuggester);
+            jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
