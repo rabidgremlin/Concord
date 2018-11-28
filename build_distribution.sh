@@ -2,6 +2,7 @@
 
 # Build UI
 cd concord-ui
+npm install
 npm run build
 rm -rfv ../concord-server/server/src/main/resources/ui/*
 cp -rf build ../concord-server/server/src/main/resources/ui
