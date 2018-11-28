@@ -1,6 +1,6 @@
 package com.rabidgremlin.concord.plugin;
 
-public class SuggestedLabel 
+public class SuggestedLabel
 {
 	
 	private String label;

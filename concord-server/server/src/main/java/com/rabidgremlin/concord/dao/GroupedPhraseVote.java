@@ -11,6 +11,18 @@ public class GroupedPhraseVote {
 	private String label;
 	private String text;
 	private int voteCount;
+
+	public GroupedPhraseVote() {
+		// do nothing
+	}
+
+	public GroupedPhraseVote(String phraseId, String label, String text, int voteCount)
+	{
+		this.phraseId = phraseId;
+		this.label = label;
+		this.text = text;
+		this.voteCount = voteCount;
+	}
 	
 	
 	public String getPhraseId() {
