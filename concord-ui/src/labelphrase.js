@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getNextPhrase } from './api'
 import { voteForPhraseLabel } from './api'
-import { getAllLabels } from './api'
+import Searchbar from './searchbar'
 
 
 import {
@@ -16,8 +16,6 @@ import {
 } from 'rmwc/Card';
 
 import { Typography } from 'rmwc/Typography';
-import { Select } from '@rmwc/select';
-import { Button, ButtonIcon } from'@rmwc/button';
 
 import { Grid, GridCell } from 'rmwc/Grid';
 import { FormattedNumber, FormattedDate } from 'react-intl';
@@ -40,7 +38,6 @@ class LabelPhrase extends Component {
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
-    this.props.dispatch(getAllLabels());
   }
 
 
@@ -103,16 +100,10 @@ class LabelPhrase extends Component {
                 </GridCell>
 
               ))}
-
             </Grid>
-              <Select
-              style={{width: '300px'}}
-                label="Other labels"
-                outlined
-                placeholder=""
-                options={['Cookies', 'Pizza', 'Icecream']}
-              />
-              <Button outlined>LABEL PHRASE AS .....</Button>
+
+            < Searchbar />
+            
           </div>
         )
       } else {
