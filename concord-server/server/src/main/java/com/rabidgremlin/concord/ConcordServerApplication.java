@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import com.rabidgremlin.concord.dao.UploadDao;
 import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -187,12 +188,13 @@ public class ConcordServerApplication
 	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
 	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
 	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
-	
-	
-    
-    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
-    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class), labelsSuggester);
-    
+
+	int consensusLevel = configuration.getConsensusLevel();
+
+	LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
+            jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
+
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
 
