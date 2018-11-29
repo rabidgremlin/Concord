@@ -3,6 +3,7 @@ import { getAllLabels } from './api'
 import { connect } from 'react-redux'
 import { Select } from '@rmwc/select';
 import { Button, ButtonIcon } from'@rmwc/button';
+import './searchbar.css';
 
 function convertLabelDataToLabels(data)
 {
@@ -26,10 +27,11 @@ class Searchbar extends Component {
             if (this.props.labelData) {
                 let labels = convertLabelDataToLabels(this.props.labelData)
                 return (
-                    <div>
+                    <div className="searchBar">
                     <Select
+                    className="labelSelector"
                     onChange={evt => this.setState({value: evt.target.value})}
-                    style={{width: '400px'}}
+                    style={{minWidth: '250px'}}
                     label="Other labels"
                     outlined
                     placeholder=""
@@ -38,7 +40,7 @@ class Searchbar extends Component {
                     }
                     />
 
-                    <Button onClick={() => {this.props.makeVote(this.state.value)}} outlined>LABEL PHRASE</Button>
+                    <Button className='labelBtn' onClick={() => {this.props.makeVote(this.state.value)}} outlined>LABEL PHRASE</Button>
 
                     </div>
                 )
