@@ -12,6 +12,8 @@ import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
 import com.rabidgremlin.concord.dao.UploadDao;
+import com.rabidgremlin.concord.plugin.InvalidConfigPropertiesException;
+import nz.co.airnz.convlabel.ConvLabelSuggester;
 import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -53,10 +55,15 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
 {
+
+  private Logger log = LoggerFactory.getLogger(ConcordServerApplication.class);
+
   public static void main(String[] args)
     throws Exception
   {
@@ -146,52 +153,58 @@ public class ConcordServerApplication
   {
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
-    
-    environment.jersey().register(CsvMessageBodyProvider.class); 
-    
-    
+
+    environment.jersey().register(CsvMessageBodyProvider.class);
+
+
 	// TODO: Clean this up with type system and wrap exceptions
 	Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
 	Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
 	CredentialsValidator credentialsValidator = (CredentialsValidator)credentialsValidatorConstructor.newInstance(configuration.getCredentialsValidator().getConfigProperties());
 
-    
-    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));    
+
+    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));
     environment.jersey().register(new RedirectResource());
-    
+
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
-    
-    
+
+
     // TODO: Very ugly needs to be refactored out
     SystemLabelStore systemLabelStore = new SystemLabelStore() {
-		
+
 		@Override
 		public List<SystemLabel> getSystemLabels() {
 			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
-			
+
 			List<Label> labels = dao.getLabels();
 			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
-			
+
 			for (Label label: labels)
 			{
 				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
 			}
-			
+
 			return systemLabels;
 		}
 	};
-    
-       
-    
-	// TODO: Clean this up with type system and wrap exceptions
-	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
-	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
-	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
 
-	int consensusLevel = configuration.getConsensusLevel();
+    LabelSuggester labelsSuggester = null;
 
-	LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+    try
+    {
+      Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
+      Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class, HashMap.class);
+      labelsSuggester = (LabelSuggester) labelSuggesterConstructor.newInstance(systemLabelStore, configuration.getLabelSuggester().getConfigProperties());
+    }
+    catch (InvocationTargetException e)
+    {
+      log.error("Error loading label suggester", e);
+    }
+
+    int consensusLevel = configuration.getConsensusLevel();
+
+    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
             jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
 
