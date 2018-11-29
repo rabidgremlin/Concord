@@ -43,7 +43,7 @@ class LabelPhrase extends Component {
 
   makeVote(label) {
     //alert('voting ' + label + ' for ' + this.props.phraseData.id);
-
+    console.log(label);
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
 
     // HACk HACK need to move to react-thunk
@@ -102,8 +102,8 @@ class LabelPhrase extends Component {
               ))}
             </Grid>
 
-            < Searchbar />
-            
+            < Searchbar makeVote={(label) => this.makeVote(label)}  />
+
           </div>
         )
       } else {
