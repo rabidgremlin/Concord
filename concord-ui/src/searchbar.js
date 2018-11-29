@@ -48,6 +48,3 @@ class Searchbar extends Component {
 }
 
 export default connect((state) => ({ loading: state.label.loading, labelData: state.label.labelData }))(Searchbar);
-
-
-//onClick={() => { this.props.makeVote(this.state.label)}}

@@ -43,7 +43,6 @@ class LabelPhrase extends Component {
 
   makeVote(label) {
     //alert('voting ' + label + ' for ' + this.props.phraseData.id);
-    console.log(label);
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
 
     // HACk HACK need to move to react-thunk
@@ -62,7 +61,6 @@ class LabelPhrase extends Component {
       )
     } else {
       if (this.props.phraseData) {
-        console.log(this.props.labelData);
         return (
           <div>
             <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab icon='delete' style={{ bottom: '0.5rem' }} onClick={() => {
