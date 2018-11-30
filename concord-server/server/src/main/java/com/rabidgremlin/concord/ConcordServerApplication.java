@@ -3,10 +3,7 @@ package com.rabidgremlin.concord;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
@@ -194,7 +191,7 @@ public class ConcordServerApplication
     try
     {
       Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
-      Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class, HashMap.class);
+      Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class, Map.class);
       labelsSuggester = (LabelSuggester) labelSuggesterConstructor.newInstance(systemLabelStore, configuration.getLabelSuggester().getConfigProperties());
     }
     catch (InvocationTargetException e)
