@@ -9,6 +9,7 @@ import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
+import com.rabidgremlin.concord.plugin.UnableToGetSuggestionsException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
@@ -85,8 +86,7 @@ public class PhrasesResourceTest
     }
 
     @Test
-    public void shouldGetNextPhraseWhenPhraseIsAvailable()
-    {
+    public void shouldGetNextPhraseWhenPhraseIsAvailable() throws UnableToGetSuggestionsException {
 
         Phrase testPhrase = new Phrase();
         testPhrase.setText("Where is my taxi?");

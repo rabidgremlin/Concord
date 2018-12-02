@@ -88,7 +88,7 @@ public class PhrasesResource
 		try
 		{
 			List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(nextPhrase.getText());
-			ArrayList<PossibleLabel> possibleLabels = new ArrayList<PossibleLabel>();
+			ArrayList<PossibleLabel> possibleLabels = new ArrayList<>();
 
 			for (SuggestedLabel suggestedLabel:suggestedLabels)
 			{
