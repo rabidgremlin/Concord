@@ -3,14 +3,16 @@ package com.rabidgremlin.concord;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
 import com.rabidgremlin.concord.dao.UploadDao;
-import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -20,7 +22,6 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
 
-import com.amazonaws.services.logs.AWSLogs;
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 
 import io.dropwizard.Application;
@@ -46,15 +47,19 @@ import com.rabidgremlin.concord.plugin.CredentialsValidator;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SystemLabel;
 import com.rabidgremlin.concord.plugin.SystemLabelStore;
-import com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester;
 import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
 {
+
+  private Logger log = LoggerFactory.getLogger(ConcordServerApplication.class);
+
   public static void main(String[] args)
     throws Exception
   {
@@ -139,47 +144,58 @@ public class ConcordServerApplication
   {
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
-    
-    environment.jersey().register(CsvMessageBodyProvider.class); 
-    
-    
+
+    environment.jersey().register(CsvMessageBodyProvider.class);
+
+
 	// TODO: Clean this up with type system and wrap exceptions
 	Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
 	Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
 	CredentialsValidator credentialsValidator = (CredentialsValidator)credentialsValidatorConstructor.newInstance(configuration.getCredentialsValidator().getConfigProperties());
 
-    
-    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));    
+
+    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));
     environment.jersey().register(new RedirectResource());
-    
+
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
-    
 
-    SystemLabelStore systemLabelStore = () -> {
-        LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
-        List<Label> labels = dao.getLabels();
-        ArrayList<SystemLabel> systemLabels = new ArrayList<>();
+    // TODO: Very ugly needs to be refactored out
+    SystemLabelStore systemLabelStore = new SystemLabelStore() {
 
-        for (Label label: labels)
-        {
-            systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
-        }
+		@Override
+		public List<SystemLabel> getSystemLabels() {
+			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
-        return systemLabels;
-    };
-    
-       
-    
-	// TODO: Clean this up with type system and wrap exceptions
-	Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
-	Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class);
-	LabelSuggester labelsSuggester = (LabelSuggester)labelSuggesterConstructor.newInstance(systemLabelStore);
+			List<Label> labels = dao.getLabels();
+			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
 
-	int consensusLevel = configuration.getConsensusLevel();
+			for (Label label: labels)
+			{
+				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+			}
 
-	LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
+			return systemLabels;
+		}
+	};
+
+    LabelSuggester labelsSuggester = null;
+
+    try
+    {
+      Class labelSuggesterClass = Class.forName(configuration.getLabelSuggester().getClassName());
+      Constructor labelSuggesterConstructor = labelSuggesterClass.getConstructor(SystemLabelStore.class, Map.class);
+      labelsSuggester = (LabelSuggester) labelSuggesterConstructor.newInstance(systemLabelStore, configuration.getLabelSuggester().getConfigProperties());
+    }
+    catch (InvocationTargetException e)
+    {
+      log.error("Error loading label suggester", e);
+    }
+
+    int consensusLevel = configuration.getConsensusLevel();
+
+    LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
             jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
 

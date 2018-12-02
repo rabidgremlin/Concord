@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getNextPhrase } from './api'
 import { voteForPhraseLabel } from './api'
+import Searchbar from './searchbar'
 
 
 import {
@@ -15,7 +16,6 @@ import {
 } from 'rmwc/Card';
 
 import { Typography } from 'rmwc/Typography';
-
 
 import { Grid, GridCell } from 'rmwc/Grid';
 import { FormattedNumber, FormattedDate } from 'react-intl';
@@ -43,7 +43,6 @@ class LabelPhrase extends Component {
 
   makeVote(label) {
     //alert('voting ' + label + ' for ' + this.props.phraseData.id);
-
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
 
     // HACk HACK need to move to react-thunk
@@ -99,8 +98,9 @@ class LabelPhrase extends Component {
                 </GridCell>
 
               ))}
-
             </Grid>
+
+            < Searchbar makeVote={(label) => this.makeVote(label)}  />
 
           </div>
         )
@@ -130,3 +130,5 @@ export default connect((state) => ({ error: state.nextPhrase.error, loading: sta
                 </GridTileSecondary>
               </GridTile>
               */
+
+

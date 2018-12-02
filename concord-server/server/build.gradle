@@ -56,6 +56,9 @@ repositories {
 
 
 dependencies {
+
+    compile files('libs/conv-label-suggestor-1.0-SNAPSHOT.jar')
+
     compile 'com.rabidgremlin.concord:concord-plugin:0.0.1'
     compile 'io.dropwizard:dropwizard-core:1.3.0'
     compile "io.dropwizard:dropwizard-assets:1.3.0"
@@ -72,7 +75,9 @@ dependencies {
     compile 'io.github.binout:jaxrs-csv:0.9'
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.squareup.retrofit2:converter-jackson:2.4.0'
-    
+    compile 'com.squareup.okhttp3:okhttp:3.12.0'
+    compile "com.squareup.okhttp3:logging-interceptor:3.12.0"
+
     
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:2.23.4'
