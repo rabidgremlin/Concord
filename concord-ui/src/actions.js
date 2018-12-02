@@ -47,3 +47,17 @@ export const callVoteForPhraseLabelFailed = (error)=> ({
 export const callVoteForPhraseLabelSucceeded = ()=> ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED'
 })
+
+export const callGetAllLabels = () => ({
+    type: 'CALL_GET_ALL_LABELS'
+})
+
+export const callGetAllLabelsFailed = (error) => ({
+    type: 'CALL_GET_ALL_LABELS_FAILED',
+    error
+})
+
+export const callGetAllLabelsSucceeded = (labelData) => ({
+    type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
+    labelData
+})

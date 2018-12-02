@@ -13,6 +13,11 @@ import { callVoteForPhraseLabel } from './actions'
 import { callVoteForPhraseLabelSucceeded } from './actions'
 import { callVoteForPhraseLabelFailed } from './actions'
 
+import { callGetAllLabels } from './actions'
+import { callGetAllLabelsSucceeded } from './actions'
+import { callGetAllLabelsFailed } from './actions'
+
+
 export function createSession(userId, password) {
     return (dispatch) => {
         dispatch(callCreateSession());
@@ -69,6 +74,23 @@ export function voteForPhraseLabel(phraseId,label) {
                 //dispatch(itemsIsLoading(false));
                 dispatch(callVoteForPhraseLabelFailed(err));
             });
+    }
+};
+
+export function getAllLabels() {
+    return (dispatch) => {
+        dispatch(callGetAllLabels());
+        request
+            .get('/api/labels')
+            .set('Accept', 'application/json')
+            .then((res) => {
+            const data = JSON.parse(res.text)
+            return data;
+        })
+        .then((data) => dispatch(callGetAllLabelsSucceeded(data)))
+        .catch((err) => {
+            dispatch(callGetAllLabelsFailed(err));
+        });
     }
 };
 

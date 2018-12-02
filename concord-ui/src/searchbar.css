@@ -1,0 +1,15 @@
+
+.searchBar {
+    padding-top: 50px; 
+    margin: 0 auto;
+    max-width: 700px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.labelBtn {
+    margin-left: 20px;
+    height: 55px;
+}  
+
