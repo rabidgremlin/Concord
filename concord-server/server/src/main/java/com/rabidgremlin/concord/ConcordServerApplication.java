@@ -162,23 +162,19 @@ public class ConcordServerApplication
 
 
     // TODO: Very ugly needs to be refactored out
-    SystemLabelStore systemLabelStore = new SystemLabelStore() {
+    SystemLabelStore systemLabelStore = () -> {
+        LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
-		@Override
-		public List<SystemLabel> getSystemLabels() {
-			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
+        List<Label> labels = dao.getLabels();
+        ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
 
-			List<Label> labels = dao.getLabels();
-			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
+        for (Label label: labels)
+        {
+            systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+        }
 
-			for (Label label: labels)
-			{
-				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
-			}
-
-			return systemLabels;
-		}
-	};
+        return systemLabels;
+    };
 
     LabelSuggester labelsSuggester = null;
 
