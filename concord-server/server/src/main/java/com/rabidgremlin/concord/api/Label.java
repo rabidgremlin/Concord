@@ -10,15 +10,18 @@ public class Label
 	private String shortDescription;
 	private String longDescription;
 	
-	
-	
-	
-	/*public Label(String label, String shortDescription, String longDescription) 
-	{	
+
+	public Label(String label, String shortDescription, String longDescription)
+	{
 		this.label = label;
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;
-	}*/
+	}
+
+	public Label()
+	{
+
+	}
 
 	public String getLabel() {
 		return label;

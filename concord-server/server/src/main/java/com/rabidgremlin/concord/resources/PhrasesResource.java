@@ -20,7 +20,6 @@ import javax.ws.rs.core.UriInfo;
 import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.plugin.UnableToGetSuggestionsException;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +77,7 @@ public class PhrasesResource
 	   {
 		   return Response.status(Status.NOT_FOUND).build();
 	   }
-
+	   
 
 	   PhraseToLabel phraseToLabel = new PhraseToLabel();
 	   phraseToLabel.setId(nextPhrase.getPhraseId());
@@ -89,7 +88,7 @@ public class PhrasesResource
 		try
 		{
 			List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(nextPhrase.getText());
-			ArrayList<PossibleLabel> possibleLabels = new ArrayList<PossibleLabel>();
+			ArrayList<PossibleLabel> possibleLabels = new ArrayList<>();
 
 			for (SuggestedLabel suggestedLabel:suggestedLabels)
 			{

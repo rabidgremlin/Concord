@@ -3,15 +3,16 @@ package com.rabidgremlin.concord;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
 import com.rabidgremlin.concord.dao.UploadDao;
-import com.rabidgremlin.concord.plugin.InvalidConfigPropertiesException;
-import nz.co.airnz.convlabel.ConvLabelSuggester;
-import org.apache.http.auth.Credentials;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -21,7 +22,6 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
 
-import com.amazonaws.services.logs.AWSLogs;
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 
 import io.dropwizard.Application;
@@ -47,7 +47,6 @@ import com.rabidgremlin.concord.plugin.CredentialsValidator;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SystemLabel;
 import com.rabidgremlin.concord.plugin.SystemLabelStore;
-import com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester;
 import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
@@ -106,13 +105,8 @@ public class ConcordServerApplication
   private void configureAssetsSecurityHeaders(Environment environment)
   {
     Dynamic filter = environment.servlets().addFilter("AssetsSecurityHeaders", AssetsSecurityHeadersFilter.class);
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.html");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.css");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.js");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.png");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.ttf");
-    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.ico");
+    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true,
+            "/","*.html","*.css","*.js","*.png","*.ttf","*.ico");
   }
 
   private void setupJwtAuth(ConcordServerConfiguration configuration,
@@ -168,23 +162,19 @@ public class ConcordServerApplication
 
 
     // TODO: Very ugly needs to be refactored out
-    SystemLabelStore systemLabelStore = new SystemLabelStore() {
+    SystemLabelStore systemLabelStore = () -> {
+        LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
-		@Override
-		public List<SystemLabel> getSystemLabels() {
-			LabelsDao dao = jdbi.onDemand(LabelsDao.class);
+        List<Label> labels = dao.getLabels();
+        ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
 
-			List<Label> labels = dao.getLabels();
-			ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
+        for (Label label: labels)
+        {
+            systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+        }
 
-			for (Label label: labels)
-			{
-				systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
-			}
-
-			return systemLabels;
-		}
-	};
+        return systemLabels;
+    };
 
     LabelSuggester labelsSuggester = null;
 
