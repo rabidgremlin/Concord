@@ -1,5 +1,4 @@
 import reducer from './error'
-//import * as types from '../../constants/ActionTypes'
 
 describe('error reducer', () => {
 
