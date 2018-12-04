@@ -14,7 +14,6 @@ describe('login', () => {
     const login = shallow(<Login />);
 
     it('renders without crashing', () => {
-        console.log(login.debug());
         expect(login.find(Login));
         expect(login.find(Grid).length).toBe(1);
         expect(login.find(Grid).containsMatchingElement(Card));

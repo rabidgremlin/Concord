@@ -44,7 +44,6 @@ export class App extends Component {
 
 
   render() {
-    console.log(this.props.logged_in);
     if (!this.props.logged_in) {
       return (
         <div>

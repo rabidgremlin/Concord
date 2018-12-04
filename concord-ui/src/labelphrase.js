@@ -31,7 +31,7 @@ import {
 
 
 
-class LabelPhrase extends Component {
+export class LabelPhrase extends Component {
   //state = { dirty: false }
   //handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
 
