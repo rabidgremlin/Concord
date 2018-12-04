@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 
 import { createSession } from './api'
 
-class Login extends Component {
+export class Login extends Component {
   state = { email: "", password: "", invalidData: true }
   handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
 
