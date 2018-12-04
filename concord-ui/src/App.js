@@ -10,10 +10,10 @@ import {
   Redirect
 } from 'react-router-dom'
 
-import Navbar from './navbar'
-import AppDrawer from './drawer'
-import Login from './login'
-import LabelPhrase from './labelphrase'
+import Navbar from './components/navbar'
+import AppDrawer from './components/drawer'
+import Login from './components/login'
+import LabelPhrase from './components/labelphrase'
 import { SimpleDialog } from 'rmwc/Dialog';
 
 
