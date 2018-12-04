@@ -22,7 +22,7 @@ import { killSession } from './actions'
 
 
 
-class App extends Component {
+export class App extends Component {
   state = { drawer: false, login: false }
 
   drawerToggle = () => { this.setState({ ...this.state, drawer: !this.state.drawer }); console.log("d toggle"); }
