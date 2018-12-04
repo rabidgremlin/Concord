@@ -1,5 +1,8 @@
 //https://redux.js.org/basics/example-todo-list
 
+/**
+ * HANDLE SESSION
+ */
 
 export const callCreateSession = () => ({
     type: 'CALL_CREATE_SESSION'
@@ -19,6 +22,9 @@ export const killSession = () => ({
     type: 'KILL_SESSION'
 })
 
+/**
+ * HANDLE NEXT PHRASE
+ */
 
 export const callGetNextPhrase = () => ({
     type: 'CALL_GET_NEXT_PHRASE'   
@@ -34,6 +40,10 @@ export const callGetNextPhraseSucceeded = (phraseData)=> ({
     phraseData   
 })
 
+/**
+ * HANDLE VOTES
+ */
+
 
 export const callVoteForPhraseLabel = () => ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL'
@@ -47,6 +57,10 @@ export const callVoteForPhraseLabelFailed = (error)=> ({
 export const callVoteForPhraseLabelSucceeded = ()=> ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED'
 })
+
+/**
+ * HANLDE LABELS
+ */
 
 export const callGetAllLabels = () => ({
     type: 'CALL_GET_ALL_LABELS'
