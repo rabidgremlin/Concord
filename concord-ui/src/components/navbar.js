@@ -4,7 +4,7 @@ import {Toolbar, ToolbarRow, ToolbarSection, ToolbarMenuIcon, ToolbarTitle, Tool
 export default class Navbar extends Component {
   render() {
     return (
-      <Toolbar style={{borderRadius: '5px'}} className="default-green">
+      <Toolbar style={{borderRadius: '5px'}}>
         <ToolbarRow>
           <ToolbarSection alignStart>           
             <ToolbarTitle style={{fontSize: '30px'}}>Concord</ToolbarTitle>

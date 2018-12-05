@@ -15,7 +15,7 @@ import AppDrawer from './components/drawer'
 import Login from './components/login'
 import LabelPhrase from './components/labelphrase'
 import { SimpleDialog } from 'rmwc/Dialog';
-
+import { ThemeProvider } from '@rmwc/theme';
 
 import { connect } from 'react-redux'
 import { killSession } from './actions'
@@ -41,7 +41,7 @@ export class App extends Component {
         </div>
      );
    }*/
-
+ 
 
   render() {
     console.log(this.props.logged_in);
@@ -60,6 +60,10 @@ export class App extends Component {
     } else {
       return (
         <div>
+            <ThemeProvider options={{
+              primary: 'lightseagreen',
+              secondary: 'black'
+            }}>
           <Navbar logout={this.logout} />
           <Router>
             <Switch>
@@ -72,6 +76,7 @@ export class App extends Component {
             open={this.props.hasError}
             cancelLabel={null}
           />
+          </ThemeProvider>
         </div>
       )
     }

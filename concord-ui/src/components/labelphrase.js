@@ -102,7 +102,7 @@ export class LabelPhrase extends Component {
                       </div>
                     </CardPrimaryAction>
                     <CardActions fullBleed>
-                      <CardAction className="default-green-font" onClick={() => {
+                      <CardAction onClick={() => {
                         this.makeVote(label.label);
                       }}>Label phrase <Icon icon="arrow_forward" /></CardAction>
                     </CardActions>

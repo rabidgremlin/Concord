@@ -11,7 +11,7 @@
     flex-wrap: wrap;
 }
 
-.labelBtn {
+button.labelBtn {
     margin-left: 20px;
     height: 55px;
     padding: 10 5 5 5;
