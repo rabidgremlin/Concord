@@ -1,3 +1,11 @@
+ .default-green {
+     background-color: lightseagreen !important;
+ }
+
+ .default-green-font {
+     color: lightseagreen !important;
+ }
+ 
  h2.mdc-typography--headline6 {
     word-wrap: break-word;
 }

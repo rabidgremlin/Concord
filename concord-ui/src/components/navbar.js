@@ -4,10 +4,10 @@ import {Toolbar, ToolbarRow, ToolbarSection, ToolbarMenuIcon, ToolbarTitle, Tool
 export default class Navbar extends Component {
   render() {
     return (
-      <Toolbar>
+      <Toolbar style={{borderRadius: '5px'}} className="default-green">
         <ToolbarRow>
           <ToolbarSection alignStart>           
-            <ToolbarTitle>Concord</ToolbarTitle>
+            <ToolbarTitle style={{fontSize: '30px'}}>Concord</ToolbarTitle>
           </ToolbarSection>
           <ToolbarSection alignEnd>
             <ToolbarIcon icon="power_settings_new" onClick={this.props.logout}/>

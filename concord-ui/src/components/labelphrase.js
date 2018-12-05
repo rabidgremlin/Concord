@@ -42,7 +42,6 @@ export class LabelPhrase extends Component {
 
 
   makeVote(label) {
-    //alert('voting ' + label + ' for ' + this.props.phraseData.id);
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
 
     // HACk HACK need to move to react-thunk
@@ -66,7 +65,7 @@ export class LabelPhrase extends Component {
             <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}>
             
             <div className="tooltip">
-              <span class="tooltiptext">Delete</span>
+              <span className="tooltiptext">Delete</span>
               <Fab icon='delete' className="tooltip" style={{ bottom: '0.5rem' }} onClick={() => {
                 this.makeVote('TRASH');
               }} />
@@ -75,7 +74,7 @@ export class LabelPhrase extends Component {
             <br />
 
             <div className="tooltip">
-              <span class="tooltiptext">Skip</span>
+              <span className="tooltiptext">Skip</span>
               <Fab icon='skip_next' mini onClick={() => {
                 this.makeVote('SKIPPED');
               }}/></div>
@@ -103,7 +102,7 @@ export class LabelPhrase extends Component {
                       </div>
                     </CardPrimaryAction>
                     <CardActions fullBleed>
-                      <CardAction onClick={() => {
+                      <CardAction className="default-green-font" onClick={() => {
                         this.makeVote(label.label);
                       }}>Label phrase <Icon icon="arrow_forward" /></CardAction>
                     </CardActions>
