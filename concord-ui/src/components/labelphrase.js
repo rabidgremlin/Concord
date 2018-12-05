@@ -63,15 +63,28 @@ export class LabelPhrase extends Component {
       if (this.props.phraseData) {
         return (
           <div>
-            <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}><Fab icon='delete' style={{ bottom: '0.5rem' }} onClick={() => {
-              this.makeVote('TRASH');
-            }}/><br /><Fab icon='skip_next' mini onClick={() => {
-              this.makeVote('SKIPPED');
-            }}/></div>
-            <div><Typography style={{ width: '100%', textAlign: 'center' }} use="headline3" tag="h1">{this.props.phraseData.phrase}</Typography></div>
+            <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}>
+            
+            <div className="tooltip">
+              <span class="tooltiptext">Delete</span>
+              <Fab icon='delete' className="tooltip" style={{ bottom: '0.5rem' }} onClick={() => {
+                this.makeVote('TRASH');
+              }} />
+            </div>
+
+            <br />
+
+            <div className="tooltip">
+              <span class="tooltiptext">Skip</span>
+              <Fab icon='skip_next' mini onClick={() => {
+                this.makeVote('SKIPPED');
+              }}/></div>
+            </div>
+            
+            <div><Typography style={{ width: '100%', textAlign: 'center' }} use="headline3" tag="h1" className="phrase-msg">{this.props.phraseData.phrase}</Typography></div>
             <Grid>
               {this.props.phraseData.possibleLabels.map((label, i) => (
-                <GridCell span="3" phone="4" tablet="2" desktop="3" key={i}>
+                <GridCell span="3" phone="4" tablet="2" desktop="4" key={i}>
                   <Card style={{ width: '100%' }}>
                     <CardPrimaryAction onClick={() => {
                       this.makeVote(label.label);
@@ -92,7 +105,7 @@ export class LabelPhrase extends Component {
                     <CardActions fullBleed>
                       <CardAction onClick={() => {
                         this.makeVote(label.label);
-                      }}>Label phrase as {label.label} <Icon icon="arrow_forward" /></CardAction>
+                      }}>Label phrase <Icon icon="arrow_forward" /></CardAction>
                     </CardActions>
                   </Card>
                 </GridCell>
