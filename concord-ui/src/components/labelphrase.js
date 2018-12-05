@@ -80,7 +80,7 @@ export class LabelPhrase extends Component {
                 this.makeVote('SKIPPED');
               }}/></div>
             </div>
-            
+
             <div><Typography style={{ width: '100%', textAlign: 'center' }} use="headline3" tag="h1" className="phrase-msg">{this.props.phraseData.phrase}</Typography></div>
             <Grid>
               {this.props.phraseData.possibleLabels.map((label, i) => (
@@ -111,9 +111,15 @@ export class LabelPhrase extends Component {
                 </GridCell>
 
               ))}
-            </Grid>
 
-            < Searchbar makeVote={(label) => this.makeVote(label)}  />
+            <GridCell span="3" phone="4" tablet="2" desktop="4" key={"searchbar"}>
+            <Card style={{minWidth: '300px'}}>
+              < Searchbar makeVote={(label) => this.makeVote(label)}  />
+            </Card>
+            </GridCell>
+
+
+            </Grid>
 
           </div>
         )
