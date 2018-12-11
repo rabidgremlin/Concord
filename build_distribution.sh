@@ -18,10 +18,4 @@ chmod +x gradlew
 echo "Building Server...."
 ./gradlew build || exit 1
 
-# Package distribution, configuration into zip
-echo "Building distribution zip...."
-project_version=$(./gradlew properties -q | grep "version:" | awk '{print $2}' | tr -d '[:space:]')
-mkdir ../../dist
-zip -j ../../dist/concord-$project_version.zip build/libs/concord-server-$project_version-all.jar src/main/yml/server.yml || exit 1
-
-echo "Done."
+echo "Done. See concord-server/server/build/distributions"
