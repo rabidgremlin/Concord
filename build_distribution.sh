@@ -3,7 +3,7 @@
 echo "Building Concord distribution..."
 
 # Build UI
-#cd concord-ui
+cd concord-ui
 #echo "Install UI dependencies..."
 #npm install || exit 1
 
