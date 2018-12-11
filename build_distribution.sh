@@ -22,6 +22,6 @@ echo "Building Server...."
 echo "Building distribution zip...."
 project_version=$(./gradlew properties -q | grep "version:" | awk '{print $2}' | tr -d '[:space:]')
 mkdir ../../dist
-zip ../../dist/concord-$project_version.zip build/libs/concord-server-$project_version-all.jar src/main/yml/server.yml || exit 1
+zip -j ../../dist/concord-$project_version.zip build/libs/concord-server-$project_version-all.jar src/main/yml/server.yml || exit 1
 
 echo "Done."
