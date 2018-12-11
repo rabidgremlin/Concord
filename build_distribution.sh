@@ -5,7 +5,7 @@ echo "Building Concord distribution..."
 # Build UI
 cd concord-ui
 echo "Install UI dependencies..."
-npm install || exit 1
+npm install --verbose || exit 1
 
 echo "Building UI..."
 npm run build || exit 1
