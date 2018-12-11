@@ -3,14 +3,14 @@
 echo "Building Concord distribution..."
 
 # Build UI
-cd concord-ui
-echo "Install UI dependencies..."
-npm install --verbose || exit 1
+#cd concord-ui
+#echo "Install UI dependencies..."
+#npm install || exit 1
 
-echo "Building UI..."
-npm run build || exit 1
-rm -rfv ../concord-server/server/src/main/resources/ui/*
-cp -rf build ../concord-server/server/src/main/resources/ui
+#echo "Building UI..."
+#npm run build || exit 1
+#rm -rfv ../concord-server/server/src/main/resources/ui/*
+#cp -rf build ../concord-server/server/src/main/resources/ui
 
 # Build server
 cd ../concord-server/server
