@@ -61,7 +61,7 @@ class App extends Component {
       return (
         <div>
           <Navbar logout={this.logout} />
-          <Router>
+          <Router basename={process.env.PUBLIC_URL}>
             <Switch>
               <Route exact path="/" component={LabelPhrase} />
             </Switch>
