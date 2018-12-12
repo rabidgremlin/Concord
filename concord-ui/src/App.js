@@ -43,11 +43,12 @@ class App extends Component {
    }*/
 
 
-  render() {
-    console.log(this.props.logged_in);
+  render() {    
     if (!this.props.logged_in) {
-      return (
+      return (        
         <div>
+          <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
+          <small>Public URL is <b>{process.env.PUBLIC_URL}</b></small>
           <Login />
           <SimpleDialog
             title="Error"
@@ -60,6 +61,8 @@ class App extends Component {
     } else {
       return (
         <div>
+          <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
+          <small>Public URL is <b>{process.env.PUBLIC_URL}</b></small>
           <Navbar logout={this.logout} />
           <Router basename={process.env.PUBLIC_URL}>
             <Switch>
