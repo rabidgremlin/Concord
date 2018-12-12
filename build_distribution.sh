@@ -10,7 +10,7 @@ npm install || exit 1
 echo "Building UI..."
 npm run build || exit 1
 rm -rfv ../concord-server/server/src/main/resources/ui/*
-cp -rf build ../concord-server/server/src/main/resources/ui
+cp -rf build/* ../concord-server/server/src/main/resources/ui
 
 # Build server
 echo "Building Server...."
