@@ -1,0 +1,49 @@
+ h2.mdc-typography--headline6 {
+    word-wrap: break-word;
+}
+
+h1.phrase-msg {
+    font-size: 2.5em;
+}
+
+
+/*  following code partially borrowed from w3schools */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 60px;
+    background-color: darkgray;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    font-size: 12px;
+    position: absolute;
+    z-index: 1;
+    left: -70px;
+    top: 10px;
+}
+
+.tooltip:hover .tooltiptext {
+    transition-delay: 0.4s;
+    visibility: visible;
+}
+
+
+/*
+* Media queries ##############
+*/
+
+@media only screen and (max-width: 1400px) {
+    h2.mdc-typography--headline6 {
+        font-size: 1rem !important;
+    }
+    h1.phrase-msg {
+        font-size: 2em;
+    }
+} 

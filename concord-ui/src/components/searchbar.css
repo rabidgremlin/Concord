@@ -1,6 +1,10 @@
 
+/*
+* Styling for the Searchbar component.
+*/
+
 .searchBar {
-    padding-top: 50px; 
+    padding: 30px 10px 30px 10px;
     margin: 0 auto;
     max-width: 700px;
     display: flex;
@@ -8,8 +12,13 @@
     flex-wrap: wrap;
 }
 
-.labelBtn {
+button.labelBtn {
     margin-left: 20px;
     height: 55px;
+    padding: 10 5 5 5;
+    margin-top: 10px;
 }  
 
+select.mdc-select--outlined .mdc-select__native-control {
+    min-width: 200px;
+}
