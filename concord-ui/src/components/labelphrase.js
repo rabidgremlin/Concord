@@ -62,6 +62,7 @@ export class LabelPhrase extends Component {
       if (this.props.phraseData) {
         return (
           <div>
+
             <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: '1', textAlign: 'center' }}>
             
             <div className="tooltip">
@@ -84,6 +85,7 @@ export class LabelPhrase extends Component {
             <Grid>
               {this.props.phraseData.possibleLabels.map((label, i) => (
                 <GridCell span="3" phone="4" tablet="2" desktop="4" key={i}>
+
                   <Card style={{ width: '100%' }}>
                     <CardPrimaryAction onClick={() => {
                       this.makeVote(label.label);
@@ -105,6 +107,7 @@ export class LabelPhrase extends Component {
                       <CardAction onClick={() => {
                         this.makeVote(label.label);
                       }}>Label phrase <Icon icon="arrow_forward" /></CardAction>
+
                     </CardActions>
                   </Card>
                 </GridCell>
@@ -119,7 +122,6 @@ export class LabelPhrase extends Component {
 
 
             </Grid>
-
           </div>
         )
       } else {
