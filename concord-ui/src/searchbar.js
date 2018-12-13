@@ -10,7 +10,7 @@ function convertLabelDataToLabels(data)
     return data.map(x => x['label'])
 }
 
-class Searchbar extends Component {
+export class Searchbar extends Component {
 
     componentDidMount() {
         this.props.dispatch(getAllLabels());

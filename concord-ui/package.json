@@ -22,10 +22,8 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:9000",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "devDependencies": {
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0"
+  }
 }
