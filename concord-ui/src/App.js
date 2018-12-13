@@ -43,11 +43,10 @@ export class App extends Component {
    }*/
 
 
-  render() {
-    console.log(this.props.logged_in);
+  render() {    
     if (!this.props.logged_in) {
-      return (
-        <div>
+      return (        
+        <div>          
           <Login />
           <SimpleDialog
             title="Error"
@@ -59,9 +58,9 @@ export class App extends Component {
       )
     } else {
       return (
-        <div>
+        <div>          
           <Navbar logout={this.logout} />
-          <Router>
+          <Router basename={process.env.PUBLIC_URL}>
             <Switch>
               <Route exact path="/" component={LabelPhrase} />
             </Switch>
