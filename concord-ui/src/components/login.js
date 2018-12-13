@@ -8,7 +8,7 @@ import { Button } from 'rmwc/Button';
 import { connect } from 'react-redux'
 //import { callCreateSession } from './actions'
 
-import { createSession } from './api'
+import { createSession } from '../api'
 
 export class Login extends Component {
   state = { email: "", password: "", invalidData: true }

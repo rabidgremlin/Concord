@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getAllLabels } from './api'
+import { getAllLabels } from '../api'
 import { connect } from 'react-redux'
 import { Select } from '@rmwc/select';
 import { Button, ButtonIcon } from'@rmwc/button';

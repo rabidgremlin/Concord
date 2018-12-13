@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getNextPhrase } from './api'
-import { voteForPhraseLabel } from './api'
+import { getNextPhrase } from '../api'
+import { voteForPhraseLabel } from '../api'
 import Searchbar from './searchbar'
 
 
