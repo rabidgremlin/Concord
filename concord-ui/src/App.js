@@ -46,9 +46,7 @@ class App extends Component {
   render() {    
     if (!this.props.logged_in) {
       return (        
-        <div>
-          <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
-          <small>Public URL is <b>{process.env.PUBLIC_URL}</b></small>
+        <div>          
           <Login />
           <SimpleDialog
             title="Error"
@@ -60,9 +58,7 @@ class App extends Component {
       )
     } else {
       return (
-        <div>
-          <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
-          <small>Public URL is <b>{process.env.PUBLIC_URL}</b></small>
+        <div>          
           <Navbar logout={this.logout} />
           <Router basename={process.env.PUBLIC_URL}>
             <Switch>
