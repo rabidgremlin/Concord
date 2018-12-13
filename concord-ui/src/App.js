@@ -46,7 +46,11 @@ export class App extends Component {
   render() {    
     if (!this.props.logged_in) {
       return (        
-        <div>          
+        <div>        
+          <ThemeProvider options={{
+              primary: '#3f51b5',
+              secondary: 'black'
+            }}>  
           <Login />
           <SimpleDialog
             title="Error"
@@ -54,13 +58,14 @@ export class App extends Component {
             open={this.props.hasError}
             cancelLabel={null}
           />
+          </ThemeProvider>
         </div>
       )
     } else {
       return (
         <div>
             <ThemeProvider options={{
-              primary: 'lightseagreen',
+              primary: '#3f51b5',
               secondary: 'black'
             }}>
           <Navbar logout={this.logout} />
