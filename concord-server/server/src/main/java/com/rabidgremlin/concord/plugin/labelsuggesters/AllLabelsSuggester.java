@@ -1,12 +1,12 @@
 package com.rabidgremlin.concord.plugin.labelsuggesters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;
 import com.rabidgremlin.concord.plugin.SystemLabelStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AllLabelsSuggester extends LabelSuggester 
 {
@@ -23,7 +23,7 @@ public class AllLabelsSuggester extends LabelSuggester
 		
 		Double score = 1.0d / (double)allLabels.size();
 		
-		ArrayList<SuggestedLabel> suggestedLabels = new ArrayList<>();
+		List<SuggestedLabel> suggestedLabels = new ArrayList<>();
 		
 		for(SystemLabel label: allLabels)
 		{

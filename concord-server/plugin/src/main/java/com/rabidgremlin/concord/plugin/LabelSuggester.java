@@ -4,15 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Represents the label suggester for a plugin.
+ * Responsible for returning a list of labels for a given phrase which users will then vote on.
+ *
+ * Example: {@link com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester}
+ * Example: {@link com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester}
+ */
 public abstract class LabelSuggester
 {
-	protected Map<String,Object> configProperties;
-	protected SystemLabelStore systemLabelStore;
+	protected final Map<String,Object> configProperties;
+
+	protected final SystemLabelStore systemLabelStore;
 	
 	public LabelSuggester(SystemLabelStore systemLabelStore)
 	{
-		configProperties = new HashMap<String,Object>();
+		configProperties = new HashMap<>();
 		this.systemLabelStore = systemLabelStore;
 	}
 	

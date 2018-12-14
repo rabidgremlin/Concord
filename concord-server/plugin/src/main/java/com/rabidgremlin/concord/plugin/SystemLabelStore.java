@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface SystemLabelStore 
 {
-  public List<SystemLabel> getSystemLabels();
+  List<SystemLabel> getSystemLabels();
 }

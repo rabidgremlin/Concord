@@ -1,29 +1,23 @@
 package com.rabidgremlin.concord;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration.Dynamic;
-
-import com.rabidgremlin.concord.dao.UploadDao;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.jdbi.v3.core.Jdbi;
-import org.jose4j.jwa.AlgorithmConstraints;
-import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.jose4j.keys.HmacKey;
-
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
-
+import com.rabidgremlin.concord.api.Label;
+import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
+import com.rabidgremlin.concord.config.ConcordServerConfiguration;
+import com.rabidgremlin.concord.dao.LabelsDao;
+import com.rabidgremlin.concord.dao.PhrasesDao;
+import com.rabidgremlin.concord.dao.UploadDao;
+import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.plugin.CredentialsValidator;
+import com.rabidgremlin.concord.plugin.LabelSuggester;
+import com.rabidgremlin.concord.plugin.SystemLabel;
+import com.rabidgremlin.concord.plugin.SystemLabelStore;
+import com.rabidgremlin.concord.resources.LabelsResource;
+import com.rabidgremlin.concord.resources.PhrasesResource;
+import com.rabidgremlin.concord.resources.RedirectResource;
+import com.rabidgremlin.concord.resources.SessionsResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -34,25 +28,27 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.binout.jaxrs.csv.CsvMessageBodyProvider;
-
-import com.rabidgremlin.concord.api.Label;
-import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
-import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.config.ConcordServerConfiguration;
-import com.rabidgremlin.concord.dao.LabelsDao;
-import com.rabidgremlin.concord.dao.PhrasesDao;
-import com.rabidgremlin.concord.dao.VotesDao;
-import com.rabidgremlin.concord.plugin.CredentialsValidator;
-import com.rabidgremlin.concord.plugin.LabelSuggester;
-import com.rabidgremlin.concord.plugin.SystemLabel;
-import com.rabidgremlin.concord.plugin.SystemLabelStore;
-import com.rabidgremlin.concord.resources.LabelsResource;
-import com.rabidgremlin.concord.resources.PhrasesResource;
-import com.rabidgremlin.concord.resources.RedirectResource;
-import com.rabidgremlin.concord.resources.SessionsResource;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.jdbi.v3.core.Jdbi;
+import org.jose4j.jwa.AlgorithmConstraints;
+import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.keys.HmacKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration.Dynamic;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
@@ -166,7 +162,7 @@ public class ConcordServerApplication
         LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
         List<Label> labels = dao.getLabels();
-        ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
+        List<SystemLabel> systemLabels = new ArrayList<>();
 
         for (Label label: labels)
         {

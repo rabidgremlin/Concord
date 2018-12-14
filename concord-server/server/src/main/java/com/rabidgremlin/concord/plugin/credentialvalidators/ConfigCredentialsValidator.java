@@ -1,12 +1,12 @@
 package com.rabidgremlin.concord.plugin.credentialvalidators;
 
-import java.util.HashMap;
-
 import com.rabidgremlin.concord.plugin.CredentialsValidator;
+
+import java.util.Map;
 
 public class ConfigCredentialsValidator extends CredentialsValidator {
 	
-	public ConfigCredentialsValidator(HashMap<String, Object> configProperties) {
+	public ConfigCredentialsValidator(Map<String, Object> configProperties) {
 		super(configProperties);
 	}
 

@@ -1,17 +1,16 @@
 package com.rabidgremlin.concord.config;
 
-import java.util.HashMap;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
 
 
 public class PluginConfig 
 {
 	@NotEmpty
 	private String className;
-	private HashMap<String, Object> configProperties = new HashMap<String, Object>();
+	private HashMap<String, Object> configProperties = new HashMap<>();
 	
 	
 	public String getClassName() {
