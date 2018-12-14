@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Represents the credentials validator for a plugin.
- * Responsible for validating credentials to the concord app.
+ * Responsible for validating credentials to the concord application.
  *
  * Example: {@link com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator}
  */

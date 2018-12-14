@@ -4,6 +4,9 @@ import com.rabidgremlin.concord.plugin.CredentialsValidator;
 
 import java.util.Map;
 
+/**
+ * Simple userId/password credentials validator.
+ */
 public class ConfigCredentialsValidator extends CredentialsValidator {
 	
 	public ConfigCredentialsValidator(Map<String, Object> configProperties) {

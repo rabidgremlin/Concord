@@ -1,5 +1,3 @@
-
-
 ## Example API calls
 
 ### Get Token

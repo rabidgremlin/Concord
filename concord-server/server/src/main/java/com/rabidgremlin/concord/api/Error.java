@@ -1,10 +1,9 @@
 package com.rabidgremlin.concord.api;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Objects;
 
 public final class Error
 {
@@ -17,7 +16,7 @@ public final class Error
     return this;
   }
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @JsonProperty("error")
   public ErrorError getError()
   {

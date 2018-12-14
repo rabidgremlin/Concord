@@ -1,5 +1,8 @@
 package com.rabidgremlin.concord.plugin;
 
+/**
+ * SuggestedLabel DAO
+ */
 public class SuggestedLabel
 {
 	

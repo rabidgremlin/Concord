@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Rasa NLU label suggester; returns labels for phrases based on a Rasa NLU query.
+ */
 public class RasaNluSuggester extends LabelSuggester 
 {
 	private final RasaNluService rasaNluService;
