@@ -100,7 +100,7 @@ export class LabelPhrase extends Component {
                         >
                           {label.shortDescription}
                         </Typography>
-                        <Typography use="body1" tag="div" theme="text-secondary-on-background">{label.longDescription}</Typography>
+                        <Typography use="body1" tag="div" theme="text-secondary-on-background" style={{ minHeight:'4.3em', maxHeight: '4.3em', overflow: 'hidden', display: '-webkit-box',  WebkitLineClamp: '3', WebkitBoxOrient: 'vertical'  }}>{label.longDescription}</Typography>
                       </div>
                     </CardPrimaryAction>
                     <CardActions fullBleed>
