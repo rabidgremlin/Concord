@@ -29,8 +29,7 @@ public interface UploadDao {
                 .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
                 .collect(Collectors.toList());
 
-        phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream().map(UnlabelledPhrase::getText).collect(Collectors.toList()), false);
-
+        // NOTE: Must delete votes before upsert, due to foreign key contraints
         // Add vote to phrases with user choice
         List<String> phraseIdsToVote = batchedPhrases.stream()
                 .filter(unlabelledPhrase -> StringUtils.isNotEmpty(unlabelledPhrase.getPossibleLabel()))
@@ -38,6 +37,10 @@ public interface UploadDao {
                 .collect(Collectors.toList());
 
         votesDao().deleteAllVotesForPhrase(phraseIdsToVote);
+
+        phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream().map(UnlabelledPhrase::getText).collect(Collectors.toList()), false);
+
+
     }
 }
 
