@@ -15,7 +15,6 @@ public class ConfigCredentialsValidator extends CredentialsValidator {
 
 	@Override
 	public boolean validateCredentials(String userId, String password) {
-		
 		return configProperties.containsKey(userId.toLowerCase()) && configProperties.get(userId.toLowerCase()).equals(password);
 	}
 

@@ -1,17 +1,19 @@
 ## Plugins framework
 
 This allows you to create and use your own plugins in Concord.
-For example to create a custom label suggester which is based on your own NLP model.
+For example, use a label suggester which is based on your own NLP model.
 
 ### Components: 
 
 * Label suggester
   * Responsible for suggesting labels when given phrases
      * Can be based on a underlying NLP/NLU model or simply return all available labels etc.
+  * Essentially an adapter to any NLP model
   
 * Credentials validator
   * Responsible for validating credentials to the concord app
      * Can be a simple userId/password check or a token system etc.
+  * Essentially an adapter to any security system
 
 ### Usage
 

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rasa NLU label suggester; returns labels for phrases based on a Rasa NLU query.
@@ -36,14 +37,13 @@ public class RasaNluSuggester extends LabelSuggester
 	public List<SuggestedLabel> suggestLabels(String phrase) 
 	{
 		// TODO: Maybe cache this look up for speed ?
-		List<SystemLabel> systemLabels = systemLabelStore.getSystemLabels();		
-		HashMap<String,SystemLabel> systemLabelsMap = new HashMap<>();
+		List<SystemLabel> systemLabels = systemLabelStore.getSystemLabels();
+		Map<String,SystemLabel> systemLabelsMap = new HashMap<>();
 		
 		for (SystemLabel systemLabel:systemLabels)
 		{
 			systemLabelsMap.put(systemLabel.getLabel().toLowerCase(), systemLabel);
 		}
-		
 		
 		RasaNluQuery query = new RasaNluQuery();
 		query.q = phrase;

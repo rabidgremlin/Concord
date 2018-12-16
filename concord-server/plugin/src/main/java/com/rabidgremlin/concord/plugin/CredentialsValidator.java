@@ -22,6 +22,6 @@ public abstract class CredentialsValidator
    {
 	 this.configProperties = configProperties;
    }
-	
+
   public abstract boolean validateCredentials(String userId, String password);
 }

@@ -34,6 +34,9 @@ public abstract class LabelSuggester
 		this.configProperties = configProperties;
 		this.systemLabelStore = systemLabelStore;
 	}
-	
+
+	/**
+	 * Return a list of suggested labels for the given phrase.
+	 */
 	public abstract List<SuggestedLabel> suggestLabels(String phrase) throws UnableToGetSuggestionsException;
 }
