@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RasaNluQuery
 {
-	@JsonProperty
-	public String q;
-	@JsonProperty
-	public String project;		
+  @JsonProperty
+  public String q;
+
+  @JsonProperty
+  public String project;
 }

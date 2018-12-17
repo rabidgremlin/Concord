@@ -1,9 +1,9 @@
 package com.rabidgremlin.concord.api;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.util.Objects;
 
 /**
  * Represents an error returned by the api.
@@ -21,7 +21,7 @@ public final class ErrorError
     return this;
   }
 
-  @ApiModelProperty()
+  @ApiModelProperty(value = "")
   @JsonProperty("code")
   public Integer getCode()
   {
@@ -39,7 +39,7 @@ public final class ErrorError
     return this;
   }
 
-  @ApiModelProperty()
+  @ApiModelProperty(value = "")
   @JsonProperty("message")
   public String getMessage()
   {
