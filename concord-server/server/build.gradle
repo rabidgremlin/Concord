@@ -1,9 +1,15 @@
+buildscript {    
+    dependencies {        
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.3.2'        
+    }
+}
+
 plugins {
   id 'java'
   id 'application'
   id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
-//apply plugin: 'application'
+apply plugin: 'com.diffplug.gradle.spotless'
 
 project.version = '0.0.1'
 mainClassName = 'com.rabidgremlin.concord.ConcordServerApplication'
@@ -14,13 +20,13 @@ task utilJar(type: Jar) {
     }
 }
 
-/*jar {
-  manifest {
-    attributes(
-      'Main-Class': 'com.rabidgremlin.concord.ConcordServerApplication'
-    )
-  }
-}*/
+spotless {
+    java {
+        importOrderFile rootProject.file('buildconf/spotless/concord.importorder')
+        eclipseFormatFile rootProject.file('buildconf/spotless/concord-formatting.xml')
+        removeUnusedImports()
+    }
+}
 
 shadowJar {
   mergeServiceFiles()

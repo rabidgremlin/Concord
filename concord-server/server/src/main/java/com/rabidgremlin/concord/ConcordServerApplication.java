@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
-import com.rabidgremlin.concord.dao.UploadDao;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -21,8 +20,27 @@ import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
+import com.rabidgremlin.concord.api.Label;
+import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
+import com.rabidgremlin.concord.config.ConcordServerConfiguration;
+import com.rabidgremlin.concord.dao.LabelsDao;
+import com.rabidgremlin.concord.dao.PhrasesDao;
+import com.rabidgremlin.concord.dao.UploadDao;
+import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.plugin.CredentialsValidator;
+import com.rabidgremlin.concord.plugin.LabelSuggester;
+import com.rabidgremlin.concord.plugin.SystemLabel;
+import com.rabidgremlin.concord.plugin.SystemLabelStore;
+import com.rabidgremlin.concord.resources.LabelsResource;
+import com.rabidgremlin.concord.resources.PhrasesResource;
+import com.rabidgremlin.concord.resources.RedirectResource;
+import com.rabidgremlin.concord.resources.SessionsResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -34,25 +52,6 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.binout.jaxrs.csv.CsvMessageBodyProvider;
-
-import com.rabidgremlin.concord.api.Label;
-import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
-import com.rabidgremlin.concord.auth.AuthorizeAllAuthorizer;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.config.ConcordServerConfiguration;
-import com.rabidgremlin.concord.dao.LabelsDao;
-import com.rabidgremlin.concord.dao.PhrasesDao;
-import com.rabidgremlin.concord.dao.VotesDao;
-import com.rabidgremlin.concord.plugin.CredentialsValidator;
-import com.rabidgremlin.concord.plugin.LabelSuggester;
-import com.rabidgremlin.concord.plugin.SystemLabel;
-import com.rabidgremlin.concord.plugin.SystemLabelStore;
-import com.rabidgremlin.concord.resources.LabelsResource;
-import com.rabidgremlin.concord.resources.PhrasesResource;
-import com.rabidgremlin.concord.resources.RedirectResource;
-import com.rabidgremlin.concord.resources.SessionsResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
@@ -77,12 +76,14 @@ public class ConcordServerApplication
   {
     // serve up swagger stuff as assets
     bootstrap.addBundle(new AssetsBundle("/ui", "/", "index.html"));
-    
-    bootstrap.addBundle(new MigrationsBundle<ConcordServerConfiguration>() {
-        @Override
-        public DataSourceFactory getDataSourceFactory(ConcordServerConfiguration configuration) {
-            return configuration.getDatabase();
-        }
+
+    bootstrap.addBundle(new MigrationsBundle<ConcordServerConfiguration>()
+    {
+      @Override
+      public DataSourceFactory getDataSourceFactory(ConcordServerConfiguration configuration)
+      {
+        return configuration.getDatabase();
+      }
     });
   }
 
@@ -106,7 +107,7 @@ public class ConcordServerApplication
   {
     Dynamic filter = environment.servlets().addFilter("AssetsSecurityHeaders", AssetsSecurityHeadersFilter.class);
     filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true,
-            "/","*.html","*.css","*.js","*.png","*.ttf","*.ico");
+        "/", "*.html", "*.css", "*.js", "*.png", "*.ttf", "*.ico");
   }
 
   private void setupJwtAuth(ConcordServerConfiguration configuration,
@@ -118,7 +119,11 @@ public class ConcordServerApplication
         .setRequireExpirationTime() // the JWT must have an expiration time
         .setRequireSubject() // the JWT must have a subject claim
         .setVerificationKey(new HmacKey(configuration.getJwtTokenSecret())) // verify the signature with the public key
-        .setJwsAlgorithmConstraints(new AlgorithmConstraints(ConstraintType.WHITELIST, org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256)) // we only expect HMAC_SHA256 alg 
+        .setJwsAlgorithmConstraints(new AlgorithmConstraints(ConstraintType.WHITELIST, org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256)) // we
+                                                                                                                                         // only
+                                                                                                                                         // expect
+                                                                                                                                         // HMAC_SHA256
+                                                                                                                                         // alg
         .setRelaxVerificationKeyValidation() // relaxes key length requirement
         .build(); // create the JwtConsumer instance
 
@@ -129,9 +134,8 @@ public class ConcordServerApplication
             .setRealm("Concord Server")
             .setPrefix("Bearer")
             .setAuthenticator(new ConcordServerAuthenticator())
-            .setAuthorizer(new AuthorizeAllAuthorizer())         
+            .setAuthorizer(new AuthorizeAllAuthorizer())
             .buildAuthFilter()));
-       
 
     environment.jersey().register(new AuthValueFactoryProvider.Binder<>(Caller.class));
     environment.jersey().register(RolesAllowedDynamicFeature.class);
@@ -140,40 +144,39 @@ public class ConcordServerApplication
   @Override
   public void run(ConcordServerConfiguration configuration,
     Environment environment)
-    throws UnsupportedEncodingException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+    throws UnsupportedEncodingException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
+    IllegalArgumentException, InvocationTargetException
   {
     configureCors(environment);
     environment.jersey().setUrlPattern("/api/*");
 
     environment.jersey().register(CsvMessageBodyProvider.class);
 
+    // TODO: Clean this up with type system and wrap exceptions
+    Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
+    Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
+    CredentialsValidator credentialsValidator = (CredentialsValidator) credentialsValidatorConstructor
+        .newInstance(configuration.getCredentialsValidator().getConfigProperties());
 
-	// TODO: Clean this up with type system and wrap exceptions
-	Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
-	Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
-	CredentialsValidator credentialsValidator = (CredentialsValidator)credentialsValidatorConstructor.newInstance(configuration.getCredentialsValidator().getConfigProperties());
-
-
-    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(),credentialsValidator));
+    environment.jersey().register(new SessionsResource(configuration.getJwtTokenSecret(), credentialsValidator));
     environment.jersey().register(new RedirectResource());
 
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDatabase(), "mysql");
 
-
     // TODO: Very ugly needs to be refactored out
     SystemLabelStore systemLabelStore = () -> {
-        LabelsDao dao = jdbi.onDemand(LabelsDao.class);
+      LabelsDao dao = jdbi.onDemand(LabelsDao.class);
 
-        List<Label> labels = dao.getLabels();
-        ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
+      List<Label> labels = dao.getLabels();
+      ArrayList<SystemLabel> systemLabels = new ArrayList<SystemLabel>();
 
-        for (Label label: labels)
-        {
-            systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
-        }
+      for (Label label : labels)
+      {
+        systemLabels.add(new SystemLabel(label.getLabel(), label.getShortDescription(), label.getLongDescription()));
+      }
 
-        return systemLabels;
+      return systemLabels;
     };
 
     LabelSuggester labelsSuggester = null;
@@ -192,8 +195,8 @@ public class ConcordServerApplication
     int consensusLevel = configuration.getConsensusLevel();
 
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
-    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class),jdbi.onDemand(VotesDao.class),
-            jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
+    PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
+        jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel);
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);

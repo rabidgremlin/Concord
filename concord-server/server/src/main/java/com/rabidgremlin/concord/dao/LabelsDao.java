@@ -12,16 +12,16 @@ import com.rabidgremlin.concord.api.Label;
 
 public interface LabelsDao
 {
-	@SqlUpdate("DELETE from labels")
-	void deleteAllLabels();
-	
-	@SqlUpdate("REPLACE INTO labels(label, shortDescription, longDescription) VALUES (:label, :shortDescription,:longDescription)")
-    void upsert(@BindBean Label label);
+  @SqlUpdate("DELETE from labels")
+  void deleteAllLabels();
 
-	@SqlBatch("REPLACE INTO labels(label, shortDescription, longDescription) VALUES (:label, :shortDescription,:longDescription)")
-	void upsert(@BindBean List<Label> label);
+  @SqlUpdate("REPLACE INTO labels(label, shortDescription, longDescription) VALUES (:label, :shortDescription,:longDescription)")
+  void upsert(@BindBean Label label);
 
-	@SqlQuery("SELECT * FROM labels ORDER BY label")
-    @RegisterBeanMapper(Label.class)
-    List<Label> getLabels();
+  @SqlBatch("REPLACE INTO labels(label, shortDescription, longDescription) VALUES (:label, :shortDescription,:longDescription)")
+  void upsert(@BindBean List<Label> label);
+
+  @SqlQuery("SELECT * FROM labels ORDER BY label")
+  @RegisterBeanMapper(Label.class)
+  List<Label> getLabels();
 }
