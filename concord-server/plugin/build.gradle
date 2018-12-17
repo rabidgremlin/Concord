@@ -1,3 +1,9 @@
+buildscript {    
+    dependencies {        
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.3.2'        
+    }
+}
+
 plugins {
   id 'java'  
 }
@@ -9,6 +15,14 @@ group = 'com.rabidgremlin.concord'
 
 repositories {    
     mavenCentral()
+}
+
+spotless {
+    java {
+        importOrderFile rootProject.file('buildconf/spotless/concord.importorder')
+        eclipseFormatFile rootProject.file('buildconf/spotless/concord-formatting.xml')
+        removeUnusedImports()
+    }
 }
 
 
