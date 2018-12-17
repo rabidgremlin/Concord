@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { getAllLabels } from '../api'
 import { connect } from 'react-redux'
-import { Select } from '@rmwc/select';
 import { Button, ButtonIcon } from'@rmwc/button';
 import './searchbar.css';
+import Select from 'react-select';
 
 function convertLabelDataToLabels(data)
 {
@@ -11,11 +11,30 @@ function convertLabelDataToLabels(data)
 }
 
 export class Searchbar extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            labels: [
+                { label: "Loading labels..."}
+            ]
+        };
+    }
 
     componentDidMount() {
         this.props.dispatch(getAllLabels());
     }
 
+    componentDidUpdate(oldProps) {
+        const newProps = this.props;
+        if(oldProps.loading !== newProps.loading) {
+          this.setState({labels: newProps.labelData})
+        }
+      }
+
+    handleChange = (selectedOption) => {
+        this.setState({value:  selectedOption });
+        console.log(`Option selected:`, selectedOption);
+      }
 
     render() {
         if (this.props.loading) {
@@ -25,23 +44,16 @@ export class Searchbar extends Component {
         } 
         else {
             if (this.props.labelData) {
-                let labels = convertLabelDataToLabels(this.props.labelData)
+                let labels = this.state.labels
                 return (
                     <div className="searchBar">
                     <Select
-                    className="labelSelector"
-                    onChange={evt => this.setState({value: evt.target.value})}
-                    style={{minWidth: '250px'}}
-                    label="Other labels"
-                    outlined
-                    placeholder=""
-                    options = {
-                        labels
-                    }
+                        className="labelSelector"
+                        value={this.state.value}
+                        onChange={this.handleChange}
+                        options={labels}
                     />
-
-                    <Button className='labelBtn' onClick={() => {this.props.makeVote(this.state.value)}} outlined>LABEL PHRASE</Button>
-
+                    <Button className='labelBtn' onClick={() => {this.props.makeVote(this.state.value.label)}} outlined>LABEL PHRASE</Button>
                     </div>
                 )
             }
