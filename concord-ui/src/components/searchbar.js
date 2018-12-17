@@ -33,7 +33,6 @@ export class Searchbar extends Component {
 
     handleChange = (selectedOption) => {
         this.setState({value:  selectedOption });
-        console.log(`Option selected:`, selectedOption);
       }
 
     render() {
