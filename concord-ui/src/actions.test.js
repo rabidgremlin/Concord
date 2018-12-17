@@ -16,6 +16,16 @@ describe('actions', () => {
 })
 
 describe('actions', () => {
+  it('should create an action to reset a session error flag', () => {
+
+    const expectedAction = {
+      type: 'RESET_ERROR'
+    }
+    expect(actions.resetSessionError()).toEqual(expectedAction)
+  })
+})
+
+describe('actions', () => {
     it('should create an action for failure to create a session', () => {
       const error ="Failed to create"
       const expectedAction = {
