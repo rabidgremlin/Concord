@@ -1,17 +1,18 @@
 package com.rabidgremlin.concord.api;
 
-public class PossibleLabel extends Label
+public class PossibleLabel
+    extends Label
 {
-	private Double score;
+  private Double score;
 
-	public Double getScore() {
-		return score;
-	}
+  public Double getScore()
+  {
+    return score;
+  }
 
-	public void setScore(Double score) {
-		this.score = score;
-	}
-	
-	
+  public void setScore(Double score)
+  {
+    this.score = score;
+  }
 
 }

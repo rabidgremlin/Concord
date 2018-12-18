@@ -14,6 +14,18 @@ describe('error reducer', () => {
     )
   });
 
+  it('should handle reset error', () => {
+    expect(
+      reducer([], {
+        type: 'RESET_ERROR'
+      })
+    ).toEqual(
+      {
+        hasError: false
+      }
+    )
+  });
+
   it('should handle create session', () => {
     expect(
       reducer([], {

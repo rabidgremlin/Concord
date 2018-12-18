@@ -3,6 +3,7 @@ import { Searchbar } from './searchbar';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Select from 'react-select';
+import { Select } from '@rmwc/select';
 import { Button } from'@rmwc/button';
 
 Enzyme.configure({ adapter: new Adapter() })

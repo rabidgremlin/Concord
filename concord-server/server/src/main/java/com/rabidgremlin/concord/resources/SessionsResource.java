@@ -28,6 +28,7 @@ import com.rabidgremlin.concord.plugin.CredentialsValidator;
 public class SessionsResource
 {
   private Logger log = LoggerFactory.getLogger(SessionsResource.class);
+
   private CredentialsValidator credentialsValidator;
 
   private byte[] jwtTokenSecret;
@@ -43,8 +44,8 @@ public class SessionsResource
   public Response generateExpiredToken(NewSessionRequest newSessionRequest)
   {
     try
-    {      
-      if (credentialsValidator.validateCredentials(newSessionRequest.getUserId(), newSessionRequest.getPassword()) )
+    {
+      if (credentialsValidator.validateCredentials(newSessionRequest.getUserId(), newSessionRequest.getPassword()))
       {
 
         final JwtClaims claims = new JwtClaims();
@@ -56,7 +57,8 @@ public class SessionsResource
         jws.setAlgorithmHeaderValue(HMAC_SHA256);
         jws.setKey(new HmacKey(jwtTokenSecret));
 
-        return Response.ok().entity(singletonMap("token", jws.getCompactSerialization())).cookie(new NewCookie("JWT_COOKIE", jws.getCompactSerialization())).build();
+        return Response.ok().entity(singletonMap("token", jws.getCompactSerialization())).cookie(new NewCookie("JWT_COOKIE", jws.getCompactSerialization()))
+            .build();
       }
       else
       {

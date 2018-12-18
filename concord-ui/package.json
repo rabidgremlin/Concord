@@ -24,8 +24,8 @@
   },
   "proxy": "http://localhost:9000",
   "devDependencies": {
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0"
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.7.0"
   },
   "browserslist": [
     ">0.2%",
