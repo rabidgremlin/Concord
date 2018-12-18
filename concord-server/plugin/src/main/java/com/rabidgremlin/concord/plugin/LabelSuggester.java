@@ -48,7 +48,7 @@ public abstract class LabelSuggester
 	}
 
 	/**
-	 * Returns a list of suggested labels for the given phrase based labels stored in the systemLabelStore.
+	 * Returns a list of suggested labels for the given phrase based on the labels stored in the systemLabelStore.
 	 */
 	public abstract List<SuggestedLabel> suggestLabels(String phrase) throws UnableToGetSuggestionsException;
 }
