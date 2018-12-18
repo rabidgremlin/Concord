@@ -1,7 +1,7 @@
 import React from 'react';
 import { LabelPhrase } from './labelphrase';
 import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.2';
+import Adapter from 'enzyme-adapter-react-16';
 import { Grid, GridCell  } from 'rmwc/Grid';
 import { Card, CardPrimaryAction } from 'rmwc/Card';
 import { Fab } from 'rmwc/Fab';
@@ -48,8 +48,8 @@ describe('labelPhrase', () => {
         expect(labelPhrase.find(Grid).containsMatchingElement(Card));
         expect(labelPhrase.find(Card).containsMatchingElement(CardPrimaryAction));
         expect(labelPhrase.find(Grid).containsMatchingElement(GridCell));
-        expect(labelPhrase.find(GridCell).length).toBe(2);
-        expect(labelPhrase.find(Card).length).toBe(2);
+        expect(labelPhrase.find(GridCell).length).toBe(3);
+        expect(labelPhrase.find(Card).length).toBe(3);
         expect(labelPhrase.find(Fab).length).toBe(2);
 
         let delIcon = labelPhrase.find(Fab).get(0);
