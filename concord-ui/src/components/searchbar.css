@@ -19,6 +19,11 @@ button.labelBtn {
     margin-top: 10px;
 }  
 
+.labelSelector {
+    min-width: 250px;
+    width: 90%;
+}
+
 select.mdc-select--outlined .mdc-select__native-control {
     min-width: 200px;
 }

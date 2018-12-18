@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from './reducers'
@@ -36,4 +36,5 @@ ReactDOM.render(
     </IntlProvider>
   </Provider>
   , document.getElementById('root'));
-registerServiceWorker();
+
+//registerServiceWorker();

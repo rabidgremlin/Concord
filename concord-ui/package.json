@@ -9,6 +9,7 @@
     "react-redux": "5.0.7",
     "react-router-dom": "4.2.2",
     "react-scripts": "2.1.1",
+    "react-select": "^2.1.2",
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "rmwc": "3.0.10",
@@ -23,8 +24,8 @@
   },
   "proxy": "http://localhost:9000",
   "devDependencies": {
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0"
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.7.0"
   },
   "browserslist": [
     ">0.2%",
