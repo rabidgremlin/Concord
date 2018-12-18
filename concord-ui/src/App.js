@@ -10,7 +10,7 @@ import LabelPhrase from './components/labelphrase'
 import { SimpleDialog } from 'rmwc/Dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux'
-import { killSession, resetSessionError } from './actions'
+import { killSession, resetError } from './actions'
 
 
 export class App extends Component {
@@ -32,7 +32,7 @@ export class App extends Component {
             open={this.props.hasError}
             cancelLabel={null}
             onClose={evt => {
-              this.props.dispatch(resetSessionError())
+              this.props.dispatch(resetError())
             }}
           />
           </ThemeProvider>
@@ -57,7 +57,7 @@ export class App extends Component {
             open={this.props.hasError}
             cancelLabel={null}
             onClose={evt => {
-              this.props.dispatch(resetSessionError())
+              this.props.dispatch(resetError())
             }}
           />
           </ThemeProvider>

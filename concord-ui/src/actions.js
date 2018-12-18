@@ -8,7 +8,7 @@ export const callCreateSession = () => ({
     type: 'CALL_CREATE_SESSION'
 })
 
-export const resetSessionError = () => ({
+export const resetError = () => ({
     type: 'RESET_ERROR'
 })
 
