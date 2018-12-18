@@ -2,7 +2,12 @@ package com.rabidgremlin.concord.plugin;
 
 import java.util.List;
 
-public interface SystemLabelStore 
+/**
+ * Responsible for returning a list of all phrase/intent labels from the system.
+ * E.g. from a database or txt file.
+ */
+@FunctionalInterface
+public interface SystemLabelStore
 {
-  public List<SystemLabel> getSystemLabels();
+  List<SystemLabel> getSystemLabels();
 }

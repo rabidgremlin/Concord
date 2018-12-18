@@ -1,6 +1,4 @@
-
-
-##Example API calls
+## Example API calls
 
 ### Get Token
 curl -v -X POST http://127.0.0.1:8080/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'

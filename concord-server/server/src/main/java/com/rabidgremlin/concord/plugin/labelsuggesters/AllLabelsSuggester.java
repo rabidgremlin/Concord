@@ -1,8 +1,5 @@
 package com.rabidgremlin.concord.plugin.labelsuggesters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;

@@ -1,5 +1,8 @@
 package com.rabidgremlin.concord.plugin;
 
+/**
+ * SystemLabel DAO
+ */
 public class SystemLabel 
 {
 	
@@ -47,10 +50,5 @@ public class SystemLabel
 				+ shortDescription + ", longDescription=" + longDescription
 				+ "]";
 	}
-
-	
-	
-	
-	
 
 }
