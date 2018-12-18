@@ -1,14 +1,5 @@
 package com.rabidgremlin.concord.plugin.labelsuggesters;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;
@@ -16,6 +7,12 @@ import com.rabidgremlin.concord.plugin.SystemLabelStore;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RasaNluSuggester
     extends LabelSuggester
@@ -40,7 +37,7 @@ public class RasaNluSuggester
   {
     // TODO: Maybe cache this look up for speed ?
     List<SystemLabel> systemLabels = systemLabelStore.getSystemLabels();
-    HashMap<String, SystemLabel> systemLabelsMap = new HashMap<String, SystemLabel>();
+    Map<String, SystemLabel> systemLabelsMap = new HashMap<>();
 
     for (SystemLabel systemLabel : systemLabels)
     {

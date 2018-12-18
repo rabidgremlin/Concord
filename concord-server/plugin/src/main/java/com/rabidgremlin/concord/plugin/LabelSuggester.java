@@ -16,13 +16,25 @@ public abstract class LabelSuggester
 	protected final Map<String,Object> configProperties;
 
 	protected final SystemLabelStore systemLabelStore;
-	
+
+	/**
+	 * Initialises the label suggester without config properties.
+	 *
+	 * @param systemLabelStore - store of all phrase labels.
+	 */
 	public LabelSuggester(SystemLabelStore systemLabelStore)
 	{
 		configProperties = new HashMap<>();
 		this.systemLabelStore = systemLabelStore;
 	}
-	
+
+	/**
+	 * Initialises the label suggester with config properties (optional); e.g. a map of
+	 * (api url -> authorisation token) pairs for your NLP model API.
+	 *
+	 * @param systemLabelStore - store of all phrase labels.
+	 * @param configProperties - map of config properties; defined in server.yml
+	 */
 	public LabelSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties)
 			throws InvalidConfigPropertiesException
 	{
@@ -36,7 +48,7 @@ public abstract class LabelSuggester
 	}
 
 	/**
-	 * Return a list of suggested labels for the given phrase.
+	 * Returns a list of suggested labels for the given phrase based labels stored in the systemLabelStore.
 	 */
 	public abstract List<SuggestedLabel> suggestLabels(String phrase) throws UnableToGetSuggestionsException;
 }
