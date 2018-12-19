@@ -1,10 +1,11 @@
 package com.rabidgremlin.concord.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PluginConfig
 {

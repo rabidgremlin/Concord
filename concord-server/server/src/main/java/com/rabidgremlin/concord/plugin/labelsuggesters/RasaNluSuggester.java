@@ -1,18 +1,19 @@
 package com.rabidgremlin.concord.plugin.labelsuggesters;
 
-import com.rabidgremlin.concord.plugin.LabelSuggester;
-import com.rabidgremlin.concord.plugin.SuggestedLabel;
-import com.rabidgremlin.concord.plugin.SystemLabel;
-import com.rabidgremlin.concord.plugin.SystemLabelStore;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import com.rabidgremlin.concord.plugin.LabelSuggester;
+import com.rabidgremlin.concord.plugin.SuggestedLabel;
+import com.rabidgremlin.concord.plugin.SystemLabel;
+import com.rabidgremlin.concord.plugin.SystemLabelStore;
 
 public class RasaNluSuggester
     extends LabelSuggester

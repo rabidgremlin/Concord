@@ -1,8 +1,8 @@
 package com.rabidgremlin.concord.plugin.credentialvalidators;
 
-import com.rabidgremlin.concord.plugin.CredentialsValidator;
-
 import java.util.Map;
+
+import com.rabidgremlin.concord.plugin.CredentialsValidator;
 
 public class ConfigCredentialsValidator
     extends CredentialsValidator
