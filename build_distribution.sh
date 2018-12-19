@@ -16,6 +16,6 @@ cp -rf build/* ../concord-server/server/src/main/resources/ui
 echo "Building Server...."
 cd ../concord-server/server
 chmod +x gradlew
-./gradlew build || exit 1
+./gradlew  --no-daemon --refresh-dependencies clean build || exit 1
 
 echo "Done. See concord-server/server/build/distributions"
