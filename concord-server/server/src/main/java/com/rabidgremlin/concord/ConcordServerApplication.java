@@ -5,7 +5,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +153,7 @@ public class ConcordServerApplication
 
     // TODO: Clean this up with type system and wrap exceptions
     Class credentialsValidatorClass = Class.forName(configuration.getCredentialsValidator().getClassName());
-    Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(HashMap.class);
+    Constructor credentialsValidatorConstructor = credentialsValidatorClass.getConstructor(Map.class);
     CredentialsValidator credentialsValidator = (CredentialsValidator) credentialsValidatorConstructor
         .newInstance(configuration.getCredentialsValidator().getConfigProperties());
 
