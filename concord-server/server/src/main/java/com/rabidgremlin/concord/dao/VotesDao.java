@@ -19,7 +19,7 @@ public interface VotesDao
   @SqlUpdate("REPLACE INTO votes(phraseId, label, userId) VALUES (:phraseId, :label,:userId)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
-  @SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING voteCount > :margin")
+  @SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING voteCount >= :margin")
   @RegisterBeanMapper(GroupedPhraseVote.class)
   List<GroupedPhraseVote> getPhraseVotesOverMargin(@Bind("margin") int margin);
 
