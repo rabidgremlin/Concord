@@ -16,7 +16,8 @@ export class Searchbar extends Component {
         this.state = {
             labels: [
                 { label: "Loading labels..."}
-            ]
+            ],
+            description: ""
         };
     }
 
@@ -32,7 +33,10 @@ export class Searchbar extends Component {
       }
 
     handleChange = (selectedOption) => {
-        this.setState({value:  selectedOption });
+        this.setState({
+            value:  selectedOption,
+            description: selectedOption.longDescription
+        });
       }
 
     render() {
@@ -52,6 +56,9 @@ export class Searchbar extends Component {
                         onChange={this.handleChange}
                         options={labels}
                     />
+                    <div className="description-box">
+                        {this.state.description}
+                    </div>
                     <Button className='labelBtn' onClick={() => {this.props.makeVote(this.state.value.label)}} outlined>LABEL PHRASE</Button>
                     </div>
                 )

@@ -24,6 +24,12 @@ button.labelBtn {
     width: 90%;
 }
 
+.description-box {
+    padding: 10px;
+    padding-top: 20px;
+    color: rgba(0,0,0,0.54);
+}
+
 select.mdc-select--outlined .mdc-select__native-control {
     min-width: 200px;
 }
