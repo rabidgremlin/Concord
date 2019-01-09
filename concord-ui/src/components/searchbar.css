@@ -29,6 +29,9 @@ button.labelBtn {
     padding-top: 20px;
     color: rgba(0,0,0,0.54);
 }
+.desc-sml {
+    font-size: 14px;
+}
 
 select.mdc-select--outlined .mdc-select__native-control {
     min-width: 200px;
