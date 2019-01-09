@@ -31,15 +31,17 @@ public interface UploadDao
         .collect(Collectors.toList());
 
     // NOTE: Must delete votes before upsert, due to foreign key contraints
-    // Add vote to phrases with user choice
-    List<String> phraseIdsToVote = batchedPhrases.stream()
-        .filter(unlabelledPhrase -> StringUtils.isNotEmpty(unlabelledPhrase.getPossibleLabel()))
-        .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
-        .collect(Collectors.toList());
-
-    votesDao().deleteAllVotesForPhrase(phraseIdsToVote);
+    votesDao().deleteAllVotesForPhrase(phraseIds);
 
     phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream().map(UnlabelledPhrase::getText).collect(Collectors.toList()), false);
 
+    // If there was a possible label, cast one vote for that intent
+    for (UnlabelledPhrase phrase : batchedPhrases)
+    {
+      if (StringUtils.isNotEmpty(phrase.getPossibleLabel()))
+      {
+        votesDao().upsert(DigestUtils.md5Hex(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
+      }
+    }
   }
 }
