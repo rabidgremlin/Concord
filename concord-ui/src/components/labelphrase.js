@@ -43,10 +43,12 @@ export class LabelPhrase extends Component {
 
   handleKeyPress = (event) => {
 
+    // ENTER key
     if(event.keyCode == "13") {
       this.makeVote("TRASH");
     }
-    
+
+    // S key
     if(event.keyCode == "83") {
       this.makeVote("SKIPPED")
     }
