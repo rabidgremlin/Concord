@@ -38,6 +38,20 @@ export class LabelPhrase extends Component {
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
+    window.addEventListener('keyup', this.handleKeyPress);
+  }
+
+  handleKeyPress = (event) => {
+
+    // ENTER key
+    if(event.keyCode == "13") {
+      this.makeVote("TRASH");
+    }
+
+    // S key
+    if(event.keyCode == "83") {
+      this.makeVote("SKIPPED")
+    }
   }
 
 
