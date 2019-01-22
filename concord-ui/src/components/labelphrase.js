@@ -27,14 +27,18 @@ import {
 } from 'rmwc/Icon';
 
 
-
-
+const keyMappings = {7:0,8:1,9:2,4:3,5:4,6:5,1:6,2:7,3:8,0:9}
 
 
 export class LabelPhrase extends Component {
   //state = { dirty: false }
   //handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
-
+  constructor(props) {
+    super(props)
+    this.state = {
+        currentLabel: null
+    };
+}
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
@@ -42,21 +46,39 @@ export class LabelPhrase extends Component {
   }
 
   handleKeyPress = (event) => {
+    let keyCode = event.code.replace("Numpad","")
+    let labels = document.getElementsByClassName("mdc-layout-grid__inner")[0].childNodes;
+    labels.forEach(function(index) {
+      index.style = "border: none"
+    });
+ 
+    let labelIndex = keyMappings[keyCode]
+    if(typeof labelIndex !== "undefined") {
+      if(labels.length-1>labelIndex) {
+        labels[labelIndex].style = "border: 2px solid darkgray";
+        this.setState({currentLabel : this.props.phraseData.possibleLabels[labelIndex].label});
+      }
+    }
 
-    // ENTER key
-    if(event.keyCode == "13") {
+    if(keyCode == "Subtract") {
       this.makeVote("TRASH");
     }
 
-    // S key
-    if(event.keyCode == "83") {
+    if(keyCode == "ArrowRight") {
       this.makeVote("SKIPPED")
+    }
+
+    if(keyCode == "Enter") {
+      if(this.state.currentLabel !== null) {
+        this.makeVote(this.state.currentLabel);
+      }
     }
   }
 
 
   makeVote(label) {
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
+    this.setState({currentLabel : null})
 
     // HACk HACK need to move to react-thunk
     /*setTimeout(() => {
@@ -129,7 +151,7 @@ export class LabelPhrase extends Component {
               ))}
 
             <GridCell span="3" phone="4" tablet="2" desktop="4" key={"searchbar"}>
-            <Card style={{minWidth: '300px'}}>
+            <Card style={{minWidth: '300px'}}  onClick={() => { this.setState({currentLabel : null})}}>
               < Searchbar makeVote={(label) => this.makeVote(label)}  />
             </Card>
             </GridCell>
