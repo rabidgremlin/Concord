@@ -2,7 +2,9 @@ package com.rabidgremlin.concord.plugin.labelsuggesters;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.rabidgremlin.concord.plugin.InvalidConfigPropertiesException;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;
@@ -11,9 +13,10 @@ import com.rabidgremlin.concord.plugin.SystemLabelStore;
 public class AllLabelsSuggester
     extends LabelSuggester
 {
-  public AllLabelsSuggester(SystemLabelStore systemLabelStore)
+  public AllLabelsSuggester(SystemLabelStore systemLabelStore, Map<String, Object> configProperties)
+    throws InvalidConfigPropertiesException
   {
-    super(systemLabelStore);
+    super(systemLabelStore, configProperties);
   }
 
   @Override

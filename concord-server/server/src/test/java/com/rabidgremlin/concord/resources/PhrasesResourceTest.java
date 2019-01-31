@@ -7,14 +7,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
@@ -59,7 +62,7 @@ public class PhrasesResourceTest
     callerMock = mock(Caller.class);
     uploadDaoMock = mock(UploadDao.class);
 
-    resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1);
+    resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, false);
 
     SuggestedLabel label1 = new SuggestedLabel("WhereTaxi", "Where Taxi", "Your taxi is ... minutes away.", 0.5);
     SuggestedLabel label2 = new SuggestedLabel("CancelTaxi", "Cancel Taxi", "Ok your Taxi has been ordered", 0.25);
@@ -125,6 +128,46 @@ public class PhrasesResourceTest
     assertThat(response, instanceOf(Response.class));
     assertEquals(200, response.getStatus());
     assertEquals("OK", response.getStatusInfo().toString());
+  }
+
+  @Test
+  public void shouldMarkPhraseCompletedWhenTrashedAndCompleteOnTrashIsTrue()
+  {
+    when(callerMock.getToken()).thenReturn("Bob");
+
+    resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, true);
+    resource.uriInfo = mock(UriInfo.class);
+
+    String trashedPhraseId = "abcdefg1234567";
+    Label trashedLabel = new Label("TRASH", "", "");
+
+    Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
+
+    verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
+    verify(phrasesDaoMock, times(1)).markPhrasesComplete(Arrays.asList(trashedPhraseId), Arrays.asList("TRASH"));
+
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(201, response.getStatus());
+  }
+
+  @Test
+  public void shouldNotMarkPhraseCompletedWhenTrashedAndCompleteOnTrashIsTrue()
+  {
+    when(callerMock.getToken()).thenReturn("Bob");
+
+    resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, false);
+    resource.uriInfo = mock(UriInfo.class);
+
+    String trashedPhraseId = "abcdefg1234567";
+    Label trashedLabel = new Label("TRASH", "", "");
+
+    Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
+
+    verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
+    verify(phrasesDaoMock, times(0)).markPhrasesComplete(Arrays.asList(trashedPhraseId), Arrays.asList("TRASH"));
+
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(201, response.getStatus());
   }
 
 }
