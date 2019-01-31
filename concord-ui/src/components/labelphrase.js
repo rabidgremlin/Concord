@@ -8,17 +8,19 @@ import Searchbar from './searchbar'
 import {
   Card,
   CardPrimaryAction,
-  CardMedia,
+ // CardMedia,
   CardAction,
   CardActions,
-  CardActionButtons,
-  CardActionIcons
+ // CardActionButtons,
+ // CardActionIcons
 } from 'rmwc/Card';
 
 import { Typography } from 'rmwc/Typography';
 
 import { Grid, GridCell } from 'rmwc/Grid';
-import { FormattedNumber, FormattedDate } from 'react-intl';
+import { FormattedNumber, 
+  //FormattedDate 
+}  from 'react-intl';
 
 import { Fab } from 'rmwc/Fab';
 
@@ -60,15 +62,15 @@ export class LabelPhrase extends Component {
       }
     }
 
-    if(keyCode == "Subtract") {
+    if(keyCode === "Subtract") {
       this.makeVote("TRASH");
     }
 
-    if(keyCode == "ArrowRight") {
+    if(keyCode === "ArrowRight") {
       this.makeVote("SKIPPED")
     }
 
-    if(keyCode == "Enter") {
+    if(keyCode === "Enter") {
       if(this.state.currentLabel !== null) {
         this.makeVote(this.state.currentLabel);
       }
