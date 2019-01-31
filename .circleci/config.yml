@@ -32,7 +32,7 @@ jobs:
       #    - v1-dependencies-
 
       - run: sudo curl -sL https://deb.nodesource.com/setup_11.x | bash -  
-      - run: sudo apt-get install -y nodejs  
+      - run: sudo apt-get install -y nodejs npm
 
       - run: chmod 744  build_distribution.sh
 
