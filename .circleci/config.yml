@@ -33,7 +33,7 @@ jobs:
 
       - run: chmod 744  build_distribution.sh
 
-      - run: build_distribution.sh
+      - run: ./build_distribution.sh
 
       #- save_cache:
       #    paths:
