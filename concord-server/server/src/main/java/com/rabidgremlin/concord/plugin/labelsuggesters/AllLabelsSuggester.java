@@ -13,9 +13,10 @@ import com.rabidgremlin.concord.plugin.SystemLabelStore;
 public class AllLabelsSuggester
     extends LabelSuggester
 {
-  public AllLabelsSuggester(SystemLabelStore systemLabelStore,Map<String,Object> configProperties) throws InvalidConfigPropertiesException
+  public AllLabelsSuggester(SystemLabelStore systemLabelStore, Map<String, Object> configProperties)
+    throws InvalidConfigPropertiesException
   {
-    super(systemLabelStore,configProperties);
+    super(systemLabelStore, configProperties);
   }
 
   @Override

@@ -16,18 +16,7 @@ public abstract class LabelSuggester
 	protected final Map<String,Object> configProperties;
 
 	protected final SystemLabelStore systemLabelStore;
-
-	/**
-	 * Initialises the label suggester without config properties.
-	 *
-	 * @param systemLabelStore - store of all phrase labels.
-	 */
-	public LabelSuggester(SystemLabelStore systemLabelStore)
-	{
-		configProperties = new HashMap<>();
-		this.systemLabelStore = systemLabelStore;
-	}
-
+	
 	/**
 	 * Initialises the label suggester with config properties (optional); e.g. a map of
 	 * (api url -> authorisation token) pairs for your NLP model API.
@@ -38,7 +27,7 @@ public abstract class LabelSuggester
 	public LabelSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties)
 			throws InvalidConfigPropertiesException
 	{
-		if (configProperties.isEmpty())
+		if (configProperties == null)
 		{
 			throw new InvalidConfigPropertiesException("No configuration provided");
 		}

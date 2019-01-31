@@ -22,9 +22,10 @@ public class RasaNluSuggester
 
   private RasaNluService rasaNluService;
 
-  public RasaNluSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties) throws InvalidConfigPropertiesException
+  public RasaNluSuggester(SystemLabelStore systemLabelStore, Map<String, Object> configProperties)
+    throws InvalidConfigPropertiesException
   {
-    super(systemLabelStore);
+    super(systemLabelStore, configProperties);
 
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("http://localhost:5000")
