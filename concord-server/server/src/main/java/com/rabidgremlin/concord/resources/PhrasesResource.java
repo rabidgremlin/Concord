@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ import io.swagger.annotations.ApiParam;
 public class PhrasesResource
 {
   @Context
-  private UriInfo uriInfo;
+  protected UriInfo uriInfo;
 
   private Logger log = LoggerFactory.getLogger(PhrasesResource.class);
 
@@ -59,13 +60,19 @@ public class PhrasesResource
 
   private int consensusLevel;
 
-  public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel)
+  private boolean completeOnTrash;
+
+  private final static String LABEL_TRASH = "TRASH";
+
+  public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
+    boolean completeOnTrash)
   {
     this.phrasesDao = phrasesDao;
     this.votesDao = votesDao;
     this.uploadDao = uploadDao;
     this.labelSuggester = labelSuggester;
     this.consensusLevel = consensusLevel;
+    this.completeOnTrash = completeOnTrash;
   }
 
   @GET
@@ -174,6 +181,12 @@ public class PhrasesResource
     log.info("Caller {} casting vote for {}", caller, phraseId);
 
     votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
+
+    // are we marking trashed labels as completed?
+    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label.getLabel()))
+    {
+      phrasesDao.markPhrasesComplete(Arrays.asList(phraseId), Arrays.asList(label.getLabel()));
+    }
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }

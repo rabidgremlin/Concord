@@ -22,6 +22,17 @@ public class ConcordServerConfiguration
   @Min(value = 1)
   private int consensusLevel;
 
+  @Valid
+  @NotNull
+  private DataSourceFactory database = new DataSourceFactory();
+
+  @Valid
+  @NotNull
+  private PluginConfig credentialsValidator;
+
+  @NotEmpty
+  private boolean completeOnTrash;
+
   @JsonProperty("jwtTokenSecret")
   public void setJwtTokenSecret(String secret)
   {
@@ -45,10 +56,6 @@ public class ConcordServerConfiguration
     return consensusLevel;
   }
 
-  @Valid
-  @NotNull
-  private DataSourceFactory database = new DataSourceFactory();
-
   public DataSourceFactory getDatabase()
   {
     return database;
@@ -68,13 +75,20 @@ public class ConcordServerConfiguration
     return labelSuggester;
   }
 
-  @Valid
-  @NotNull
-  private PluginConfig credentialsValidator;
-
   public PluginConfig getCredentialsValidator()
   {
     return credentialsValidator;
+  }
+
+  public boolean isCompleteOnTrash()
+  {
+    return completeOnTrash;
+  }
+
+  @JsonProperty("completeOnTrash")
+  public void setCompleteOnTrash(boolean completeOnTrash)
+  {
+    this.completeOnTrash = completeOnTrash;
   }
 
 }
