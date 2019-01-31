@@ -30,8 +30,8 @@ public class ConcordServerConfiguration
   @NotNull
   private PluginConfig credentialsValidator;
 
-  @NotEmpty
-  private boolean completeOnTrash;
+  @NotNull
+  private Boolean completeOnTrash;
 
   @JsonProperty("jwtTokenSecret")
   public void setJwtTokenSecret(String secret)
