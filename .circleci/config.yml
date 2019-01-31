@@ -38,6 +38,12 @@ jobs:
 
       - run: ./build_distribution.sh
 
+      - store_test_results:
+        path: concord-server/server/build/test-results
+
+      - store_artifacts:
+        path: concord-server/server/build/distributions  
+
       #- save_cache:
       #    paths:
       #      - ~/.gradle
