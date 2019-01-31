@@ -10,6 +10,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import com.rabidgremlin.concord.plugin.InvalidConfigPropertiesException;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.SystemLabel;
@@ -21,7 +22,7 @@ public class RasaNluSuggester
 
   private RasaNluService rasaNluService;
 
-  public RasaNluSuggester(SystemLabelStore systemLabelStore)
+  public RasaNluSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties) throws InvalidConfigPropertiesException
   {
     super(systemLabelStore);
 
