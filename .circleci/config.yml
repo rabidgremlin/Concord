@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+      - image: rabidgremlin/concord-docker-buildenv
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -32,9 +32,9 @@ jobs:
       #    - v1-dependencies-
 
       #- run: sudo curl -sL https://deb.nodesource.com/setup_11.x | bash -  
-      - run: sudo apt-get install -y nodejs npm
+      #- run: sudo apt-get install -y nodejs npm
 
-      - run: chmod 744  build_distribution.sh
+      #- run: chmod 744  build_distribution.sh
 
       - run: ./build_distribution.sh
 
