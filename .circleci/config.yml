@@ -31,7 +31,8 @@ jobs:
       #    # fallback to using the latest cache if no exact match is found
       #    - v1-dependencies-
 
-      - run: sudo apt install nodejs  
+      - run: sudo curl -sL https://deb.nodesource.com/setup_11.x | bash -  
+      - run: sudo apt-get install -y nodejs  
 
       - run: chmod 744  build_distribution.sh
 
