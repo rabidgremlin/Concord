@@ -62,7 +62,7 @@ export class LabelPhrase extends Component {
       }
     }
 
-    if(keyCode === "Subtract") {
+    if(keyCode === "Subtract" || keyCode === "Minus") {
       this.makeVote("TRASH");
     }
 
