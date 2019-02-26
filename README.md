@@ -4,8 +4,6 @@
 
 Concord is a web application designed to easily crowd source labelling of text data for NLP. It's focus is on labeling text for training text classification models such as in chatbots.
 
- **NOTE: This is still a work in progress**
-
 ## get up and running (for developers)
 
 ### 1. Create database
@@ -16,7 +14,7 @@ docker run --rm -it -p 3306:3306 -e MYSQL_DATABASE=concorddb -e MYSQL_USER=conco
 
 ### 2. Setup  RASA NLU Server
 
-By default Concord is configured to use a Rasa NLU server for testing. See *concord-server/server/src/main/server.yml*
+By default Concord is configured to use a Rasa NLU server for testing. See *concord-server/server/src/main/yml/server.yml*
 
 #### 2a. Start server
 ```
@@ -56,9 +54,10 @@ cd concord-server/server
 ```
 
 ### 4. Load test data
+In a new terminal window:
 
 #### 4a. Get Token for API calls
-By default Concord is configured to use a list of usernames/passwords held in it's config file. See *concord-server/server/src/main/server.yml*
+By default Concord is configured to use a list of usernames/passwords held in it's config file. See *concord-server/server/src/main/yml/server.yml*
 
 ```
 curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
@@ -105,13 +104,8 @@ docker exec -it [docker-image-name] bash
 mysql -u concorduser -p
 ```
 
-password: concordpwd
+password: ```concordpwd```
 
 ```
 use concorddb
 ```
-
-
-
-
-
