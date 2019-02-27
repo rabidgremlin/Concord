@@ -65,7 +65,7 @@ public class PhrasesResource
   private final static String LABEL_TRASH = "TRASH";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
-    boolean completeOnTrash)
+      boolean completeOnTrash)
   {
     this.phrasesDao = phrasesDao;
     this.votesDao = votesDao;
@@ -140,15 +140,22 @@ public class PhrasesResource
   public synchronized Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller)
   {
 
-    log.info("Caller {} marking phrases and downloading csv of completedPhrases {}", caller);
+    log.info("Caller {} marking phrases and downloading csv of completedPhrases", caller);
 
-    List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseVotesOverMargin(consensusLevel);
+    log.info("Searching for votes over margin {}...", consensusLevel);
+    List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseOverMarginWithTop2Votes(consensusLevel);
+    log.info("Found {} votes over margin.", phraseVotes.size());
 
-    GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(votesDao, phraseVotes, consensusLevel);
+    GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(phraseVotes, consensusLevel);
+
+    log.info("Looking for completed phrases...");
     List<Phrase> completedPhrases = getPhrases.execute();
+    log.info("Found {} completed phrases.", completedPhrases.size());
 
+    log.info("Marking phrases complete...");
     phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
         completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
+    log.info("Marking phrases complete done.");
 
     return Response.ok().entity(completedPhrases).build();
   }

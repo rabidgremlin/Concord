@@ -19,12 +19,38 @@ public interface VotesDao
   @SqlUpdate("REPLACE INTO votes(phraseId, label, userId) VALUES (:phraseId, :label,:userId)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
-  @SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING voteCount >= :margin")
+  /**
+   * This query returns incomplete phrases with the top 2 votes for each.
+   * <P>
+   * Note that there will be only one row for those only have one voted label.
+   * 
+   * @param margin
+   */
+  @SqlQuery("SELECT " +
+      "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +
+      " FROM" +
+      "    (SELECT " +
+      "        t.phraseId," +
+      "            t.text," +
+      "            t.label," +
+      "            t.voteCount," +
+      "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
+      "            @current_phraseId:=t.phraseId" +
+      "    FROM" +
+      "        (SELECT " +
+      "        p.phraseId, p.text, v.label, COUNT(v.userId) AS voteCount" +
+      "    FROM" +
+      "        phrases p" +
+      "    JOIN votes v ON p.phraseId = v.phraseId" +
+      "    WHERE" +
+      "        p.completed = FALSE" +
+      "    GROUP BY p.phraseId , p.text , v.label , v.label" +
+      "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
+      "    where t.voteCount >= :margin" +
+      "    ) r" +
+      " WHERE" +
+      "    r.voteRank < 3")
   @RegisterBeanMapper(GroupedPhraseVote.class)
-  List<GroupedPhraseVote> getPhraseVotesOverMargin(@Bind("margin") int margin);
-
-  @SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING phraseId = :phraseId ORDER BY voteCount Desc limit 1 offset 1")
-  @RegisterBeanMapper(GroupedPhraseVote.class)
-  GroupedPhraseVote getSecondHighestContender(@Bind("phraseId") String phraseId);
+  List<GroupedPhraseVote> getPhraseOverMarginWithTop2Votes(@Bind("margin") int margin);
 
 }

@@ -3,9 +3,11 @@ package com.rabidgremlin.concord.functions;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
-import com.rabidgremlin.concord.dao.VotesDao;
 
 /**
  * function retrieves phrases that have label votes with a label vote count greater than the consensus level, and a
@@ -16,15 +18,14 @@ import com.rabidgremlin.concord.dao.VotesDao;
 public class GetEligiblePhrasesForCompletion
 {
 
-  private VotesDao votesDao;
-
   private List<GroupedPhraseVote> phraseVotes;
 
   private int consensusLevel;
 
-  public GetEligiblePhrasesForCompletion(VotesDao votesDao, List<GroupedPhraseVote> phraseVotes, int consensusLevel)
+  private Logger log = LoggerFactory.getLogger(GetEligiblePhrasesForCompletion.class);
+
+  public GetEligiblePhrasesForCompletion(List<GroupedPhraseVote> phraseVotes, int consensusLevel)
   {
-    this.votesDao = votesDao;
     this.phraseVotes = phraseVotes;
     this.consensusLevel = consensusLevel;
   }
@@ -33,29 +34,49 @@ public class GetEligiblePhrasesForCompletion
   {
     List<Phrase> completedPhrases = new LinkedList<>();
 
-    for (GroupedPhraseVote vote : phraseVotes)
+    for (int i = 0; i < phraseVotes.size(); i++)
     {
-      String phraseId = vote.getPhraseId();
-      String text = vote.getText();
-      String designatedLabel = vote.getLabel();
-
-      int secondHighestContenderCount = 0;
-      GroupedPhraseVote secondHighestContender = votesDao.getSecondHighestContender(phraseId);
-
-      if (secondHighestContender != null)
+      GroupedPhraseVote highestVote = phraseVotes.get(i);
+      GroupedPhraseVote secondHighestVote = null;
+      // in case it is the last one in the list
+      if (i != phraseVotes.size() - 1)
       {
-        secondHighestContenderCount = secondHighestContender.getVoteCount();
+        secondHighestVote = phraseVotes.get(i + 1);
       }
-
-      if (vote.getVoteCount() - secondHighestContenderCount >= consensusLevel)
+      // When there is no second vote, we just need to check if it has enough votes
+      log.debug("Highest: Label {} voted {} times for phrase[{}]", highestVote.getLabel(), highestVote.getVoteCount(), highestVote.getText());
+      if (secondHighestVote == null || !highestVote.getPhraseId().equals(secondHighestVote.getPhraseId()))
       {
-        Phrase curr = new Phrase();
-        curr.setLabel(designatedLabel);
-        curr.setText(text);
-        curr.setPhraseId(phraseId);
-        completedPhrases.add(curr);
+        log.debug("There is no second vote for phrase[{}]", highestVote.getText());
+        if (highestVote.getVoteCount() >= consensusLevel)
+        {
+          addVoteToCompletedList(completedPhrases, highestVote);
+        }
+      }
+      // When there is a second vote, calculate the vote count difference
+      else
+      {
+        i++;
+        log.debug("Second highest: Label {} voted {} times for phrase[{}] with second hightest vote count {}", secondHighestVote.getLabel(),
+            secondHighestVote.getVoteCount(),
+            secondHighestVote.getText());
+        if (highestVote.getVoteCount() - secondHighestVote.getVoteCount() >= consensusLevel)
+        {
+          addVoteToCompletedList(completedPhrases, highestVote);
+        }
       }
     }
+
     return completedPhrases;
+  }
+
+  private void addVoteToCompletedList(List<Phrase> list, GroupedPhraseVote vote)
+  {
+    Phrase curr = new Phrase();
+    curr.setLabel(vote.getLabel());
+    curr.setText(vote.getText());
+    curr.setPhraseId(vote.getPhraseId());
+    list.add(curr);
+    log.debug("Found completed phrase [{}] with id {}", vote.getText(), vote.getPhraseId());
   }
 }
