@@ -59,19 +59,24 @@
 		</addColumn>
 		<addColumn tableName="phrases">
 			<column name="lastModified" type="datetime">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 		</addColumn>
 		<addColumn tableName="votes">
 			<column name="lastModified" type="datetime">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 		</addColumn>
 		<sql dbms="mysql">
-			update phrases set lastModified = CURRENT_TIMESTAMP where lastModified = NULL
+			update phrases set lastModified = CURRENT_TIMESTAMP where lastModified is NULL
 		</sql>
 		<sql dbms="mysql">
-			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp = NULL
+			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is NULL
 		</sql>
+		<sql dbms="mysql">
+			update votes set lastModified = CURRENT_TIMESTAMP where lastModified is NULL
+		</sql>
+		<addNotNullConstraint tableName="phrases" columnName="lastModified" columnDataType="dateTime"/>
+		<addNotNullConstraint tableName="votes" columnName="lastModified" columnDataType="dateTime"/>
 	</changeSet>
 </databaseChangeLog>

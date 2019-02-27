@@ -171,7 +171,7 @@ public class PhrasesResource
     int amount = phraseIdentifiers.size();
 
     votesDao.deleteAllVotesForPhrase(phraseIdentifiers);
-    phrasesDao.deleteCompletedPhrases(phraseIdentifiers);
+    phrasesDao.deletePhrases(phraseIdentifiers);
 
     log.info(amount + " phrases purged from database.");
 
