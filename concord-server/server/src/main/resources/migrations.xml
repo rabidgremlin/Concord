@@ -52,6 +52,7 @@
 			referencedTableName="phrases" />
 	</changeSet>
 	<changeSet id="4" author="wilmol">
+        <comment>Add timestamps to votes and phrases tables</comment>
 		<addColumn tableName="phrases">
 			<column name="completedTimestamp" type="datetime">
 				<constraints nullable="true" />
@@ -78,5 +79,11 @@
 		</sql>
 		<addNotNullConstraint tableName="phrases" columnName="lastModified" columnDataType="dateTime"/>
 		<addNotNullConstraint tableName="votes" columnName="lastModified" columnDataType="dateTime"/>
+	</changeSet>
+	<changeSet id="5" author="wilmol">
+        <comment>Mark trashed phrases as completed, required after the bugfix for completeOnTrash logic</comment>
+		<sql dbms="mysql">
+			update phrases set completed = true, completedTimestamp = CURRENT_TIMESTAMP where completed = false AND label = 'TRASH'
+		</sql>
 	</changeSet>
 </databaseChangeLog>

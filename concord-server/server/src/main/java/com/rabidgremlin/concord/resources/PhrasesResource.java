@@ -188,10 +188,10 @@ public class PhrasesResource
 
     votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
 
-    // are we marking trashed labels as completed?
+    // are we marking trashed phrases as completed?
     if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label.getLabel()))
     {
-      phrasesDao.markPhrasesComplete(Arrays.asList(phraseId), Arrays.asList(label.getLabel()));
+      phrasesDao.markPhrasesComplete(Collections.singletonList(phraseId), Collections.singletonList(label.getLabel()));
     }
 
     return Response.created(uriInfo.getAbsolutePath()).build();
