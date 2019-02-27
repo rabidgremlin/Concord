@@ -35,6 +35,7 @@ public interface VotesDao
       "            t.label," +
       "            t.voteCount," +
       "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
+      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount,@maxVote,t.voteCount), t.voteCount) AS maxVote," +
       "            @current_phraseId:=t.phraseId" +
       "    FROM" +
       "        (SELECT " +
@@ -46,10 +47,10 @@ public interface VotesDao
       "        p.completed = FALSE" +
       "    GROUP BY p.phraseId , p.text , v.label , v.label" +
       "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
-      "    where t.voteCount >= :margin" +
       "    ) r" +
       " WHERE" +
-      "    r.voteRank < 3")
+      "    r.voteRank < 3" +
+      "    and r.maxVote >= :margin")
   @RegisterBeanMapper(GroupedPhraseVote.class)
   List<GroupedPhraseVote> getPhraseOverMarginWithTop2Votes(@Bind("margin") int margin);
 

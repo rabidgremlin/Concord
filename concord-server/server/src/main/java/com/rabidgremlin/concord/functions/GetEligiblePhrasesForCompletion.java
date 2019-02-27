@@ -57,7 +57,7 @@ public class GetEligiblePhrasesForCompletion
       else
       {
         i++;
-        log.debug("Second highest: Label {} voted {} times for phrase[{}] with second hightest vote count {}", secondHighestVote.getLabel(),
+        log.debug("Second highest: Label {} voted {} times for phrase[{}]", secondHighestVote.getLabel(),
             secondHighestVote.getVoteCount(),
             secondHighestVote.getText());
         if (highestVote.getVoteCount() - secondHighestVote.getVoteCount() >= consensusLevel)
