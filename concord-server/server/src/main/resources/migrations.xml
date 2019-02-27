@@ -57,8 +57,11 @@
 				<constraints nullable="true" />
 			</column>
 		</addColumn>
-	</changeSet>
-	<changeSet id="5" author="wilmol">
+		<addColumn tableName="phrases">
+			<column name="lastModified" type="datetime">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
 		<addColumn tableName="votes">
 			<column name="lastModified" type="datetime">
 				<constraints nullable="false" />
