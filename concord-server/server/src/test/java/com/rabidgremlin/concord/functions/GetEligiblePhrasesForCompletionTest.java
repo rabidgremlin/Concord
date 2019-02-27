@@ -2,7 +2,6 @@ package com.rabidgremlin.concord.functions;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
-import com.rabidgremlin.concord.dao.VotesDao;
 
 public class GetEligiblePhrasesForCompletionTest
 {
@@ -24,15 +22,11 @@ public class GetEligiblePhrasesForCompletionTest
   private GroupedPhraseVote vote2, vote5;
 
   @Mock
-  VotesDao votesDaoMock;
-
-  @Mock
   UriInfo uriInfoMock;
 
   @Before
   public void setUp()
   {
-    votesDaoMock = mock(VotesDao.class);
     uriInfoMock = mock(UriInfo.class);
 
     List<GroupedPhraseVote> phraseVotes = new ArrayList<>();
@@ -51,16 +45,16 @@ public class GetEligiblePhrasesForCompletionTest
 
     phraseVotes.add(new GroupedPhraseVote("126", "CelineDion", "And my heart will go on and on", 1));
 
-    functionUnderTest = new GetEligiblePhrasesForCompletion(votesDaoMock, phraseVotes, 2);
+    phraseVotes.add(new GroupedPhraseVote("127", "TaylorSwift", "Last Christmas I gave your my heart", 3));
+
+    phraseVotes.add(new GroupedPhraseVote("127", "JustinBieber", "Last Christmas I gave your my heart", 2));
+
+    functionUnderTest = new GetEligiblePhrasesForCompletion(phraseVotes, 2);
   }
 
   @Test
   public void canGetEligiblePhrases()
   {
-    when(votesDaoMock.getSecondHighestContender("123")).thenReturn(vote2);
-    when(votesDaoMock.getSecondHighestContender("124")).thenReturn(null);
-    when(votesDaoMock.getSecondHighestContender("125")).thenReturn(vote5);
-
     List<Phrase> result = functionUnderTest.execute();
 
     assertEquals(3, result.size());
