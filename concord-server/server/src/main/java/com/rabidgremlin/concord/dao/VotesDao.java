@@ -16,7 +16,7 @@ public interface VotesDao
   @SqlBatch("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);
 
-  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId) VALUES (:phraseId, :label,:userId)")
+  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModified) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
   @SqlQuery("select p.phraseId, v.label, p.text, COUNT(v.userId) AS voteCount from phrases p LEFT OUTER JOIN votes v on p.phraseId = v.phraseId WHERE p.completed = false GROUP BY p.phraseId, v.label, p.text HAVING voteCount >= :margin")

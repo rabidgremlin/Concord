@@ -51,4 +51,18 @@
 			onUpdate="RESTRICT" referencedColumnNames="phraseId"
 			referencedTableName="phrases" />
 	</changeSet>
+	<changeSet id="4" author="wilmol">
+		<addColumn tableName="phrases">
+			<column name="completedTimestamp" type="datetime">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="5" author="wilmol">
+		<addColumn tableName="votes">
+			<column name="lastModified" type="datetime">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

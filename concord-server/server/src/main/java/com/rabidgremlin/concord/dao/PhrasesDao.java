@@ -23,7 +23,7 @@ public interface PhrasesDao
   @RegisterBeanMapper(Phrase.class)
   Phrase getNextPhraseToLabelForUser(@Bind("userId") String userId);
 
-  @SqlBatch("update phrases set completed = True, label = :label where phraseId = :phraseId")
+  @SqlBatch("update phrases set completed = True, label = :label, completedTimestamp = CURRENT_TIMESTAMP where phraseId = :phraseId")
   void markPhrasesComplete(@Bind("phraseId") List<String> phraseId, @Bind("label") List<String> label);
 
   @SqlQuery("select p.phraseId from phrases p where p.completed = True")

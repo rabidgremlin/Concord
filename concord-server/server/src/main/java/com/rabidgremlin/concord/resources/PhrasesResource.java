@@ -158,7 +158,6 @@ public class PhrasesResource
   @Timed
   public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller)
   {
-
     log.info("Caller {} purging completed votes and phrases {}", caller);
 
     List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
