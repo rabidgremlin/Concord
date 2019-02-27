@@ -2,7 +2,8 @@
 
 > concord. noun. agreement or harmony between people
 
-Concord is a web application designed to easily crowd source labelling of text data for NLP. It's focus is on labeling text for training text classification models such as in chatbots.
+Concord is a web application designed to easily crowd source labelling of text data for NLP. 
+It's focus is on labeling text for training text classification models such as in chatbots.
 
 ## get up and running (for developers)
 
@@ -22,6 +23,7 @@ docker run -p 5000:5000 rasa/rasa_nlu:latest-full
 ```
 
 #### 2b. Populate RASA NLU server
+
 In a new terminal window:
 ```
 curl -XPOST --header "Content-Type: application/json" http://localhost:5000/train?project=taxibot -d @testbed/taxibotdata.json
@@ -31,6 +33,7 @@ curl -XPOST --header "Content-Type: application/json" http://localhost:5000/trai
 ```
 curl http://localhost:5000/status
 ```
+
 When status of taxibot model is listed as ready, execute:
 ```
 curl -XPOST http://localhost:5000/parse -d '{"q":"get me my taxi", "project": "taxibot"}'
@@ -38,7 +41,6 @@ curl -XPOST http://localhost:5000/parse -d '{"q":"get me my taxi", "project": "t
 **NOTE: Wait for this response to return before running other queries against the Rasa NLU server. May take several minutes.**
 
 ### 3. Create database and Start up server
-In a new terminal window:
 
 #### 3a. Create the database
 ```
@@ -47,7 +49,6 @@ cd concord-server/server
 ```
 
 #### 3b. Run server
-
 ```
 cd concord-server/server
 ./gradlew run
@@ -69,7 +70,7 @@ Extract token from response and use in place of XXXXXX in the following commands
 curl -v -X POST http://127.0.0.1:9000/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/labels.csv'
 ```
 
-#### 4c. Load unlabelled training data
+#### 4c. Load unlabelled phrases
 ```
 curl -v -X POST http://127.0.0.1:9000/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXXX" --data-binary '@testbed/unlabelled_phrases.csv'
 ```
@@ -91,7 +92,6 @@ npm start
 
 ### 5c. Login
 Login as **bob**, password **secret** or as **alice**, password **garden**
-
 
 ***************************************************
 ## Viewing your Database 
