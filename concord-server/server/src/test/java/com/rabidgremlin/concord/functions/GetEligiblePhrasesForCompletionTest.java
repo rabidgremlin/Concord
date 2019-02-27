@@ -2,7 +2,6 @@ package com.rabidgremlin.concord.functions;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
-import com.rabidgremlin.concord.dao.VotesDao;
 
 public class GetEligiblePhrasesForCompletionTest
 {

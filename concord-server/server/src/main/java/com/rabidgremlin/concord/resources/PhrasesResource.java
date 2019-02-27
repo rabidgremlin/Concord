@@ -65,7 +65,7 @@ public class PhrasesResource
   private final static String LABEL_TRASH = "TRASH";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
-      boolean completeOnTrash)
+    boolean completeOnTrash)
   {
     this.phrasesDao = phrasesDao;
     this.votesDao = votesDao;
