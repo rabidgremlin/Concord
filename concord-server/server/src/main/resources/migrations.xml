@@ -67,5 +67,11 @@
 				<constraints nullable="false" />
 			</column>
 		</addColumn>
+		<sql dbms="mysql">
+			update phrases set lastModified = CURRENT_TIMESTAMP where lastModified = NULL
+		</sql>
+		<sql dbms="mysql">
+			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp = NULL
+		</sql>
 	</changeSet>
 </databaseChangeLog>

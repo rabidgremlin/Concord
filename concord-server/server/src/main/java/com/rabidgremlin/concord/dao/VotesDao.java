@@ -10,6 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 public interface VotesDao
 {
+
   @SqlUpdate("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") String phraseId);
 
@@ -24,7 +25,7 @@ public interface VotesDao
    * <P>
    * Note that there will be only one row for those only have one voted label.
    * 
-   * @param margin
+   * @param margin consensus level required for a phrase to be considered complete
    */
   @SqlQuery("SELECT " +
       "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +
