@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import com.rabidgremlin.concord.resources.VotesResource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -196,9 +197,11 @@ public class ConcordServerApplication
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
+    VotesResource votesResource = new VotesResource(jdbi.onDemand(VotesDao.class));
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
+    environment.jersey().register(votesResource);
 
     setupJwtAuth(configuration, environment);
   }

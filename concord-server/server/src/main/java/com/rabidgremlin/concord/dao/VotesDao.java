@@ -2,6 +2,7 @@ package com.rabidgremlin.concord.dao;
 
 import java.util.List;
 
+import com.rabidgremlin.concord.api.UserVotesMade;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
@@ -53,5 +54,9 @@ public interface VotesDao
       "    and r.maxVote >= :margin")
   @RegisterBeanMapper(GroupedPhraseVote.class)
   List<GroupedPhraseVote> getPhraseOverMarginWithTop2Votes(@Bind("margin") int margin);
+
+  @SqlQuery("select userId, count(*) votesMade from votes group by userId order by votesMade desc")
+  @RegisterBeanMapper(UserVotesMade.class)
+  List<UserVotesMade> getVotesMadePerUser();
 
 }
