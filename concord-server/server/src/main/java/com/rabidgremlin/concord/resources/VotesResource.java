@@ -34,9 +34,9 @@ public class VotesResource
     @GET
     @Timed
     @Path("/scores")
-    public Response getUserScores(@ApiParam(hidden = true) @Auth Caller caller)
+    public Response getUserScores()
     {
-        log.info("Caller {} getting user scores", caller);
+        log.info("Getting user scores");
 
         List<UserVotesMade> userScores = votesDao.getVotesMadePerUser();
 

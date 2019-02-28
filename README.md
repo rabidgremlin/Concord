@@ -65,7 +65,7 @@ By default Concord is configured to use a list of usernames/passwords held in it
 ```
 curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
 ```
-Extract token from response and use in place of XXXXXX in the following commands.
+***Extract token from response and use in place of ```XXXXXX``` in the following commands.***
 
 #### 4b. Load classification labels
 ```

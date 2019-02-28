@@ -1,28 +1,29 @@
 ## Example API calls
 
 ### Get Auth Token
-curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
+```curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'```
+***Extract token from response and use in place of ```XXXXXX``` in the following commands.***
 
 ### Get next phrase to label
-curl -v -X GET http://127.0.0.1:9000/api/phrases/next --header "Authorization: Bearer XXXXX"
+```curl -v -X GET http://127.0.0.1:9000/api/phrases/next --header "Authorization: Bearer XXXXX"```
 
 ### Upload phrases
-curl -v -X POST http://127.0.0.1:9000/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXX" --data-binary '@unlabelled_phrases.csv'
+```curl -v -X POST http://127.0.0.1:9000/api/phrases/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXX" --data-binary '@unlabelled_phrases.csv'```
 
 ### Get all labels
-curl -v -X GET http://127.0.0.1:9000/api/labels --header "Authorization: Bearer XXXXX"
+```curl -v -X GET http://127.0.0.1:9000/api/labels --header "Authorization: Bearer XXXXX"```
 
 ### add a label
-curl -v -X POST http://127.0.0.1:9000/api/labels --header "Content-Type: application/json" --header "Authorization: Bearer XXXXX" --data '{"label":"Test","shortDescription":"short", "longDescription":"longer description"}'
+```curl -v -X POST http://127.0.0.1:9000/api/labels --header "Content-Type: application/json" --header "Authorization: Bearer XXXXX" --data '{"label":"Test","shortDescription":"short", "longDescription":"longer description"}'```
 
 ### upload csv of labels
-curl -v -X POST http://127.0.0.1:9000/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXX" --data-binary '@labels.csv'
+```curl -v -X POST http://127.0.0.1:9000/api/labels/bulk --header "Content-Type: text/csv" --header "Authorization: Bearer XXXXX" --data-binary '@labels.csv'```
 
 ### Make vote
-curl -v -X POST http://127.0.0.1:9000/api/phrases/082f2ce2d8fa15fcf60189796c126d55/votes --header "Content-Type: application/json" --header "Authorization: Bearer XXXXX" --data '{"label":"WhereTaxi"}'
+```curl -v -X POST http://127.0.0.1:9000/api/phrases/082f2ce2d8fa15fcf60189796c126d55/votes --header "Content-Type: application/json" --header "Authorization: Bearer XXXXX" --data '{"label":"WhereTaxi"}'```
 
 ### Get all completed votes
-curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorization: Bearer XXXXX"
+```curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorization: Bearer XXXXX"```
 
 ### Get user scores
-curl -v -X GET http://127.0.0.1:9000/api/votes/scores --header "Authorization: Bearer XXXXXX"
+```curl -v -X GET http://127.0.0.1:9000/api/votes/scores```
