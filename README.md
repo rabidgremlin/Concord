@@ -5,6 +5,8 @@
 Concord is a web application designed to easily crowd source labelling of text data for NLP. 
 It's focus is on labeling text for training text classification models such as in chatbots.
 
+[![CircleCI](https://circleci.com/gh/rabidgremlin/Concord.svg?style=svg)](https://circleci.com/gh/rabidgremlin/Concord)
+
 ## get up and running (for developers)
 
 ### 1. Create database
