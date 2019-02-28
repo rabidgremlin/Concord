@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
-import com.rabidgremlin.concord.resources.VotesResource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -41,6 +40,7 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
+import com.rabidgremlin.concord.resources.VotesResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
