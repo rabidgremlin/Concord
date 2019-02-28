@@ -23,7 +23,7 @@ public interface VotesDao
    * This query returns incomplete phrases with the top 2 votes for each.
    * <P>
    * Note that there will be only one row for those only have one voted label.
-   * 
+   *
    * @param margin
    */
   @SqlQuery("SELECT " +
