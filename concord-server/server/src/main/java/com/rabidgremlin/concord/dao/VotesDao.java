@@ -12,13 +12,14 @@ import com.rabidgremlin.concord.api.UserVotesMade;
 
 public interface VotesDao
 {
+
   @SqlUpdate("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") String phraseId);
 
   @SqlBatch("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);
 
-  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId) VALUES (:phraseId, :label,:userId)")
+  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModifiedTimestamp) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
   /**
@@ -26,7 +27,7 @@ public interface VotesDao
    * <P>
    * Note that there will be only one row for those only have one voted label.
    *
-   * @param margin
+   * @param margin consensus level required for a phrase to be considered complete
    */
   @SqlQuery("SELECT " +
       "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +

@@ -51,4 +51,39 @@
 			onUpdate="RESTRICT" referencedColumnNames="phraseId"
 			referencedTableName="phrases" />
 	</changeSet>
+	<changeSet id="4" author="wilmol">
+        <comment>Add timestamps to votes and phrases tables</comment>
+		<addColumn tableName="phrases">
+			<column name="completedTimestamp" type="datetime">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="phrases">
+			<column name="lastModifiedTimestamp" type="datetime">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="votes">
+			<column name="lastModifiedTimestamp" type="datetime">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<sql dbms="mysql">
+			update phrases set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
+		</sql>
+		<sql dbms="mysql">
+			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is NULL
+		</sql>
+		<sql dbms="mysql">
+			update votes set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
+		</sql>
+		<addNotNullConstraint tableName="phrases" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
+		<addNotNullConstraint tableName="votes" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
+	</changeSet>
+	<changeSet id="5" author="wilmol">
+        <comment>Mark trashed phrases as completed, required after the bugfix for completeOnTrash logic</comment>
+		<sql dbms="mysql">
+			update phrases set completed = true, completedTimestamp = CURRENT_TIMESTAMP where completed = false AND label = 'TRASH'
+		</sql>
+	</changeSet>
 </databaseChangeLog>

@@ -165,14 +165,13 @@ public class PhrasesResource
   @Timed
   public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller)
   {
-
     log.info("Caller {} purging completed votes and phrases {}", caller);
 
     List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
     int amount = phraseIdentifiers.size();
 
     votesDao.deleteAllVotesForPhrase(phraseIdentifiers);
-    phrasesDao.deleteCompletedPhrases(phraseIdentifiers);
+    phrasesDao.deletePhrases(phraseIdentifiers);
 
     log.info(amount + " phrases purged from database.");
 
@@ -189,10 +188,10 @@ public class PhrasesResource
 
     votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
 
-    // are we marking trashed labels as completed?
+    // are we marking trashed phrases as completed?
     if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label.getLabel()))
     {
-      phrasesDao.markPhrasesComplete(Arrays.asList(phraseId), Arrays.asList(label.getLabel()));
+      phrasesDao.markPhrasesComplete(Collections.singletonList(phraseId), Collections.singletonList(label.getLabel()));
     }
 
     return Response.created(uriInfo.getAbsolutePath()).build();

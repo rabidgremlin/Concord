@@ -18,7 +18,13 @@ credentialsValidator:
   class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator
   config:
     bob: secret
-    alice: garden 
+    alice: garden
+    user1: pwd
+    user2: pwd
+    user3: pwd
+    user4: pwd
+    user5: pwd
+    user6: pwd
 
 server:
   applicationConnectors:
