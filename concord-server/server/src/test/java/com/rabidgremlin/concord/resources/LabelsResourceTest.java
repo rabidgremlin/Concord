@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.auth.Caller;
@@ -27,21 +27,16 @@ public class LabelsResourceTest
   private List<Label> labels = new ArrayList<>();
 
   @Mock
-  Caller callerMock;
+  private Caller callerMock;
 
   @Mock
-  LabelsDao labelsDaoMock;
-
-  @Mock
-  UriInfo uriInfoMock;
+  private LabelsDao labelsDaoMock;
 
   @Before
   public void setUp()
   {
-    labelsDaoMock = mock(LabelsDao.class);
-    callerMock = mock(Caller.class);
+    MockitoAnnotations.initMocks(this);
     labelsResource = new LabelsResource(labelsDaoMock);
-    uriInfoMock = mock(UriInfo.class);
 
     Label label1 = new Label();
     label1.setLabel("OrderTaxi");

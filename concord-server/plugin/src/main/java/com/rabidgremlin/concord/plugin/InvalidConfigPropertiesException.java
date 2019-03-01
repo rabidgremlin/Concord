@@ -1,8 +1,10 @@
 package com.rabidgremlin.concord.plugin;
 
-public class InvalidConfigPropertiesException extends Exception
+public class InvalidConfigPropertiesException
+    extends Exception
 {
-    public InvalidConfigPropertiesException(String errorMessage) {
-        super(errorMessage);
-    }
+  public InvalidConfigPropertiesException(String errorMessage)
+  {
+    super(errorMessage);
+  }
 }

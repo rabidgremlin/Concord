@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
@@ -39,28 +40,24 @@ public class PhrasesResourceTest
   private List<UnlabelledPhrase> unlabelledPhrases = new ArrayList<>();
 
   @Mock
-  PhrasesDao phrasesDaoMock;
+  private PhrasesDao phrasesDaoMock;
 
   @Mock
-  Caller callerMock;
+  private Caller callerMock;
 
   @Mock
-  VotesDao votesDaoMock;
+  private VotesDao votesDaoMock;
 
   @Mock
-  LabelSuggester labelSuggestMock;
+  private LabelSuggester labelSuggestMock;
 
   @Mock
-  UploadDao uploadDaoMock;
+  private UploadDao uploadDaoMock;
 
   @Before
   public void setUp()
   {
-    phrasesDaoMock = mock(PhrasesDao.class);
-    votesDaoMock = mock(VotesDao.class);
-    labelSuggestMock = mock(LabelSuggester.class);
-    callerMock = mock(Caller.class);
-    uploadDaoMock = mock(UploadDao.class);
+    MockitoAnnotations.initMocks(this);
 
     resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, false);
 
@@ -88,7 +85,6 @@ public class PhrasesResourceTest
   public void shouldGetNextPhraseWhenPhraseIsAvailable()
     throws UnableToGetSuggestionsException
   {
-
     Phrase testPhrase = new Phrase();
     testPhrase.setText("Where is my taxi?");
     testPhrase.setPhraseId("1234");

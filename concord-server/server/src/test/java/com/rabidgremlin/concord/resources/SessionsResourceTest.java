@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
@@ -12,6 +11,7 @@ import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.NewSessionRequest;
 import com.rabidgremlin.concord.plugin.CredentialsValidator;
@@ -23,17 +23,15 @@ public class SessionsResourceTest
   private SessionsResource badSessionsResource;
 
   @Mock
-  CredentialsValidator validatorMock;
+  private CredentialsValidator validatorMock;
 
   @Mock
-  NewSessionRequest sessionRequestMock;
+  private NewSessionRequest sessionRequestMock;
 
   @Before
   public void setUp()
   {
-
-    validatorMock = mock(CredentialsValidator.class);
-    sessionRequestMock = mock(NewSessionRequest.class);
+    MockitoAnnotations.initMocks(this);
 
     byte[] token = "123456789abcdefghijklmnopqrstuvwxyz".getBytes();
     sessionsResource = new SessionsResource(token, validatorMock);
