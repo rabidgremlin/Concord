@@ -59,26 +59,26 @@
 			</column>
 		</addColumn>
 		<addColumn tableName="phrases">
-			<column name="lastModified" type="datetime">
+			<column name="lastModifiedTimestamp" type="datetime">
 				<constraints nullable="true" />
 			</column>
 		</addColumn>
 		<addColumn tableName="votes">
-			<column name="lastModified" type="datetime">
+			<column name="lastModifiedTimestamp" type="datetime">
 				<constraints nullable="true" />
 			</column>
 		</addColumn>
 		<sql dbms="mysql">
-			update phrases set lastModified = CURRENT_TIMESTAMP where lastModified is NULL
+			update phrases set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
 		</sql>
 		<sql dbms="mysql">
 			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is NULL
 		</sql>
 		<sql dbms="mysql">
-			update votes set lastModified = CURRENT_TIMESTAMP where lastModified is NULL
+			update votes set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
 		</sql>
-		<addNotNullConstraint tableName="phrases" columnName="lastModified" columnDataType="dateTime"/>
-		<addNotNullConstraint tableName="votes" columnName="lastModified" columnDataType="dateTime"/>
+		<addNotNullConstraint tableName="phrases" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
+		<addNotNullConstraint tableName="votes" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
 	</changeSet>
 	<changeSet id="5" author="wilmol">
         <comment>Mark trashed phrases as completed, required after the bugfix for completeOnTrash logic</comment>

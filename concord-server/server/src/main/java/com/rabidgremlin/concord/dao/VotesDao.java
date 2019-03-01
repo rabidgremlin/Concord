@@ -19,7 +19,7 @@ public interface VotesDao
   @SqlBatch("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);
 
-  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModified) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
+  @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModifiedTimestamp) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
   /**
