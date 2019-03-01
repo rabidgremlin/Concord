@@ -44,5 +44,5 @@ curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorizati
 
 ### Get user scores
 ```
-curl -v -X GET http://127.0.0.1:9000/api/votes/scores
+curl -v -X GET http://127.0.0.1:9000/api/users/scores
 ```

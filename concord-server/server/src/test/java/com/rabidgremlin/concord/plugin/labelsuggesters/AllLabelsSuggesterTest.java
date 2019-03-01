@@ -25,7 +25,7 @@ public class AllLabelsSuggesterTest
   private List<SystemLabel> systemLabels = new ArrayList<>();
 
   @Mock
-  SystemLabelStore labelStoreMock;
+  private SystemLabelStore labelStoreMock;
 
   @Before
   public void setUp()
@@ -41,8 +41,7 @@ public class AllLabelsSuggesterTest
 
     phrase = "Reality is wrong, dreams are for real.";
     labelStoreMock = mock(SystemLabelStore.class);
-    labelSuggester = new AllLabelsSuggester(labelStoreMock, new HashMap<String, Object>());
-
+    labelSuggester = new AllLabelsSuggester(labelStoreMock, new HashMap<>());
   }
 
   @Test

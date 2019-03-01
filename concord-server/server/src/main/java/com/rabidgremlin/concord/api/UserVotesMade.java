@@ -6,6 +6,12 @@ public class UserVotesMade
 
   private int votesMade;
 
+  public UserVotesMade(String userId, int votesMade)
+  {
+    this.userId = userId;
+    this.votesMade = votesMade;
+  }
+
   public String getUserId()
   {
     return userId;
