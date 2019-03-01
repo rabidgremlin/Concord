@@ -1,43 +1,43 @@
 package com.rabidgremlin.concord.plugin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the label suggester for a plugin.
- * Responsible for returning a list of labels for a given phrase which users will then vote on.
+ * Represents the label suggester for a plugin. Responsible for returning a list of labels for a given phrase which
+ * users will then vote on.
  *
- * Example: {@link com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester}
- * Example: {@link com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester}
+ * Example: {@link com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester} Example:
+ * {@link com.rabidgremlin.concord.plugin.labelsuggesters.AllLabelsSuggester}
  */
 public abstract class LabelSuggester
 {
-	protected final Map<String,Object> configProperties;
+  protected final Map<String, Object> configProperties;
 
-	protected final SystemLabelStore systemLabelStore;
-	
-	/**
-	 * Initialises the label suggester with config properties (optional); e.g. a map of
-	 * (api url -> authorisation token) pairs for your NLP model API.
-	 *
-	 * @param systemLabelStore - store of all phrase labels.
-	 * @param configProperties - map of config properties; defined in server.yml
-	 */
-	public LabelSuggester(SystemLabelStore systemLabelStore, Map<String,Object> configProperties)
-			throws InvalidConfigPropertiesException
-	{
-		if (configProperties == null)
-		{
-			throw new InvalidConfigPropertiesException("No configuration provided");
-		}
+  protected final SystemLabelStore systemLabelStore;
 
-		this.configProperties = configProperties;
-		this.systemLabelStore = systemLabelStore;
-	}
+  /**
+   * Initialises the label suggester with config properties (optional); e.g. a map of (api url -> authorisation token)
+   * pairs for your NLP model API.
+   *
+   * @param systemLabelStore - store of all phrase labels.
+   * @param configProperties - map of config properties; defined in server.yml
+   */
+  public LabelSuggester(SystemLabelStore systemLabelStore, Map<String, Object> configProperties)
+    throws InvalidConfigPropertiesException
+  {
+    if (configProperties == null)
+    {
+      throw new InvalidConfigPropertiesException("No configuration provided");
+    }
 
-	/**
-	 * Returns a list of suggested labels for the given phrase based on the labels stored in the systemLabelStore.
-	 */
-	public abstract List<SuggestedLabel> suggestLabels(String phrase) throws UnableToGetSuggestionsException;
+    this.configProperties = configProperties;
+    this.systemLabelStore = systemLabelStore;
+  }
+
+  /**
+   * Returns a list of suggested labels for the given phrase based on the labels stored in the systemLabelStore.
+   */
+  public abstract List<SuggestedLabel> suggestLabels(String phrase)
+    throws UnableToGetSuggestionsException;
 }
