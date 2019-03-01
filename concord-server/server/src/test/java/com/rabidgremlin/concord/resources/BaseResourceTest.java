@@ -18,6 +18,7 @@ import com.wix.mysql.config.MysqldConfig;
 
 public class BaseResourceTest
 {
+  // TODO maybe find a better way then using a static here ?
   private static EmbeddedMysql mysqld;
 
   protected Jdbi jdbi;
@@ -40,18 +41,22 @@ public class BaseResourceTest
   private void resetDatabase()
     throws Exception
   {
+    // if database hasn't start been started then start it
     if (mysqld == null)
     {
       startDatabase();
     }
 
+    // override properties from config file
     System.setProperty("dw.database.url", "jdbc:mysql://localhost:2215/concorddb?nullNamePatternMatchesAll=true");
     System.setProperty("dw.database.user", "root");
     System.setProperty("dw.database.password", "");
 
+    // use build in dropwizard logic/liquibase to drop the database
     String[] args = { "db", "drop-all", "--confirm-delete-everything", "src/main/yml/server.yml" };
     ConcordServerApplication.main(args);
 
+    // use build in dropwizard logic/liquibase to create a clean empty database
     args = new String[]{ "db", "migrate", "src/main/yml/server.yml" };
     ConcordServerApplication.main(args);
   }
@@ -59,8 +64,9 @@ public class BaseResourceTest
   public void setUpDatabase()
     throws Exception
   {
-    resetDatabase();
+    resetDatabase(); // create a fresh empty database
 
+    // create a jdbi object to access the database
     jdbi = Jdbi.create(System.getProperty("dw.database.url"), System.getProperty("dw.database.user"), System.getProperty("dw.database.password"));
     jdbi.installPlugin(new SqlObjectPlugin());
   }

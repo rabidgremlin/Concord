@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
@@ -56,12 +57,17 @@ public class LabelsResourceTest
     assertEquals(200, response.getStatus());
     assertEquals("OK", response.getStatusInfo().toString());
 
-    // then the list of labels are stored (should we do this check with a SQL query?)
-    response = labelsResource.getLabels(callerMock);
-    assertThat(response, instanceOf(Response.class));
-    assertEquals(200, response.getStatus());
-    assertEquals("OK", response.getStatusInfo().toString());
-    assertEquals(response.getEntity(), labels);
+    // then the list of labels is stored in the db
+    List<Map<String, Object>> dbLabels = jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM labels")
+        .mapToMap()
+        .list());
+
+    assertEquals(dbLabels.size(), 1); // should have one row
+    Map<String, Object> dbLabel = dbLabels.get(0);
+    assertEquals(dbLabel.size(), 3); // three columns
+    assertEquals("OrderTaxi", dbLabel.get("label"));
+    assertEquals("Order Taxi", dbLabel.get("shortdescription"));
+    assertEquals("Where would you like your taxi to be sent ?", dbLabel.get("longdescription"));
   }
 
   @Test
@@ -85,10 +91,11 @@ public class LabelsResourceTest
     response = labelsResource.getLabels(callerMock);
 
     // then we get backthe list of labels we expect
+    // TODO use sql query here
     assertThat(response, instanceOf(Response.class));
     assertEquals(200, response.getStatus());
     assertEquals("OK", response.getStatusInfo().toString());
-    assertEquals(response.getEntity(), labels);
+    assertEquals(((List) response.getEntity()).size(), 3);
   }
 
   @Test
