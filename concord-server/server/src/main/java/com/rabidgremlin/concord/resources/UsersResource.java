@@ -15,16 +15,16 @@ import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.UserVotesMade;
 import com.rabidgremlin.concord.dao.VotesDao;
 
-@Path("votes")
+@Path("users")
 @Produces(MediaType.APPLICATION_JSON)
-public class VotesResource
+public class UsersResource
 {
 
   private final VotesDao votesDao;
 
-  private final Logger log = LoggerFactory.getLogger(VotesResource.class);
+  private final Logger log = LoggerFactory.getLogger(UsersResource.class);
 
-  public VotesResource(VotesDao votesDao)
+  public UsersResource(VotesDao votesDao)
   {
     this.votesDao = votesDao;
   }
@@ -34,9 +34,11 @@ public class VotesResource
   @Path("/scores")
   public Response getUserScores()
   {
-    log.info("Getting user scores");
+    log.info("Getting all users scores.");
 
     List<UserVotesMade> userScores = votesDao.getVotesMadePerUser();
+
+    userScores.stream().map(UserVotesMade::toString).forEach(log::info);
 
     return Response.ok().entity(userScores).build();
   }

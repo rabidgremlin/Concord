@@ -40,7 +40,7 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
-import com.rabidgremlin.concord.resources.VotesResource;
+import com.rabidgremlin.concord.resources.UsersResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -197,11 +197,11 @@ public class ConcordServerApplication
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
-    VotesResource votesResource = new VotesResource(jdbi.onDemand(VotesDao.class));
+    UsersResource usersResource = new UsersResource(jdbi.onDemand(VotesDao.class));
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
-    environment.jersey().register(votesResource);
+    environment.jersey().register(usersResource);
 
     setupJwtAuth(configuration, environment);
   }
