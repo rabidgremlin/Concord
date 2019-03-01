@@ -1,20 +1,20 @@
 import request from 'superagent'
 
-
-import { callCreateSessionSucceeded } from './actions'
-import { callCreateSessionFailed } from './actions'
-import { callGetNextPhrase } from './actions'
-import { callGetNextPhraseSucceeded } from './actions'
-import { callGetNextPhraseFailed } from './actions'
-import { callVoteForPhraseLabelSucceeded } from './actions'
-import { callVoteForPhraseLabelFailed } from './actions'
-import { callGetAllLabels } from './actions'
-import { callGetAllLabelsSucceeded } from './actions'
-import { callGetAllLabelsFailed } from './actions'
+import {
+    callCreateSessionFailed,
+    callCreateSessionSucceeded,
+    callGetAllLabelsFailed,
+    callGetAllLabelsSucceeded,
+    callGetNextPhraseFailed,
+    callGetNextPhraseSucceeded,
+    callGetUserScoresFailed,
+    callGetUserScoresSucceeded,
+    callVoteForPhraseLabelFailed,
+    callVoteForPhraseLabelSucceeded
+} from './actions'
 
 
 export const apiService = store => next => action => {
-
 
     /*
     Pass all actions through by default
@@ -97,6 +97,19 @@ export const apiService = store => next => action => {
                     }
                     const data = JSON.parse(res.text)
                     next(callGetAllLabelsSucceeded(data))
+                });
+            break;
+        case 'CALL_GET_USER_SCORES':
+            console.log("getting all users scores");
+            request
+                .get('/api/users/scores')
+                .set('Accept', 'application/json')
+                .end((err, res) => {
+                    if (err) {
+                        return next(callGetUserScoresFailed(err))
+                    }
+                    const data = JSON.parse(res.text);
+                    next(callGetUserScoresSucceeded(data));
                 });
             break;
         /*

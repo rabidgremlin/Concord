@@ -15,7 +15,7 @@ import { killSession, resetError } from './actions'
 
 export class App extends Component {
 
-  logout = () => { this.props.dispatch(killSession()) }
+  logout = () => this.props.dispatch(killSession());
 
   render() {    
     if (!this.props.logged_in) {

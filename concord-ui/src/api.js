@@ -17,6 +17,9 @@ import { callGetAllLabels } from './actions'
 import { callGetAllLabelsSucceeded } from './actions'
 import { callGetAllLabelsFailed } from './actions'
 
+import { callGetUserScores } from './actions'
+import { callGetUserScoresSucceeded } from './actions'
+import { callGetUserScoresFailed } from './actions'
 
 export function createSession(userId, password) {
     return (dispatch) => {
@@ -37,8 +40,7 @@ export function createSession(userId, password) {
                 dispatch(callCreateSessionFailed(err));
             });
     }
-};
-
+}
 
 export function getNextPhrase() {
     return (dispatch) => {
@@ -59,7 +61,7 @@ export function getNextPhrase() {
                 dispatch(callGetNextPhraseFailed(err));
             });
     }
-};
+}
 
 export function voteForPhraseLabel(phraseId,label) {
     return (dispatch) => {
@@ -75,7 +77,7 @@ export function voteForPhraseLabel(phraseId,label) {
                 dispatch(callVoteForPhraseLabelFailed(err));
             });
     }
-};
+}
 
 export function getAllLabels() {
     return (dispatch) => {
@@ -92,6 +94,16 @@ export function getAllLabels() {
             dispatch(callGetAllLabelsFailed(err));
         });
     }
-};
+}
 
-
+export function getUserScores() {
+    return (dispatch) => {
+        dispatch(callGetUserScores());
+        request
+            .get('/api/users/scores')
+            .set('Accept', 'application/json')
+            .then((res) => JSON.parse(res.text))
+            .then((data) => dispatch(callGetUserScoresSucceeded(data)))
+            .catch((err) => dispatch(callGetUserScoresFailed(err)))
+    }
+}
