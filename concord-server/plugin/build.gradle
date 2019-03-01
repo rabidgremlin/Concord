@@ -1,16 +1,29 @@
+buildscript {
+    dependencies {
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.3.2'
+    }
+}
+
 plugins {
   id 'java'  
 }
+apply plugin: 'com.diffplug.gradle.spotless'
 
 version = '0.0.1'
 group = 'com.rabidgremlin.concord'
 
+spotless {
+    java {
+        importOrderFile rootProject.file('buildconf/spotless/concord.importorder')
+        eclipseFormatFile rootProject.file('buildconf/spotless/concord-formatting.xml')
+        removeUnusedImports()
+    }
+}
 
 repositories {    
     mavenCentral()
 }
 
 dependencies {    
-    
     testCompile 'junit:junit:4.11'
 }

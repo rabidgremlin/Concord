@@ -5,6 +5,8 @@
 Concord is a web application designed to easily crowd source labelling of text data for NLP. 
 It's focus is on labeling text for training text classification models such as in chatbots.
 
+[![CircleCI](https://circleci.com/gh/rabidgremlin/Concord.svg?style=svg)](https://circleci.com/gh/rabidgremlin/Concord)
+
 ## get up and running (for developers)
 
 ### 1. Create database
@@ -63,7 +65,7 @@ By default Concord is configured to use a list of usernames/passwords held in it
 ```
 curl -v -X POST http://127.0.0.1:9000/api/sessions --header "Content-Type: application/json" --data '{"userId":"Bob","password":"secret"}'
 ```
-Extract token from response and use in place of XXXXXX in the following commands.
+***Extract token from response and use in place of ```XXXXXX``` in the following commands.***
 
 #### 4b. Load classification labels
 ```

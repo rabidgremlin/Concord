@@ -1,16 +1,13 @@
 package com.rabidgremlin.concord.functions;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
@@ -21,13 +18,10 @@ public class GetEligiblePhrasesForCompletionTest
 
   private GroupedPhraseVote vote2, vote5;
 
-  @Mock
-  UriInfo uriInfoMock;
-
   @Before
   public void setUp()
   {
-    uriInfoMock = mock(UriInfo.class);
+    MockitoAnnotations.initMocks(this);
 
     List<GroupedPhraseVote> phraseVotes = new ArrayList<>();
 
@@ -68,4 +62,5 @@ public class GetEligiblePhrasesForCompletionTest
     assertEquals("125", result.get(2).getPhraseId());
     assertEquals("EltonJohn", result.get(2).getLabel());
   }
+
 }

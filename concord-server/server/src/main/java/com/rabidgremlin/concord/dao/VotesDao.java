@@ -8,6 +8,8 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import com.rabidgremlin.concord.api.UserVotesMade;
+
 public interface VotesDao
 {
 
@@ -24,7 +26,7 @@ public interface VotesDao
    * This query returns incomplete phrases with the top 2 votes for each.
    * <P>
    * Note that there will be only one row for those only have one voted label.
-   * 
+   *
    * @param margin consensus level required for a phrase to be considered complete
    */
   @SqlQuery("SELECT " +
@@ -54,5 +56,9 @@ public interface VotesDao
       "    and r.maxVote >= :margin")
   @RegisterBeanMapper(GroupedPhraseVote.class)
   List<GroupedPhraseVote> getPhraseOverMarginWithTop2Votes(@Bind("margin") int margin);
+
+  @SqlQuery("select userId, count(*) votesMade from votes group by userId order by votesMade desc")
+  @RegisterBeanMapper(UserVotesMade.class)
+  List<UserVotesMade> getVotesMadePerUser();
 
 }
