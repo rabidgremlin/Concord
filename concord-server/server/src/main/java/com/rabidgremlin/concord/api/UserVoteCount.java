@@ -1,5 +1,8 @@
 package com.rabidgremlin.concord.api;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class UserVoteCount
 {
   private String userId;
@@ -44,6 +47,36 @@ public class UserVoteCount
         "userId='" + userId + '\'' +
         ", voteCount=" + voteCount +
         '}';
+  }
+
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass())
+    {
+      return false;
+    }
+
+    UserVoteCount that = (UserVoteCount) o;
+
+    return new EqualsBuilder()
+        .append(voteCount, that.voteCount)
+        .append(userId, that.userId)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return new HashCodeBuilder(17, 37)
+        .append(userId)
+        .append(voteCount)
+        .toHashCode();
   }
 
 }

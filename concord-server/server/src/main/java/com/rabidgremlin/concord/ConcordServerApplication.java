@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
-import com.rabidgremlin.concord.dao.StatsDao;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -31,6 +30,7 @@ import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.config.ConcordServerConfiguration;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
+import com.rabidgremlin.concord.dao.StatsDao;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.CredentialsValidator;
