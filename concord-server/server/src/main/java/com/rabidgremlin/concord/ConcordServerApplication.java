@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import com.rabidgremlin.concord.dao.StatsDao;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -40,7 +41,7 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
-import com.rabidgremlin.concord.resources.UsersResource;
+import com.rabidgremlin.concord.resources.StatsResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -197,11 +198,11 @@ public class ConcordServerApplication
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
-    UsersResource usersResource = new UsersResource(jdbi.onDemand(VotesDao.class));
+    StatsResource statsResource = new StatsResource(jdbi.onDemand(StatsDao.class));
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
-    environment.jersey().register(usersResource);
+    environment.jersey().register(statsResource);
 
     setupJwtAuth(configuration, environment);
   }

@@ -1,20 +1,20 @@
 package com.rabidgremlin.concord.api;
 
-public class UserVotesMade
+public class UserVoteCount
 {
   private String userId;
 
-  private int votesMade;
+  private int voteCount;
 
   // Needed for Bean Mapper
-  public UserVotesMade()
+  public UserVoteCount()
   {
   }
 
-  public UserVotesMade(String userId, int votesMade)
+  public UserVoteCount(String userId, int voteCount)
   {
     this.userId = userId;
-    this.votesMade = votesMade;
+    this.voteCount = voteCount;
   }
 
   public String getUserId()
@@ -27,22 +27,22 @@ public class UserVotesMade
     this.userId = userId;
   }
 
-  public int getVotesMade()
+  public int getVoteCount()
   {
-    return votesMade;
+    return voteCount;
   }
 
-  public void setVotesMade(int votesMade)
+  public void setVoteCount(int voteCount)
   {
-    this.votesMade = votesMade;
+    this.voteCount = voteCount;
   }
 
   @Override
   public String toString()
   {
-    return "UserVotesMade{" +
+    return "UserVoteCount{" +
         "userId='" + userId + '\'' +
-        ", votesMade=" + votesMade +
+        ", voteCount=" + voteCount +
         '}';
   }
 

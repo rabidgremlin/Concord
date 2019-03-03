@@ -11,45 +11,45 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import com.rabidgremlin.concord.api.UserVoteCount;
+import com.rabidgremlin.concord.dao.StatsDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.rabidgremlin.concord.api.UserVotesMade;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.VotesDao;
 
-public class UsersResourceTest
+public class StatsResourceTest
 {
 
   @Mock
-  private VotesDao votesDao;
+  private StatsDao statsDao;
 
   @Mock
   private Caller caller;
 
-  private UsersResource usersResource;
+  private StatsResource statsResource;
 
   @Before
   public void setup()
   {
     MockitoAnnotations.initMocks(this);
-    usersResource = new UsersResource(votesDao);
+    statsResource = new StatsResource(statsDao);
   }
 
   @Test
   public void shouldGetUserScoresWhenAvailable()
   {
     // Given
-    List<UserVotesMade> dummyScores = Arrays.asList(
-        new UserVotesMade("user1", 10),
-        new UserVotesMade("user2", 100),
-        new UserVotesMade("user3", 9999));
-    when(votesDao.getVotesMadePerUser()).thenReturn(dummyScores);
+    List<UserVoteCount> dummyScores = Arrays.asList(
+        new UserVoteCount("user1", 10),
+        new UserVoteCount("user2", 100),
+        new UserVoteCount("user3", 9999));
+    when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(dummyScores);
 
     // When
-    Response response = usersResource.getUserScores(caller);
+    Response response = statsResource.getTotalUserVotes(caller);
 
     // Then
     assertThat(response, instanceOf(Response.class));
@@ -63,7 +63,7 @@ public class UsersResourceTest
   public void shouldGetEmptyListWhenNoVotesMade()
   {
     // When
-    Response response = usersResource.getUserScores(caller);
+    Response response = statsResource.getTotalUserVotes(caller);
 
     // Then
     assertThat(response, instanceOf(Response.class));
@@ -77,15 +77,15 @@ public class UsersResourceTest
   public void shouldFilterOutBulkUploadUser()
   {
     // Given
-    List<UserVotesMade> dummyScores = Arrays.asList(
-        new UserVotesMade("user1", 10),
-        new UserVotesMade("user2", 100));
-    List<UserVotesMade> dummyScoresWithBulkUpload = new ArrayList<>(dummyScores);
-    dummyScoresWithBulkUpload.add(new UserVotesMade("BULK_UPLOAD", 9999));
-    when(votesDao.getVotesMadePerUser()).thenReturn(dummyScoresWithBulkUpload);
+    List<UserVoteCount> dummyScores = Arrays.asList(
+        new UserVoteCount("user1", 10),
+        new UserVoteCount("user2", 100));
+    List<UserVoteCount> dummyScoresWithBulkUpload = new ArrayList<>(dummyScores);
+    dummyScoresWithBulkUpload.add(new UserVoteCount("BULK_UPLOAD", 9999));
+    when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(dummyScoresWithBulkUpload);
 
     // When
-    Response response = usersResource.getUserScores(caller);
+    Response response = statsResource.getTotalUserVotes(caller);
 
     // Then
     assertThat(response, instanceOf(Response.class));
