@@ -6,6 +6,11 @@ public class UserVotesMade
 
   private int votesMade;
 
+  // Needed for Bean Mapper
+  public UserVotesMade()
+  {
+  }
+
   public UserVotesMade(String userId, int votesMade)
   {
     this.userId = userId;

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.UserVotesMade;
+import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.VotesDao;
 
 public class UsersResourceTest
@@ -23,6 +25,9 @@ public class UsersResourceTest
 
   @Mock
   private VotesDao votesDao;
+
+  @Mock
+  private Caller caller;
 
   private UsersResource usersResource;
 
@@ -44,7 +49,7 @@ public class UsersResourceTest
     when(votesDao.getVotesMadePerUser()).thenReturn(dummyScores);
 
     // When
-    Response response = usersResource.getUserScores();
+    Response response = usersResource.getUserScores(caller);
 
     // Then
     assertThat(response, instanceOf(Response.class));
@@ -58,7 +63,7 @@ public class UsersResourceTest
   public void shouldGetEmptyListWhenNoVotesMade()
   {
     // When
-    Response response = usersResource.getUserScores();
+    Response response = usersResource.getUserScores(caller);
 
     // Then
     assertThat(response, instanceOf(Response.class));
@@ -66,6 +71,28 @@ public class UsersResourceTest
     assertEquals("OK", response.getStatusInfo().toString());
     assertThat(response.getEntity(), instanceOf(List.class));
     assertEquals(((List) response.getEntity()).size(), 0);
+  }
+
+  @Test
+  public void shouldFilterOutBulkUploadUser()
+  {
+    // Given
+    List<UserVotesMade> dummyScores = Arrays.asList(
+        new UserVotesMade("user1", 10),
+        new UserVotesMade("user2", 100));
+    List<UserVotesMade> dummyScoresWithBulkUpload = new ArrayList<>(dummyScores);
+    dummyScoresWithBulkUpload.add(new UserVotesMade("BULK_UPLOAD", 9999));
+    when(votesDao.getVotesMadePerUser()).thenReturn(dummyScoresWithBulkUpload);
+
+    // When
+    Response response = usersResource.getUserScores(caller);
+
+    // Then
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(200, response.getStatus());
+    assertEquals("OK", response.getStatusInfo().toString());
+    assertThat(response.getEntity(), instanceOf(List.class));
+    assertEquals(response.getEntity(), dummyScores);
   }
 
 }
