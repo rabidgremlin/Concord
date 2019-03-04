@@ -86,12 +86,10 @@ export class LabelPhrase extends Component {
     /*setTimeout(() => {
       this.props.dispatch(callGetNextPhrase());
     }, 1500)*/
-
   }
 
 
   render() {
-
     if (this.props.loading) {
       return (
         <div><p>loading.....</p></div>

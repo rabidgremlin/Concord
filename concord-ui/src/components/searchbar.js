@@ -41,7 +41,7 @@ export class Searchbar extends Component {
             shortDescription: selectedOption.shortDescription,
             longDescription: selectedOption.longDescription
         });
-      }
+      };
 
     render() {
         if (this.props.loading) {

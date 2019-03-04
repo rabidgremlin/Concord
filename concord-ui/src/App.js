@@ -10,21 +10,19 @@ import LabelPhrase from './components/labelphrase'
 import { SimpleDialog } from 'rmwc/Dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux'
-import { killSession, resetError } from './actions'
-
-
+import {callGetTotalUserVotes, killSession, resetError} from './actions'
 export class App extends Component {
 
   logout = () => this.props.dispatch(killSession());
 
-  render() {    
+  render() {
     if (!this.props.logged_in) {
-      return (        
-        <div>        
+      return (
+        <div>
           <ThemeProvider options={{
               primary: '#3f51b5',
               secondary: 'black'
-            }}>  
+            }}>
           <Login />
           <SimpleDialog
             title="Error"
@@ -45,7 +43,7 @@ export class App extends Component {
               primary: '#3f51b5',
               secondary: 'black'
             }}>
-          <Navbar logout={this.logout} />
+          <Navbar logout={this.logout} renderScores={this.renderScores} />
           <Router basename={process.env.PUBLIC_URL}>
             <Switch>
               <Route exact path="/" component={LabelPhrase} />
