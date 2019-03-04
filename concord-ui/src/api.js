@@ -17,9 +17,9 @@ import { callGetAllLabels } from './actions'
 import { callGetAllLabelsSucceeded } from './actions'
 import { callGetAllLabelsFailed } from './actions'
 
-import { callGetUserScores } from './actions'
-import { callGetUserScoresSucceeded } from './actions'
-import { callGetUserScoresFailed } from './actions'
+import { callGetTotalUserVotes } from './actions'
+import { callGetTotalUserVotesSucceeded } from './actions'
+import { callGetTotalUserVotesFailed } from './actions'
 
 export function createSession(userId, password) {
     return (dispatch) => {
@@ -96,14 +96,14 @@ export function getAllLabels() {
     }
 }
 
-export function getUserScores() {
+export function getTotalUserVotes() {
     return (dispatch) => {
-        dispatch(callGetUserScores());
+        dispatch(callGetTotalUserVotes());
         request
-            .get('/api/users/scores')
+            .get('/api/stats/votes/total')
             .set('Accept', 'application/json')
             .then((res) => JSON.parse(res.text))
-            .then((data) => dispatch(callGetUserScoresSucceeded(data)))
-            .catch((err) => dispatch(callGetUserScoresFailed(err)))
+            .then((data) => dispatch(callGetTotalUserVotesSucceeded(data)))
+            .catch((err) => dispatch(callGetTotalUserVotesFailed(err)))
     }
 }

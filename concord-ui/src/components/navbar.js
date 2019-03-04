@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Toolbar, ToolbarRow, ToolbarSection, ToolbarTitle, ToolbarIcon} from 'rmwc';
-import {getUserScores} from "../api";
+import {getTotalUserVotes} from "../api";
 
 export default class Navbar extends Component {
 
@@ -9,7 +9,7 @@ export default class Navbar extends Component {
   }
 
   renderScores() {
-    this.props.dispatch(getUserScores());
+    this.props.dispatch(getTotalUserVotes());
     console.log(this.props.userScores)
   }
 

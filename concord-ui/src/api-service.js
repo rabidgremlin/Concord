@@ -7,8 +7,8 @@ import {
     callGetAllLabelsSucceeded,
     callGetNextPhraseFailed,
     callGetNextPhraseSucceeded,
-    callGetUserScoresFailed,
-    callGetUserScoresSucceeded,
+    callGetTotalUserVotesFailed,
+    callGetTotalUserVotesSucceeded,
     callVoteForPhraseLabelFailed,
     callVoteForPhraseLabelSucceeded
 } from './actions'
@@ -38,7 +38,7 @@ export const apiService = store => next => action => {
                         */
                         return next(callCreateSessionFailed(err))
                     }
-                    const data = JSON.parse(res.text)
+                    const data = JSON.parse(res.text);
                     /*
                     Once data is received, dispatch an action telling the application
                     that data was received successfully, along with the parsed data
@@ -59,7 +59,7 @@ export const apiService = store => next => action => {
                         */
                         return next(callGetNextPhraseFailed(err))
                     }
-                    const data = JSON.parse(res.text)
+                    const data = JSON.parse(res.text);
                     /*
                     Once data is received, dispatch an action telling the application
                     that data was received successfully, along with the parsed data
@@ -99,17 +99,17 @@ export const apiService = store => next => action => {
                     next(callGetAllLabelsSucceeded(data))
                 });
             break;
-        case 'CALL_GET_USER_SCORES':
-            console.log("getting all users scores");
+        case 'CALL_GET_TOTAL_USER_VOTES':
+            console.log("getting total user votes");
             request
-                .get('/api/users/scores')
+                .get('/api/stats/votes/total')
                 .set('Accept', 'application/json')
                 .end((err, res) => {
                     if (err) {
-                        return next(callGetUserScoresFailed(err))
+                        return next(callGetTotalUserVotesFailed(err))
                     }
                     const data = JSON.parse(res.text);
-                    next(callGetUserScoresSucceeded(data));
+                    next(callGetTotalUserVotesSucceeded(data));
                 });
             break;
         /*
@@ -120,6 +120,6 @@ export const apiService = store => next => action => {
             break;
     }
 
-}
+};
 
 //export default apiService
