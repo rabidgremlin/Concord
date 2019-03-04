@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.collect.Streams;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.api.UserVoteRatio;
 import com.rabidgremlin.concord.auth.Caller;
@@ -32,11 +31,14 @@ public class StatsResource
 
   private final StatsDao statsDao;
 
+  private final int consensusLevel;
+
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
 
-  public StatsResource(StatsDao votesDao)
+  public StatsResource(StatsDao statsDao, int consensusLevel)
   {
-    this.statsDao = votesDao;
+    this.statsDao = statsDao;
+    this.consensusLevel = consensusLevel;
   }
 
   private List<UserVoteCount> withoutIgnoredUsers(List<UserVoteCount> list)
@@ -82,18 +84,28 @@ public class StatsResource
     log.info("{} getting ratio of completed user votes for phrases beyond consensus.", caller);
 
     List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
-    List<UserVoteCount> totalVoteCountsForPhrasesBeyondConsensus = withoutIgnoredUsers(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(3));
+    List<UserVoteCount> totalVoteCountsForPhrasesBeyondConsensus = withoutIgnoredUsers(
+        statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(consensusLevel));
 
     completedVoteCounts.sort(Comparator.comparing(UserVoteCount::getUserId));
     totalVoteCountsForPhrasesBeyondConsensus.sort(Comparator.comparing(UserVoteCount::getUserId));
 
     // assumes userIds line up
-    List<UserVoteRatio> voteRatios = Streams.zip(completedVoteCounts.stream(), totalVoteCountsForPhrasesBeyondConsensus.stream(),
-            (completed, total) -> new UserVoteRatio(completed.getUserId(), (double) completed.getVoteCount() / total.getVoteCount())).sorted(Comparator.comparing(UserVoteRatio::getVoteRatio).reversed()).collect(Collectors.toList());
+    List<UserVoteRatio> ratios = totalVoteCountsForPhrasesBeyondConsensus.stream()
+        .map(total -> {
+          int completedCount = completedVoteCounts.stream()
+              .filter(u -> u.getUserId().equals(total.getUserId()))
+              .findFirst()
+              .map(UserVoteCount::getVoteCount)
+              .orElse(0);
+          return new UserVoteRatio(total.getUserId(), (double) completedCount / total.getVoteCount());
+        })
+        .sorted(Comparator.comparing(UserVoteRatio::getVoteRatio).reversed())
+        .collect(Collectors.toList());
 
-      voteRatios.stream().map(UserVoteRatio::toString).forEach(log::info);
+    ratios.stream().map(UserVoteRatio::toString).forEach(log::info);
 
-    return Response.ok().entity(voteRatios).build();
+    return Response.ok().entity(ratios).build();
   }
 
 }

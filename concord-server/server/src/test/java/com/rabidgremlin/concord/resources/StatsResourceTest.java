@@ -36,7 +36,7 @@ public class StatsResourceTest
   public void setup()
   {
     MockitoAnnotations.initMocks(this);
-    statsResource = new StatsResource(statsDao);
+    statsResource = new StatsResource(statsDao, 3);
   }
 
   @Test
