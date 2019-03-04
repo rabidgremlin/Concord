@@ -30,6 +30,7 @@ import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.config.ConcordServerConfiguration;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
+import com.rabidgremlin.concord.dao.StatsDao;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.CredentialsValidator;
@@ -40,7 +41,7 @@ import com.rabidgremlin.concord.resources.LabelsResource;
 import com.rabidgremlin.concord.resources.PhrasesResource;
 import com.rabidgremlin.concord.resources.RedirectResource;
 import com.rabidgremlin.concord.resources.SessionsResource;
-import com.rabidgremlin.concord.resources.UsersResource;
+import com.rabidgremlin.concord.resources.StatsResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -197,11 +198,11 @@ public class ConcordServerApplication
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
-    UsersResource usersResource = new UsersResource(jdbi.onDemand(VotesDao.class));
+    StatsResource statsResource = new StatsResource(jdbi.onDemand(StatsDao.class), consensusLevel);
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);
-    environment.jersey().register(usersResource);
+    environment.jersey().register(statsResource);
 
     setupJwtAuth(configuration, environment);
   }

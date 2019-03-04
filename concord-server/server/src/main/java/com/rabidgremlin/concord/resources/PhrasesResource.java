@@ -139,7 +139,6 @@ public class PhrasesResource
   @Timed
   public synchronized Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller)
   {
-
     log.info("Caller {} marking phrases and downloading csv of completedPhrases", caller);
 
     log.info("Searching for votes over margin {}...", consensusLevel);
