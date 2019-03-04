@@ -15,6 +15,10 @@ export default class Menu extends Component {
         }
     }
 
+    renderStats() {
+        console.log("Rendering stats")
+    }
+
     render() {
         return (
             <div>
@@ -29,7 +33,7 @@ export default class Menu extends Component {
                     </DrawerHeader>
                     <DrawerContent>
                         <List>
-                            <ListItem>Cookies</ListItem>
+                            <ListItem onClick={this.renderStats}>View stats</ListItem>
                             <ListItem>Pizza</ListItem>
                             <ListItem>Icecream</ListItem>
                         </List>
