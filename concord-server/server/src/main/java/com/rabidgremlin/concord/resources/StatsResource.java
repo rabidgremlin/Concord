@@ -82,19 +82,16 @@ public class StatsResource
     log.info("{} getting ratio of completed user votes for phrases beyond consensus.", caller);
 
     List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
-    List<UserVoteCount> totalVoteCountsForPhrasesPassedConsensus = withoutIgnoredUsers(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(3));
+    List<UserVoteCount> totalVoteCountsForPhrasesBeyondConsensus = withoutIgnoredUsers(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(3));
 
     completedVoteCounts.sort(Comparator.comparing(UserVoteCount::getUserId));
-    totalVoteCountsForPhrasesPassedConsensus.sort(Comparator.comparing(UserVoteCount::getUserId));
+    totalVoteCountsForPhrasesBeyondConsensus.sort(Comparator.comparing(UserVoteCount::getUserId));
 
     // assumes userIds line up
-    List<UserVoteRatio> voteRatios = Streams.zip(completedVoteCounts.stream(), totalVoteCountsForPhrasesPassedConsensus.stream(),
-        (completed, total) -> new UserVoteRatio(completed.getUserId(), (double) completed.getVoteCount() / total.getVoteCount()))
-        .collect(Collectors.toList());
+    List<UserVoteRatio> voteRatios = Streams.zip(completedVoteCounts.stream(), totalVoteCountsForPhrasesBeyondConsensus.stream(),
+            (completed, total) -> new UserVoteRatio(completed.getUserId(), (double) completed.getVoteCount() / total.getVoteCount())).sorted(Comparator.comparing(UserVoteRatio::getVoteRatio).reversed()).collect(Collectors.toList());
 
-    voteRatios.sort(Comparator.comparing(UserVoteRatio::getVoteRatio).reversed());
-
-    voteRatios.stream().map(UserVoteRatio::toString).forEach(log::info);
+      voteRatios.stream().map(UserVoteRatio::toString).forEach(log::info);
 
     return Response.ok().entity(voteRatios).build();
   }
