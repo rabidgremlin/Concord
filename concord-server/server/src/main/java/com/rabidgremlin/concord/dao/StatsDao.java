@@ -22,7 +22,8 @@ public interface StatsDao
   List<UserVoteCount> getTotalCountOfVotesMadePerUser();
 
   /*
-   * TODO filter out SKIP and TRASH ???? They are considered complete with less than consensus level.
+   * NOTE: not filtering SKIPPED and TRASH since we check against the consensus
+   * TODO investigate assumption made that TRASH is correct? Can possibly cheat?
    */
 
   /**
@@ -32,6 +33,7 @@ public interface StatsDao
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
       "WHERE completed = true AND phrases.label=votes.label " +
+      //"AND votes.label != 'TRASH' AND votes.label != 'SKIPPED' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -47,6 +49,7 @@ public interface StatsDao
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +
       "WHERE phraseId in (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
+     //"AND label != 'TRASH' AND label != 'SKIPPED' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
