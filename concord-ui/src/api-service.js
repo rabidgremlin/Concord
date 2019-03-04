@@ -99,19 +99,6 @@ export const apiService = store => next => action => {
                     next(callGetAllLabelsSucceeded(data))
                 });
             break;
-        case 'CALL_GET_TOTAL_USER_VOTES':
-            console.log("getting total user votes");
-            request
-                .get('/api/stats/votes/total')
-                .set('Accept', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-                        return next(callGetTotalUserVotesFailed(err))
-                    }
-                    const data = JSON.parse(res.text);
-                    next(callGetTotalUserVotesSucceeded(data));
-                });
-            break;
         /*
         Do nothing if the action does not interest us
         */

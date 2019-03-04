@@ -81,22 +81,3 @@ export const callGetAllLabelsSucceeded = (labelData) => ({
     type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
     labelData
 });
-
-
-/**
- * HANDLE STATS
- */
-
-export const callGetTotalUserVotes = () => ({
-    type: 'CALL_GET_TOTAL_USER_VOTES'
-});
-
-export const callGetTotalUserVotesFailed = (error) => ({
-    type: 'CALL_GET_TOTAL_USER_VOTES_FAILED',
-    error
-});
-
-export const callGetTotalUserVotesSucceeded = (userScoresData) => ({
-    type: 'CALL_GET_TOTAL_USER_VOTES_SUCCEEDED',
-    userScoresData
-});
