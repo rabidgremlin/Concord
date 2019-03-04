@@ -14,7 +14,10 @@ public interface StatsDao
   /**
    * Returns the raw total count of votes made per user.
    */
-  @SqlQuery("select userId, count(*) voteCount from votes group by userId order by voteCount desc")
+  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
+      "FROM votes " +
+      "GROUP BY userId " +
+      "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getTotalCountOfVotesMadePerUser();
 
@@ -26,7 +29,11 @@ public interface StatsDao
    * Returns the count of votes made per user, for phrases which have been marked complete with the same label the user
    * voted for.
    */
-  @SqlQuery("select userId, count(*) voteCount from votes join phrases on phrases.phraseId=votes.phraseId where completed = true AND phrases.label=votes.label group by userId order by voteCount desc")
+  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
+      "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
+      "WHERE completed = true AND phrases.label=votes.label " +
+      "GROUP BY userId " +
+      "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getCompletedCountOfVotesMadePerUser();
 
@@ -37,7 +44,11 @@ public interface StatsDao
    * @param margin the amount of times a phrase must be voted on to be considered in the query. Recommend setting to the
    *          consensus level.
    */
-  @SqlQuery("select userId, count(*) voteCount from votes where phraseId in (select phraseId from votes group by phraseId having count(phraseId) >= :margin) group by userId order by voteCount desc")
+  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
+      "FROM votes " +
+      "WHERE phraseId in (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
+      "GROUP BY userId " +
+      "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(@Bind("margin") int margin);
 

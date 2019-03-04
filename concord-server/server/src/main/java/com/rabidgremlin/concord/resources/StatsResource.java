@@ -90,7 +90,6 @@ public class StatsResource
     completedVoteCounts.sort(Comparator.comparing(UserVoteCount::getUserId));
     totalVoteCountsForPhrasesBeyondConsensus.sort(Comparator.comparing(UserVoteCount::getUserId));
 
-    // assumes userIds line up
     List<UserVoteRatio> ratios = totalVoteCountsForPhrasesBeyondConsensus.stream()
         .map(total -> {
           int completedCount = completedVoteCounts.stream()
