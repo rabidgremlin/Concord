@@ -1,12 +1,14 @@
 import {Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, List, ListItem} from 'rmwc';
 
 import React, {Component} from 'react';
+import {getTotalUserVotes} from "../api";
+import { connect } from 'react-redux'
 
 export default class AppScoresDrawer extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {isOpen: false}
+        this.state = {isOpen: false, totalUserVoteCounts: {}}
     }
 
     handleChange = () => {
@@ -20,6 +22,8 @@ export default class AppScoresDrawer extends Component {
         }
     };
 
+
+
     componentDidUpdate(oldProps) {
         const newProps = this.props;
         if (oldProps.isOpen !== newProps.isOpen)
@@ -29,7 +33,7 @@ export default class AppScoresDrawer extends Component {
     }
 
     render() {
-        console.log("IS OPEN" + this.props.isOpen);
+        console.log(this.props);
         if (this.state.isOpen)
         {
             return (
@@ -53,3 +57,5 @@ export default class AppScoresDrawer extends Component {
     }
 
 }
+
+// export connect((state) => ({ isOpen: state.isOpen, totalUserVoteCounts: state.totalUserVoteCounts }))(AppScoresDrawer);

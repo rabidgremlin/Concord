@@ -10,7 +10,7 @@ import LabelPhrase from './components/labelphrase'
 import { SimpleDialog } from 'rmwc/Dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux'
-import {callGetTotalUserVotes, killSession, resetError} from './actions'
+import {killSession, resetError} from './actions'
 export class App extends Component {
 
   logout = () => this.props.dispatch(killSession());

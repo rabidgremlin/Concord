@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Toolbar, ToolbarRow, ToolbarSection, ToolbarTitle, ToolbarIcon} from 'rmwc';
 import AppScoresDrawer from './scores_drawer';
-import {getTotalUserVotes} from "../api";
 import { connect } from 'react-redux'
+import {getTotalUserVotes} from "../api";
 
 export class Navbar extends Component {
 
@@ -12,25 +12,19 @@ export class Navbar extends Component {
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
-  componentDidMount() {
-    this.props.dispatch(getTotalUserVotes());
-  }
-
-  // componentDidUpdate(oldProps) {
-  //   const newProps = this.props;
-  //   if(oldProps.loading !== newProps.loading) {
-  //     this.setState({loading: newProps.loading})
-  //   }
-  // }
-
   toggleDrawer()
   {
       let open = !this.state.isOpen;
       this.setState({isOpen: open})
   }
 
+    componentDidMount() {
+        this.props.dispatch(getTotalUserVotes());
+    }
+
   render() {
-    return (
+      console.log(this.state.isOpen);
+      return (
       <Toolbar style={{borderRadius: '5px'}}>
         <ToolbarRow>
           <ToolbarSection alignStart>
@@ -38,7 +32,7 @@ export class Navbar extends Component {
           </ToolbarSection>
           <ToolbarSection alignEnd>
             <ToolbarIcon icon="stars" onClick={this.toggleDrawer}/>
-            <AppScoresDrawer isOpen={this.state.isOpen}/>
+            <AppScoresDrawer isOpen={this.state.isOpen} totalUserVoteCounts = {this.state.totalUserVoteCounts}/>
             <ToolbarIcon icon="exit_to_app" onClick={this.props.logout}/>
           </ToolbarSection>
         </ToolbarRow>

@@ -5,7 +5,7 @@ const userReducer = (state = { logged_in: false }, action) => {
         case 'CALL_GET_TOTAL_USER_VOTES_FAILED':
             return { loading: false, error: true };
         case 'CALL_GET_TOTAL_USER_VOTES_SUCCEEDED':
-            return { loading: false, error: false, userScores: action.userScores };
+            return { loading: false, error: false, totalUserVoteCounts: action.totalUserVoteCounts };
         default:
             return state
     }
