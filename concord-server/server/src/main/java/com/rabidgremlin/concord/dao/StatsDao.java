@@ -56,4 +56,12 @@ public interface StatsDao
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(@Bind("margin") int margin);
 
+  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
+      "FROM votes " +
+      "WHERE label = 'TRASH' " +
+      "GROUP BY userId " +
+      "ORDER BY voteCount desc")
+  @RegisterBeanMapper(UserVoteCount.class)
+  List<UserVoteCount> getCountOfTrashVotesPerUser();
+
 }

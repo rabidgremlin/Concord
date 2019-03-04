@@ -42,7 +42,7 @@ curl -v -X POST http://127.0.0.1:9000/api/phrases/082f2ce2d8fa15fcf60189796c126d
 curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorization: Bearer XXXXXX"
 ```
 
-### Get user vote counts
+### Get user stats
 ```
-curl -v -X GET http://127.0.0.1:9000/api/stats/votes/total --header "Authorization: Bearer XXXXXX"
+curl -v -X GET http://127.0.0.1:9000/api/stats --header "Authorization: Bearer XXXXXX"
 ```

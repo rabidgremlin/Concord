@@ -14,15 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
+import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
-import com.rabidgremlin.concord.api.UserVoteRatio;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.StatsDao;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
 
-@Path("stats/votes")
+@Path("stats")
 @Produces(MediaType.APPLICATION_JSON)
 public class StatsResource
 {
@@ -44,67 +44,52 @@ public class StatsResource
   private List<UserVoteCount> withoutIgnoredUsers(List<UserVoteCount> list)
   {
     return list.stream()
-        .filter(s -> !s.getUserId().equals(USER_TO_IGNORE))
+        .filter(u -> !u.getUserId().equals(USER_TO_IGNORE))
         .collect(Collectors.toList());
   }
 
+  private int getVotesForUser(List<UserVoteCount> list, String userId)
+  {
+    return list.stream()
+        .filter(u -> u.getUserId().equals(userId))
+        .findFirst()
+        .map(UserVoteCount::getVoteCount)
+        .orElse(0);
+  }
+
   @GET
   @Timed
-  @Path("/total")
-  public Response getTotalUserVotes(@ApiParam(hidden = true) @Auth Caller caller)
+  @Path("/")
+  public Response getUserStats(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("{} getting total count of user votes.", caller);
+    log.info("{} getting all user stats.", caller);
+    log.debug("Consensus level = {}", consensusLevel);
 
     List<UserVoteCount> totalVoteCounts = withoutIgnoredUsers(statsDao.getTotalCountOfVotesMadePerUser());
-
-    totalVoteCounts.stream().map(UserVoteCount::toString).forEach(log::info);
-
-    return Response.ok().entity(totalVoteCounts).build();
-  }
-
-  @GET
-  @Timed
-  @Path("/completed")
-  public Response getCompletedUserVotes(@ApiParam(hidden = true) @Auth Caller caller)
-  {
-    log.info("{} getting count of completed user votes.", caller);
-
     List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
-
-    completedVoteCounts.stream().map(UserVoteCount::toString).forEach(log::info);
-
-    return Response.ok().entity(completedVoteCounts).build();
-  }
-
-  @GET
-  @Timed
-  @Path("/completed/ratio")
-  public Response getCompletedRatioOfUserVotesForPhrasesBeyondConsensus(@ApiParam(hidden = true) @Auth Caller caller)
-  {
-    log.info("{} getting ratio of completed user votes for phrases beyond consensus.", caller);
-
-    List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
+    List<UserVoteCount> trashedVoteCounts = withoutIgnoredUsers(statsDao.getCountOfTrashVotesPerUser());
     List<UserVoteCount> totalVoteCountsForPhrasesBeyondConsensus = withoutIgnoredUsers(
         statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(consensusLevel));
 
-    completedVoteCounts.sort(Comparator.comparing(UserVoteCount::getUserId));
-    totalVoteCountsForPhrasesBeyondConsensus.sort(Comparator.comparing(UserVoteCount::getUserId));
-
-    List<UserVoteRatio> ratios = totalVoteCountsForPhrasesBeyondConsensus.stream()
-        .map(total -> {
-          int completedCount = completedVoteCounts.stream()
-              .filter(u -> u.getUserId().equals(total.getUserId()))
-              .findFirst()
-              .map(UserVoteCount::getVoteCount)
-              .orElse(0);
-          return new UserVoteRatio(total.getUserId(), (double) completedCount / total.getVoteCount());
+    List<UserStats> userStats = totalVoteCounts.stream()
+        // only include users who have voted (also avoids divide by zero)
+        .filter(totalVoteCount -> totalVoteCount.getVoteCount() > 0)
+        .map(totalVoteCount -> {
+          String userId = totalVoteCount.getUserId();
+          int total = totalVoteCount.getVoteCount();
+          int completed = getVotesForUser(completedVoteCounts, userId);
+          int trashed = getVotesForUser(trashedVoteCounts, userId);
+          int totalBeyondConsensus = getVotesForUser(totalVoteCountsForPhrasesBeyondConsensus, userId);
+          float trashRatio = (float) trashed / total;
+          float completedSuccessRatio = totalBeyondConsensus > 0 ? (float) completed / totalBeyondConsensus : 0;
+          return new UserStats(userId, total, completed, trashed, completedSuccessRatio, trashRatio);
         })
-        .sorted(Comparator.comparing(UserVoteRatio::getVoteRatio).reversed())
+        .sorted(Comparator.comparing(UserStats::getTotalVotes).reversed())
         .collect(Collectors.toList());
 
-    ratios.stream().map(UserVoteRatio::toString).forEach(log::info);
+    userStats.stream().map(UserStats::toString).forEach(log::info);
 
-    return Response.ok().entity(ratios).build();
+    return Response.ok().entity(userStats).build();
   }
 
 }
