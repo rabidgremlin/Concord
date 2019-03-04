@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiParam;
 public class LabelsResource
 {
   @Context
-  private UriInfo uriInfo;
+  protected UriInfo uriInfo;
 
   private Logger log = LoggerFactory.getLogger(LabelsResource.class);
 
