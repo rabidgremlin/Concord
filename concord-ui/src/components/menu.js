@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Drawer, DrawerContent, DrawerHeader, DrawerSubtitle, DrawerTitle, List, ListItem} from 'rmwc';
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, List, ListItem} from 'rmwc';
+import {Link} from "react-router-dom";
 
 export default class Menu extends Component {
 
@@ -18,39 +19,27 @@ export default class Menu extends Component {
         }
     }
 
-
-    renderStats() {
-        console.log("Rendering stats");
-        fetch('/api/stats')
-            .then(results => results.json())
-            .then(data => {
-                for(var d in data){
-                    console.log(data[d])
-                }
-            })
-    }
-
     render() {
         return (
-            <div>
-                <Drawer
-                    modal
-                    open={this.state.menuOpen}
-                    onClose={this.props.toggleMenu}
-                >
-                    <DrawerHeader>
-                        <DrawerTitle>DrawerHeader</DrawerTitle>
-                        <DrawerSubtitle>Subtitle</DrawerSubtitle>
-                    </DrawerHeader>
-                    <DrawerContent>
-                        <List>
-                            <ListItem onClick={this.renderStats}>View stats</ListItem>
-                            <ListItem>Pizza</ListItem>
-                            <ListItem>Icecream</ListItem>
-                        </List>
-                    </DrawerContent>
-                </Drawer>
-            </div>
+            <Drawer
+                modal
+                open={this.state.menuOpen}
+                onClose={this.props.toggleMenu}
+            >
+                <DrawerHeader>
+                    <DrawerTitle>DrawerHeader</DrawerTitle>
+                </DrawerHeader>
+                <DrawerContent>
+                    <List>
+                        <ListItem>
+                            <Link to="/labels">Labels</Link>
+                        </ListItem>
+                        <ListItem>
+                            <Link to="/stats">Stats</Link>
+                        </ListItem>
+                    </List>
+                </DrawerContent>
+            </Drawer>
         )
     }
 

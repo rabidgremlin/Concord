@@ -8,10 +8,11 @@ import {SimpleDialog} from 'rmwc/Dialog';
 import {ThemeProvider} from '@rmwc/theme';
 import {connect} from 'react-redux'
 import {killSession, resetError} from './actions'
+import StatsTable from "./components/statstable";
 
 export class App extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = ({menuOpen: false});
     }
@@ -23,52 +24,52 @@ export class App extends Component {
     render() {
         if (!this.props.logged_in) {
             return (
-                <div>
-                    <ThemeProvider options={{
-                        primary: '#3f51b5',
-                        secondary: 'black'
-                    }}>
-                        <Login/>
-                        <SimpleDialog
-                            title="Error"
-                            body={this.props.errorMsg}
-                            open={this.props.hasError}
-                            cancelLabel={null}
-                            onClose={evt => {
-                                this.props.dispatch(resetError())
-                            }}
-                        />
-                    </ThemeProvider>
-                </div>
+                <ThemeProvider options={{
+                    primary: '#3f51b5',
+                    secondary: 'black'
+                }}>
+                    <Login/>
+                    <SimpleDialog
+                        title="Error"
+                        body={this.props.errorMsg}
+                        open={this.props.hasError}
+                        cancelLabel={null}
+                        onClose={evt => {
+                            this.props.dispatch(resetError())
+                        }}
+                    />
+                </ThemeProvider>
             )
         } else {
             return (
-                <div>
-                    <Menu menuOpen={this.state.menuOpen} toggleMenu={this.toggleMenu}/>
-                    <ThemeProvider options={{
-                        primary: '#3f51b5',
-                        secondary: 'black'
-                    }}>
-                        <Navbar logout={this.logout} toggleMenu={this.toggleMenu}/>
-                        <Router basename={process.env.PUBLIC_URL}>
+                <ThemeProvider options={{
+                    primary: '#3f51b5',
+                    secondary: 'black'
+                }}>
+                    <Router basename={process.env.PUBLIC_URL}>
+                        <div>
+                            <Menu menuOpen={this.state.menuOpen} toggleMenu={this.toggleMenu}/>
+                            <Navbar logout={this.logout} toggleMenu={this.toggleMenu}/>
+                            <SimpleDialog
+                                title="Error"
+                                body={this.props.errorMsg}
+                                open={this.props.hasError}
+                                cancelLabel={null}
+                                onClose={evt => {
+                                    this.props.dispatch(resetError())
+                                }}
+                            />
                             <Switch>
-                                <Route exact path="/" component={LabelPhrase}/>
+                                <Route exact path="/labels" component={LabelPhrase}/>
+                                <Route path="/stats" component={StatsTable}/>
                             </Switch>
-                        </Router>
-                        <SimpleDialog
-                            title="Error"
-                            body={this.props.errorMsg}
-                            open={this.props.hasError}
-                            cancelLabel={null}
-                            onClose={evt => {
-                                this.props.dispatch(resetError())
-                            }}
-                        />
-                    </ThemeProvider>
-                </div>
+                        </div>
+                    </Router>
+                </ThemeProvider>
             )
         }
     }
+
 }
 
 export default connect((state) => ({

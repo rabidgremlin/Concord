@@ -171,20 +171,3 @@ export class LabelPhrase extends Component {
 }
 
 export default connect((state) => ({ error: state.nextPhrase.error, loading: state.nextPhrase.loading, phraseData: state.nextPhrase.phraseData }))(LabelPhrase);
-
-
-/*
- <GridTile key={i}>
-                <GridTilePrimary>
-                  <GridTilePrimaryContent>
-                    <div>{label.longDescription}</div>
-                  </GridTilePrimaryContent>
-                </GridTilePrimary>
-                <GridTileSecondary>
-                  <GridTileIcon>info</GridTileIcon>
-                  <GridTileTitle>{label.label} <br/> {label.shortDescription}</GridTileTitle>
-                </GridTileSecondary>
-              </GridTile>
-              */
-
-
