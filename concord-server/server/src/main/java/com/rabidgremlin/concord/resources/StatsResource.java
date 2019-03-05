@@ -1,23 +1,26 @@
 package com.rabidgremlin.concord.resources;
 
-import com.codahale.metrics.annotation.Timed;
-import com.rabidgremlin.concord.api.UserStats;
-import com.rabidgremlin.concord.api.UserVoteCount;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.StatsDao;
-import io.dropwizard.auth.Auth;
-import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.codahale.metrics.annotation.Timed;
+import com.rabidgremlin.concord.api.UserStats;
+import com.rabidgremlin.concord.api.UserVoteCount;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.StatsDao;
+
+import io.dropwizard.auth.Auth;
+import io.swagger.annotations.ApiParam;
 
 @Path("stats")
 @Produces(MediaType.APPLICATION_JSON)
@@ -75,8 +78,7 @@ public class StatsResource
     List<UserStats> userStats = totalVoteCounts.stream()
         // only include users who have voted
         .filter(totalVoteCount -> totalVoteCount.getVoteCount() > 0)
-        .map(totalVoteCount ->
-        {
+        .map(totalVoteCount -> {
           String userId = totalVoteCount.getUserId();
           int total = totalVoteCount.getVoteCount();
           int completed = getVotesForUser(completedVoteCounts, userId);

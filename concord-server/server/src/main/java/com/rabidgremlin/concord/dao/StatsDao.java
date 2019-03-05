@@ -1,11 +1,12 @@
 package com.rabidgremlin.concord.dao;
 
-import com.rabidgremlin.concord.api.UserVoteCount;
+import java.util.List;
+
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
-import java.util.List;
+import com.rabidgremlin.concord.api.UserVoteCount;
 
 public interface StatsDao
 {
@@ -51,7 +52,7 @@ public interface StatsDao
    * margin.
    *
    * @param margin the amount of times a phrase must be voted on to be considered in the query. Recommend setting to the
-   *               consensus level.
+   *          consensus level.
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +

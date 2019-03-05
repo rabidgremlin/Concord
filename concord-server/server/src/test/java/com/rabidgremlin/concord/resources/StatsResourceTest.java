@@ -1,24 +1,26 @@
 package com.rabidgremlin.concord.resources;
 
-import com.rabidgremlin.concord.api.UserStats;
-import com.rabidgremlin.concord.api.UserVoteCount;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.StatsDao;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.rabidgremlin.concord.api.UserStats;
+import com.rabidgremlin.concord.api.UserVoteCount;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.StatsDao;
 
 public class StatsResourceTest
 {

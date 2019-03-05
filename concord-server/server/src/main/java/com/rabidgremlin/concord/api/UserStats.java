@@ -19,7 +19,8 @@ public class UserStats
 
   private final int totalVotesWithConsensusIgnoringTrash;
 
-  public UserStats(String userId, int totalVotes, int completedVotes, int trashVotes, int totalVotesWithConsensus, int completedVotesIgnoringTrash, int totalVotesWithConsensusIgnoringTrash)
+  public UserStats(String userId, int totalVotes, int completedVotes, int trashVotes, int totalVotesWithConsensus, int completedVotesIgnoringTrash,
+    int totalVotesWithConsensusIgnoringTrash)
   {
     this.userId = userId;
     this.totalVotes = totalVotes;
@@ -89,7 +90,8 @@ public class UserStats
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(userId, totalVotes, completedVotes, trashVotes, totalVotesWithConsensus, completedVotesIgnoringTrash, totalVotesWithConsensusIgnoringTrash);
+    return Objects.hashCode(userId, totalVotes, completedVotes, trashVotes, totalVotesWithConsensus, completedVotesIgnoringTrash,
+        totalVotesWithConsensusIgnoringTrash);
   }
 
   @Override
