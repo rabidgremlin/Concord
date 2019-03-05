@@ -84,8 +84,6 @@ public class StatsResource
         .sorted(Comparator.comparing(UserStats::getTotalVotes).reversed())
         .collect(Collectors.toList());
 
-    userStats.stream().map(UserStats::toString).forEach(log::info);
-
     return Response.ok().entity(userStats).build();
   }
 

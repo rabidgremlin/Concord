@@ -22,22 +22,15 @@ export default class StatsTable extends Component {
 
     componentWillMount() {
         console.log("Fetching stats");
-        fetch('/api/stats', { credentials: "same-origin" })
+        fetch('/api/stats', {credentials: "same-origin"})
             .then(results => results.json())
-            // filter uses with less than 50 votes (they have inflated accuracy ratings)
+            // filter out users with less than 50 votes (they have inflated accuracy ratings)
             .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
-            .then(results => {
-                    this.clearSorts();
-                    this.setState({
-                        data: results,
-                        totalSortDir: -1
-                    });
-                }
-            )
+            .then(results => this.setState({data: results}))
             .then(() => this.sortByTotal(-1));
     }
 
-    toPercentage = (n, d) => ((100 * (n / d)).toFixed(2)) + "%";
+    toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
     render() {
         const data = this.state.data;
@@ -104,13 +97,13 @@ export default class StatsTable extends Component {
                                             {data[i].trashVotes}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}
+                                            {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}
+                                            {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}
+                                            {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}%
                                         </DataTableCell>
                                     </DataTableRow>
                                 ))}
@@ -176,19 +169,19 @@ export default class StatsTable extends Component {
     sortByAccuracyRate = (sortDir) => {
         this.clearSorts();
         this.setState({accuracyRateSortDir: sortDir});
-        this.sortRows(sortDir, (a) => (a.completedVotes / a.totalVotesWithConsensus));
+        this.sortRows(sortDir, (a) => this.toPercentage(a.completedVotes, a.totalVotesWithConsensus));
     };
 
     sortByTrashedRate = (sortDir) => {
         this.clearSorts();
         this.setState({trashRateSortDir: sortDir});
-        this.sortRows(sortDir, (a) => (a.trashVotes / a.totalVotes));
+        this.sortRows(sortDir, (a) => this.toPercentage(a.trashVotes, a.totalVotes));
     };
 
     sortByAccuracyRateNoTrash = (sortDir) => {
         this.clearSorts();
         this.setState({accuracyRateNoTrashSortDir: sortDir});
-        this.sortRows(sortDir, (a) => (a.completedVotesIgnoringTrash / a.totalVotesWithConsensusIgnoringTrash));
+        this.sortRows(sortDir, (a) => this.toPercentage(a.completedVotesIgnoringTrash, a.totalVotesWithConsensusIgnoringTrash));
     };
 
 }
