@@ -1,4 +1,4 @@
- h2.mdc-typography--headline6 {
+h2.mdc-typography--headline6 {
     word-wrap: break-word;
 }
 
@@ -43,6 +43,7 @@ h1.phrase-msg {
     h2.mdc-typography--headline6 {
         font-size: 1rem !important;
     }
+
     h1.phrase-msg {
         font-size: 2em;
     }

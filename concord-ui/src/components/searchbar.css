@@ -1,4 +1,3 @@
-
 /*
 * Styling for the Searchbar component.
 */
@@ -17,7 +16,7 @@ button.labelBtn {
     height: 55px;
     padding: 10 5 5 5;
     margin-top: 10px;
-}  
+}
 
 .labelSelector {
     min-width: 250px;
@@ -27,8 +26,9 @@ button.labelBtn {
 .description-box {
     padding: 10px;
     padding-top: 20px;
-    color: rgba(0,0,0,0.54);
+    color: rgba(0, 0, 0, 0.54);
 }
+
 .desc-sml {
     font-size: 14px;
 }

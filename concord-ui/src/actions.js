@@ -32,17 +32,17 @@ export const killSession = () => ({
  */
 
 export const callGetNextPhrase = () => ({
-    type: 'CALL_GET_NEXT_PHRASE'   
+    type: 'CALL_GET_NEXT_PHRASE'
 });
 
-export const callGetNextPhraseFailed = (error)=> ({
+export const callGetNextPhraseFailed = (error) => ({
     type: 'CALL_GET_NEXT_PHRASE_FAILED',
-    error   
+    error
 });
 
-export const callGetNextPhraseSucceeded = (phraseData)=> ({
+export const callGetNextPhraseSucceeded = (phraseData) => ({
     type: 'CALL_GET_NEXT_PHRASE_SUCCEEDED',
-    phraseData   
+    phraseData
 });
 
 
@@ -54,12 +54,12 @@ export const callVoteForPhraseLabel = () => ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL'
 });
 
-export const callVoteForPhraseLabelFailed = (error)=> ({
+export const callVoteForPhraseLabelFailed = (error) => ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL_FAILED',
-    error   
+    error
 });
 
-export const callVoteForPhraseLabelSucceeded = ()=> ({
+export const callVoteForPhraseLabelSucceeded = () => ({
     type: 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED'
 });
 

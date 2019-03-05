@@ -1,12 +1,10 @@
 import React from 'react';
-import { LabelPhrase } from './labelphrase';
-import Enzyme, { shallow } from 'enzyme';
+import {LabelPhrase} from './labelphrase';
+import Enzyme, {shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Grid, GridCell  } from 'rmwc/Grid';
-import { Card, CardPrimaryAction } from 'rmwc/Card';
-import { Fab } from 'rmwc/Fab';
+import {Card, CardPrimaryAction, Fab, Grid, GridCell} from 'rmwc';
 
-Enzyme.configure({ adapter: new Adapter() })
+Enzyme.configure({adapter: new Adapter()});
 
 function setup() {
     const props = {
@@ -14,7 +12,7 @@ function setup() {
         phraseData: {
             msg: "Hello world",
             id: 1234,
-            possibleLabels : [
+            possibleLabels: [
                 {
                     label: 'HelloIntent',
                     score: 0.5,
@@ -29,9 +27,9 @@ function setup() {
                 }
             ]
         }
-    
-    }
-    const labelPhrase = shallow(<LabelPhrase {...props} />)
+
+    };
+    const labelPhrase = shallow(<LabelPhrase {...props} />);
     // console.log(labelPhrase.debug());
     return {
         props,
@@ -41,7 +39,7 @@ function setup() {
 
 describe('labelPhrase', () => {
 
-    const { labelPhrase, props } = setup();
+    const {labelPhrase, props} = setup();
     it('renders without crashing', () => {
         expect(labelPhrase.find(LabelPhrase));
         expect(labelPhrase.find(Grid).length).toBe(1);

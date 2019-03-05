@@ -29,7 +29,7 @@ export const apiService = store => next => action => {
             */
             request
                 .post('/api/sessions')
-                .send({ userId: action.userId, password: action.password })
+                .send({userId: action.userId, password: action.password})
                 .set('Accept', 'application/json')
                 .end((err, res) => {
                     if (err) {
@@ -73,7 +73,7 @@ export const apiService = store => next => action => {
             */
             request
                 .post('/api/phrases/' + action.phraseId + '/votes/')
-                .send({ label:action.label })
+                .send({label: action.label})
                 .set('Accept', 'application/json')
                 .end((err, res) => {
                     if (err) {
@@ -81,7 +81,7 @@ export const apiService = store => next => action => {
                         in case there is any error, dispatch an action containing the error
                         */
                         return next(callVoteForPhraseLabelFailed(err))
-                    }                    
+                    }
                     next(callVoteForPhraseLabelSucceeded())
                 });
             break;
@@ -95,7 +95,7 @@ export const apiService = store => next => action => {
 
                         return next(callGetAllLabelsFailed(err))
                     }
-                    const data = JSON.parse(res.text)
+                    const data = JSON.parse(res.text);
                     next(callGetAllLabelsSucceeded(data))
                 });
             break;
