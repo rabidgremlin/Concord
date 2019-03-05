@@ -7,8 +7,6 @@ import {
     callGetAllLabelsSucceeded,
     callGetNextPhraseFailed,
     callGetNextPhraseSucceeded,
-    callGetTotalUserVotesFailed,
-    callGetTotalUserVotesSucceeded,
     callVoteForPhraseLabelFailed,
     callVoteForPhraseLabelSucceeded
 } from './actions'

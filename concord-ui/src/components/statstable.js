@@ -18,7 +18,6 @@ export default class StatsTable extends Component {
         this.state = ({})
     }
 
-
     componentWillMount() {
         console.log("Fetching stats");
         fetch('/api/stats')
@@ -32,35 +31,37 @@ export default class StatsTable extends Component {
 
     render() {
         const data = this.state.data;
-        console.log(data);
         if (data) {
             console.log("Rendering stats");
-            data.forEach(console.log);
-            console.log(data[0].userId);
             return (
                 <DataTable
                     style={{height: window.innerHeight, width: window.innerWidth}}
                 >
-                    <DataTableContent>
+                    <DataTableContent style={{fontSize: '30px'}}>
                         <DataTableHead>
                             <DataTableRow>
                                 <DataTableHeadCell>
                                     User
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd>
+                                <DataTableHeadCell alignEnd sort={this.state.totalSortDir || null}
+                                                   onSortChange={this.sortByTotal}>
                                     Total Phrases
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd>
+                                <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
+                                                   onSortChange={this.sortByCompleted}>
                                     Completed Phrases
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd>
+                                <DataTableHeadCell alignEnd sort={this.state.trashSortDir || null}
+                                                   onSortChange={this.sortByTrashed}>
                                     Trashed Phrases
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd>
+                                <DataTableHeadCell alignEnd sort={this.state.completedRateSortDir || null}
+                                                   onSortChange={this.sortByCompletedRate}>
                                     Completed Success Rate
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd>
-                                    Trashed Rate
+                                <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
+                                                   onSortChange={this.sortByTrashedRate}>
+                                    Trash Rate
                                 </DataTableHeadCell>
                             </DataTableRow>
                         </DataTableHead>
@@ -68,11 +69,21 @@ export default class StatsTable extends Component {
                             {[...Array(data.length)].map((v, i) => (
                                 <DataTableRow key={i}>
                                     <DataTableCell>{data[i].userId}</DataTableCell>
-                                    <DataTableCell alignEnd>{data[i].totalVotes}</DataTableCell>
-                                    <DataTableCell alignEnd>{data[i].completedVotes}</DataTableCell>
-                                    <DataTableCell alignEnd>{data[i].trashVotes}</DataTableCell>
-                                    <DataTableCell alignEnd>{(100 * data[i].completedSuccessRatio).toFixed(0)}%</DataTableCell>
-                                    <DataTableCell alignEnd>{(100 * data[i].trashRatio).toFixed(0)}%</DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].totalVotes}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].completedVotes}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].trashVotes}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {(100 * data[i].completedSuccessRatio).toFixed(2)}%
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {(100 * data[i].trashRatio).toFixed(2)}%
+                                    </DataTableCell>
                                 </DataTableRow>
                             ))}
                         </DataTableBody>
@@ -85,5 +96,63 @@ export default class StatsTable extends Component {
             )
         }
     }
+
+    /**
+     * Clears the column sort arrows
+     */
+    clearSorts() {
+        this.setState({
+            totalSortDir: null,
+            completedSortDir: null,
+            trashSortDir: null,
+            completedRateSortDir: null,
+            trashRateSortDir: null,
+        })
+    }
+
+    /**
+     * Sort rows and update the data state, render() will then update the UI
+     */
+    sortRows = (sortDir, comparatorFunction) => {
+        console.log(sortDir);
+        const data = this.state.data;
+        data.sort(comparatorFunction);
+        this.setState({data: data})
+    };
+
+    sortByTotal = (sortDir) => {
+        console.log("Sorting by total");
+        this.clearSorts();
+        this.setState({totalSortDir: sortDir});
+        this.sortRows(sortDir, (a, b) => sortDir * (a.totalVotes - b.totalVotes));
+    };
+
+    sortByCompleted = (sortDir) => {
+        console.log("Sorting by completed");
+        this.clearSorts();
+        this.setState({completedSortDir: sortDir});
+        this.sortRows(sortDir, (a, b) => sortDir * (a.completedVotes - b.completedVotes));
+    };
+
+    sortByTrashed = (sortDir) => {
+        console.log("Sorting by trashed");
+        this.clearSorts();
+        this.setState({trashSortDir: sortDir});
+        this.sortRows(sortDir, (a, b) => sortDir * (a.trashVotes - b.trashVotes));
+    };
+
+    sortByCompletedRate = (sortDir) => {
+        console.log("Sorting by completed rate");
+        this.clearSorts();
+        this.setState({completedRateSortDir: sortDir});
+        this.sortRows(sortDir, (a, b) => sortDir * (a.completedSuccessRatio - b.completedSuccessRatio));
+    };
+
+    sortByTrashedRate = (sortDir) => {
+        console.log("Sorting by trashed rate");
+        this.clearSorts();
+        this.setState({trashRateSortDir: sortDir});
+        this.sortRows(sortDir, (a, b) => sortDir * (a.trashRatio - b.trashRatio));
+    };
 
 }
