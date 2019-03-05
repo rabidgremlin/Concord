@@ -27,7 +27,7 @@ export default class Menu extends Component {
                 onClose={this.props.toggleMenu}
             >
                 <DrawerHeader>
-                    <DrawerTitle style={{fontSize: '30px'}}>Menu</DrawerTitle>
+                    <DrawerTitle style={{fontSize: '30px'}}>Concord</DrawerTitle>
                 </DrawerHeader>
                 <DrawerContent>
                     <List>
@@ -35,7 +35,7 @@ export default class Menu extends Component {
                             <Link to="/labels">Labels</Link>
                         </ListItem>
                         <ListItem style={{fontSize: '20px'}}>
-                            <Link to="/stats">Stats</Link>
+                            <Link to="/stats">User Stats</Link>
                         </ListItem>
                     </List>
                 </DrawerContent>

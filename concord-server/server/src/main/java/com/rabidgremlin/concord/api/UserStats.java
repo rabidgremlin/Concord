@@ -1,7 +1,6 @@
 package com.rabidgremlin.concord.api;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.google.common.base.Objects;
 
 public class UserStats
 {
@@ -14,18 +13,21 @@ public class UserStats
 
   private final int trashVotes;
 
-  private final float completedSuccessRatio;
+  private final int totalVotesWithConsensus;
 
-  private final float trashRatio;
+  private final int completedVotesIgnoringTrash;
 
-  public UserStats(String userId, int totalVotes, int completedVotes, int trashVotes, float completedSuccessRatio, float trashRatio)
+  private final int totalVotesWithConsensusIgnoringTrash;
+
+  public UserStats(String userId, int totalVotes, int completedVotes, int trashVotes, int totalVotesWithConsensus, int completedVotesIgnoringTrash, int totalVotesWithConsensusIgnoringTrash)
   {
     this.userId = userId;
     this.totalVotes = totalVotes;
     this.completedVotes = completedVotes;
     this.trashVotes = trashVotes;
-    this.completedSuccessRatio = completedSuccessRatio;
-    this.trashRatio = trashRatio;
+    this.totalVotesWithConsensus = totalVotesWithConsensus;
+    this.completedVotesIgnoringTrash = completedVotesIgnoringTrash;
+    this.totalVotesWithConsensusIgnoringTrash = totalVotesWithConsensusIgnoringTrash;
   }
 
   public String getUserId()
@@ -48,14 +50,46 @@ public class UserStats
     return trashVotes;
   }
 
-  public float getCompletedSuccessRatio()
+  public int getTotalVotesWithConsensus()
   {
-    return completedSuccessRatio;
+    return totalVotesWithConsensus;
   }
 
-  public float getTrashRatio()
+  public int getCompletedVotesIgnoringTrash()
   {
-    return trashRatio;
+    return completedVotesIgnoringTrash;
+  }
+
+  public int getTotalVotesWithConsensusIgnoringTrash()
+  {
+    return totalVotesWithConsensusIgnoringTrash;
+  }
+
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass())
+    {
+      return false;
+    }
+    UserStats userStats = (UserStats) o;
+    return totalVotes == userStats.totalVotes &&
+        completedVotes == userStats.completedVotes &&
+        trashVotes == userStats.trashVotes &&
+        totalVotesWithConsensus == userStats.totalVotesWithConsensus &&
+        completedVotesIgnoringTrash == userStats.completedVotesIgnoringTrash &&
+        totalVotesWithConsensusIgnoringTrash == userStats.totalVotesWithConsensusIgnoringTrash &&
+        Objects.equal(userId, userStats.userId);
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(userId, totalVotes, completedVotes, trashVotes, totalVotesWithConsensus, completedVotesIgnoringTrash, totalVotesWithConsensusIgnoringTrash);
   }
 
   @Override
@@ -66,47 +100,10 @@ public class UserStats
         ", totalVotes=" + totalVotes +
         ", completedVotes=" + completedVotes +
         ", trashVotes=" + trashVotes +
-        ", completedSuccessRatio=" + completedSuccessRatio +
-        ", trashRatio=" + trashRatio +
+        ", totalVotesWithConsensus=" + totalVotesWithConsensus +
+        ", completedVotesIgnoringTrash=" + completedVotesIgnoringTrash +
+        ", totalVotesWithConsensusIgnoringTrash=" + totalVotesWithConsensusIgnoringTrash +
         '}';
-  }
-
-  @Override
-  public boolean equals(Object o)
-  {
-    if (this == o)
-    {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass())
-    {
-      return false;
-    }
-
-    UserStats userStats = (UserStats) o;
-
-    return new EqualsBuilder()
-        .append(totalVotes, userStats.totalVotes)
-        .append(completedVotes, userStats.completedVotes)
-        .append(trashVotes, userStats.trashVotes)
-        .append(completedSuccessRatio, userStats.completedSuccessRatio)
-        .append(trashRatio, userStats.trashRatio)
-        .append(userId, userStats.userId)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode()
-  {
-    return new HashCodeBuilder(17, 37)
-        .append(userId)
-        .append(totalVotes)
-        .append(completedVotes)
-        .append(trashVotes)
-        .append(completedSuccessRatio)
-        .append(trashRatio)
-        .toHashCode();
   }
 
 }

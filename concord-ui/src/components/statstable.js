@@ -17,7 +17,6 @@ export default class StatsTable extends Component {
         super(props);
         this.state = ({
             data: [],
-            totalSortDir: -1, // sorted by total votes by default (assumption on data source)
         })
     }
 
@@ -25,12 +24,20 @@ export default class StatsTable extends Component {
         console.log("Fetching stats");
         fetch('/api/stats')
             .then(results => results.json())
+            // filter uses with less than 50 votes (they have inflated accuracy ratings)
+            .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
             .then(results => {
-                this.setState({
-                    data: results
-                })
-            });
+                    this.clearSorts();
+                    this.setState({
+                        data: results,
+                        totalSortDir: -1
+                    });
+                }
+            )
+            .then(() => this.sortByTotal(-1));
     }
+
+    toPercentage = (n, d) => ((100 * (n / d)).toFixed(2)) + "%";
 
     render() {
         const data = this.state.data;
@@ -39,7 +46,7 @@ export default class StatsTable extends Component {
             console.log("Rendering stats");
             return (
                 <DataTable
-                    style={{height: window.innerHeight, width: window.innerWidth}}
+                    style={{minHeight: '500px', width: '100%'}} // HACK HACK
                 >
                     <DataTableContent style={{fontSize: '20px'}}>
                         <DataTableHead>
@@ -51,6 +58,10 @@ export default class StatsTable extends Component {
                                                    onSortChange={this.sortByTotal}>
                                     Total Phrases
                                 </DataTableHeadCell>
+                                <DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}
+                                                   onSortChange={this.sortByTotalWithConsensus}>
+                                    Total Phrases With Consensus
+                                </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
                                                    onSortChange={this.sortByCompleted}>
                                     Completed Phrases
@@ -59,37 +70,50 @@ export default class StatsTable extends Component {
                                                    onSortChange={this.sortByTrashed}>
                                     Trashed Phrases
                                 </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.completedRateSortDir || null}
-                                                   onSortChange={this.sortByCompletedRate}>
-                                    Success Rate
+                                <DataTableHeadCell alignEnd sort={this.state.accuracyRateSortDir || null}
+                                                   onSortChange={this.sortByAccuracyRate}>
+                                    Accuracy Rate
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
                                                    onSortChange={this.sortByTrashedRate}>
                                     Trash Rate
                                 </DataTableHeadCell>
+                                <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
+                                                   onSortChange={this.sortByAccuracyRateNoTrash}>
+                                    Accuracy Rate (ignoring trashed phrases)
+                                </DataTableHeadCell>
                             </DataTableRow>
                         </DataTableHead>
                         <DataTableBody>
-                            {[...Array(dataLength)].map((v, i) => (
-                                <DataTableRow key={i}>
-                                    <DataTableCell>{data[i].userId}</DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {data[i].totalVotes}
-                                    </DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {data[i].completedVotes}
-                                    </DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {data[i].trashVotes}
-                                    </DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {(100 * data[i].completedSuccessRatio).toFixed(2)}%
-                                    </DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {(100 * data[i].trashRatio).toFixed(2)}%
-                                    </DataTableCell>
-                                </DataTableRow>
-                            ))}
+                            {[...Array(dataLength)]
+                                .map((v, i) => (
+                                    <DataTableRow key={i}>
+                                        <DataTableCell>
+                                            {data[i].userId}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {data[i].totalVotes}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {data[i].totalVotesWithConsensus}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {data[i].completedVotes}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {data[i].trashVotes}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}
+                                        </DataTableCell>
+                                        <DataTableCell alignEnd>
+                                            {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}
+                                        </DataTableCell>
+                                    </DataTableRow>
+                                ))}
                         </DataTableBody>
                     </DataTableContent>
                 </DataTable>
@@ -107,55 +131,64 @@ export default class StatsTable extends Component {
     clearSorts() {
         this.setState({
             totalSortDir: null,
+            totalWithConsensusSortDir: null,
             completedSortDir: null,
             trashSortDir: null,
-            completedRateSortDir: null,
+            accuracyRateSortDir: null,
             trashRateSortDir: null,
+            accuracyRateNoTrashSortDir: null,
         })
     }
 
     /**
      * Sort rows and update the data state, render() will then update the UI
      */
-    sortRows = (sortDir, comparatorFunction) => {
+    sortRows = (sortDir, supplier) => {
         const data = this.state.data;
-        data.sort(comparatorFunction);
+        data.sort((a, b) => sortDir * (supplier(a) - supplier(b)));
         this.setState({data: data})
     };
 
     sortByTotal = (sortDir) => {
-        console.log("Sorting by total");
         this.clearSorts();
         this.setState({totalSortDir: sortDir});
-        this.sortRows(sortDir, (a, b) => sortDir * (a.totalVotes - b.totalVotes));
+        this.sortRows(sortDir, (a) => a.totalVotes);
+    };
+
+    sortByTotalWithConsensus = (sortDir) => {
+        this.clearSorts();
+        this.setState({totalWithConsensusSortDir: sortDir});
+        this.sortRows(sortDir, (a) => a.totalVotesWithConsensus);
     };
 
     sortByCompleted = (sortDir) => {
-        console.log("Sorting by completed");
         this.clearSorts();
         this.setState({completedSortDir: sortDir});
-        this.sortRows(sortDir, (a, b) => sortDir * (a.completedVotes - b.completedVotes));
+        this.sortRows(sortDir, (a) => (a.completedVotes));
     };
 
     sortByTrashed = (sortDir) => {
-        console.log("Sorting by trashed");
         this.clearSorts();
         this.setState({trashSortDir: sortDir});
-        this.sortRows(sortDir, (a, b) => sortDir * (a.trashVotes - b.trashVotes));
+        this.sortRows(sortDir, (a) => (a.trashVotes));
     };
 
-    sortByCompletedRate = (sortDir) => {
-        console.log("Sorting by completed rate");
+    sortByAccuracyRate = (sortDir) => {
         this.clearSorts();
-        this.setState({completedRateSortDir: sortDir});
-        this.sortRows(sortDir, (a, b) => sortDir * (a.completedSuccessRatio - b.completedSuccessRatio));
+        this.setState({accuracyRateSortDir: sortDir});
+        this.sortRows(sortDir, (a) => (a.completedVotes / a.totalVotesWithConsensus));
     };
 
     sortByTrashedRate = (sortDir) => {
-        console.log("Sorting by trashed rate");
         this.clearSorts();
         this.setState({trashRateSortDir: sortDir});
-        this.sortRows(sortDir, (a, b) => sortDir * (a.trashRatio - b.trashRatio));
+        this.sortRows(sortDir, (a) => (a.trashVotes / a.totalVotes));
+    };
+
+    sortByAccuracyRateNoTrash = (sortDir) => {
+        this.clearSorts();
+        this.setState({accuracyRateNoTrashSortDir: sortDir});
+        this.sortRows(sortDir, (a) => (a.completedVotesIgnoringTrash / a.totalVotesWithConsensusIgnoringTrash));
     };
 
 }

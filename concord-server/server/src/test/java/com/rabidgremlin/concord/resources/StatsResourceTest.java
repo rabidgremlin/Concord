@@ -1,26 +1,24 @@
 package com.rabidgremlin.concord.resources;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-
+import com.rabidgremlin.concord.api.UserStats;
+import com.rabidgremlin.concord.api.UserVoteCount;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.StatsDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.rabidgremlin.concord.api.UserStats;
-import com.rabidgremlin.concord.api.UserVoteCount;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.StatsDao;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 public class StatsResourceTest
 {
@@ -60,19 +58,25 @@ public class StatsResourceTest
         new UserVoteCount("user1", 10),
         new UserVoteCount("user2", 78),
         new UserVoteCount("user3", 10));
+    List<UserVoteCount> dummyScores = Arrays.asList(
+        new UserVoteCount("user1", 0),
+        new UserVoteCount("user2", 0),
+        new UserVoteCount("user3", 0));
     when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(totalCounts);
     when(statsDao.getCompletedCountOfVotesMadePerUser()).thenReturn(completedCounts);
     when(statsDao.getCountOfTrashVotesPerUser()).thenReturn(trashedCounts);
     when(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(anyInt())).thenReturn(totalCountsBeyondConsensus);
+    when(statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash()).thenReturn(dummyScores);
+    when(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(anyInt())).thenReturn(dummyScores);
 
     // When
     Response response = statsResource.getUserStats(caller);
 
     // Then
     List<UserStats> expectedStats = Arrays.asList(
-        new UserStats("user2", 100, 39, 23, 0.5f, 0.23f),
-        new UserStats("user3", 70, 7, 0, 0.7f, 0),
-        new UserStats("user1", 10, 2, 1, 0.2f, 0.1f));
+        new UserStats("user2", 100, 39, 23, 78, 0, 0),
+        new UserStats("user3", 70, 7, 0, 10, 0, 0),
+        new UserStats("user1", 10, 2, 1, 10, 0, 0));
     assertThat(response, instanceOf(Response.class));
     assertEquals(200, response.getStatus());
     assertEquals("OK", response.getStatusInfo().toString());

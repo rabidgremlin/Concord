@@ -1,26 +1,23 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.codahale.metrics.annotation.Timed;
+import com.rabidgremlin.concord.api.UserStats;
+import com.rabidgremlin.concord.api.UserVoteCount;
+import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.StatsDao;
+import io.dropwizard.auth.Auth;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.codahale.metrics.annotation.Timed;
-import com.rabidgremlin.concord.api.UserStats;
-import com.rabidgremlin.concord.api.UserVoteCount;
-import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.StatsDao;
-
-import io.dropwizard.auth.Auth;
-import io.swagger.annotations.ApiParam;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("stats")
 @Produces(MediaType.APPLICATION_JSON)
@@ -68,21 +65,26 @@ public class StatsResource
     List<UserVoteCount> totalVoteCounts = withoutIgnoredUsers(statsDao.getTotalCountOfVotesMadePerUser());
     List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
     List<UserVoteCount> trashedVoteCounts = withoutIgnoredUsers(statsDao.getCountOfTrashVotesPerUser());
-    List<UserVoteCount> totalVoteCountsForPhrasesBeyondConsensus = withoutIgnoredUsers(
+    List<UserVoteCount> totalVoteCountsForPhrasesWithConsensus = withoutIgnoredUsers(
         statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(consensusLevel));
+    List<UserVoteCount> completedVoteCountsIgnoringTrash = withoutIgnoredUsers(
+        statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash());
+    List<UserVoteCount> totalVotesForPhrasesWithConsensusIgnoringTrash = withoutIgnoredUsers(
+        statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(consensusLevel));
 
     List<UserStats> userStats = totalVoteCounts.stream()
-        // only include users who have voted (also avoids divide by zero)
+        // only include users who have voted
         .filter(totalVoteCount -> totalVoteCount.getVoteCount() > 0)
-        .map(totalVoteCount -> {
+        .map(totalVoteCount ->
+        {
           String userId = totalVoteCount.getUserId();
           int total = totalVoteCount.getVoteCount();
           int completed = getVotesForUser(completedVoteCounts, userId);
           int trashed = getVotesForUser(trashedVoteCounts, userId);
-          int totalBeyondConsensus = getVotesForUser(totalVoteCountsForPhrasesBeyondConsensus, userId);
-          float trashRatio = (float) trashed / total;
-          float completedSuccessRatio = totalBeyondConsensus > 0 ? (float) completed / totalBeyondConsensus : 0;
-          return new UserStats(userId, total, completed, trashed, completedSuccessRatio, trashRatio);
+          int totalWithConsensus = getVotesForUser(totalVoteCountsForPhrasesWithConsensus, userId);
+          int completedIgnoringTrash = getVotesForUser(completedVoteCountsIgnoringTrash, userId);
+          int totalWithConsensusIgnoringTrash = getVotesForUser(totalVotesForPhrasesWithConsensusIgnoringTrash, userId);
+          return new UserStats(userId, total, completed, trashed, totalWithConsensus, completedIgnoringTrash, totalWithConsensusIgnoringTrash);
         })
         .sorted(Comparator.comparing(UserStats::getTotalVotes).reversed())
         .collect(Collectors.toList());
