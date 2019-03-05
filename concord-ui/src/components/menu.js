@@ -27,14 +27,14 @@ export default class Menu extends Component {
                 onClose={this.props.toggleMenu}
             >
                 <DrawerHeader>
-                    <DrawerTitle>DrawerHeader</DrawerTitle>
+                    <DrawerTitle style={{fontSize: '30px'}}>Menu</DrawerTitle>
                 </DrawerHeader>
                 <DrawerContent>
                     <List>
-                        <ListItem>
+                        <ListItem style={{fontSize: '20px'}}>
                             <Link to="/labels">Labels</Link>
                         </ListItem>
-                        <ListItem>
+                        <ListItem style={{fontSize: '20px'}}>
                             <Link to="/stats">Stats</Link>
                         </ListItem>
                     </List>

@@ -40,10 +40,7 @@ export class Login extends Component {
                             <Button raised style={{margin: '1rem 1rem 1rem 1rem'}} disabled={this.state.invalidData}
                                     onClick={() => {
 
-                                        //this.props.history.push('/labelphrase')
-                                        //alert('hello');
                                         this.props.dispatch(createSession(this.state.email, this.state.password));
-                                        //callCreateSession(this.state.email,this.state.password);
 
                                     }}>Login</Button>
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {BrowserRouter as Router, Route, Switch,} from 'react-router-dom'
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom'
 import Navbar from './components/navbar'
 import Login from './components/login'
 import Menu from './components/menu'
@@ -63,6 +63,7 @@ export class App extends Component {
                                 <Route exact path="/labels" component={LabelPhrase}/>
                                 <Route path="/stats" component={StatsTable}/>
                             </Switch>
+                            <Redirect from="/" to="/labels"/>
                         </div>
                     </Router>
                 </ThemeProvider>

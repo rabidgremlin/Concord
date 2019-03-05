@@ -37,7 +37,7 @@ export default class StatsTable extends Component {
                 <DataTable
                     style={{height: window.innerHeight, width: window.innerWidth}}
                 >
-                    <DataTableContent style={{fontSize: '30px'}}>
+                    <DataTableContent style={{fontSize: '20px'}}>
                         <DataTableHead>
                             <DataTableRow>
                                 <DataTableHeadCell>
@@ -57,7 +57,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.completedRateSortDir || null}
                                                    onSortChange={this.sortByCompletedRate}>
-                                    Completed Success Rate
+                                    Success Rate
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
                                                    onSortChange={this.sortByTrashedRate}>
@@ -114,7 +114,6 @@ export default class StatsTable extends Component {
      * Sort rows and update the data state, render() will then update the UI
      */
     sortRows = (sortDir, comparatorFunction) => {
-        console.log(sortDir);
         const data = this.state.data;
         data.sort(comparatorFunction);
         this.setState({data: data})
