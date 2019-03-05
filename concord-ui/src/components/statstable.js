@@ -22,7 +22,7 @@ export default class StatsTable extends Component {
 
     componentWillMount() {
         console.log("Fetching stats");
-        fetch('/api/stats')
+        fetch('/api/stats', { credentials: "same-origin" })
             .then(results => results.json())
             // filter uses with less than 50 votes (they have inflated accuracy ratings)
             .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
@@ -80,7 +80,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
                                                    onSortChange={this.sortByAccuracyRateNoTrash}>
-                                    Accuracy Rate (ignoring trashed phrases)
+                                    Accuracy Rate <br/>(ignoring trashed phrases)
                                 </DataTableHeadCell>
                             </DataTableRow>
                         </DataTableHead>
