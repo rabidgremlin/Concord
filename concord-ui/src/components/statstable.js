@@ -15,7 +15,10 @@ export default class StatsTable extends Component {
 
     constructor(props) {
         super(props);
-        this.state = ({})
+        this.state = ({
+            data: [],
+            totalSortDir: -1, // sorted by total votes by default (assumption on data source)
+        })
     }
 
     componentWillMount() {
@@ -31,7 +34,8 @@ export default class StatsTable extends Component {
 
     render() {
         const data = this.state.data;
-        if (data) {
+        const dataLength = data.length;
+        if (dataLength > 0) {
             console.log("Rendering stats");
             return (
                 <DataTable
@@ -66,7 +70,7 @@ export default class StatsTable extends Component {
                             </DataTableRow>
                         </DataTableHead>
                         <DataTableBody>
-                            {[...Array(data.length)].map((v, i) => (
+                            {[...Array(dataLength)].map((v, i) => (
                                 <DataTableRow key={i}>
                                     <DataTableCell>{data[i].userId}</DataTableCell>
                                     <DataTableCell alignEnd>
@@ -92,7 +96,7 @@ export default class StatsTable extends Component {
             )
         } else {
             return (
-                <div><p>Loading...</p></div>
+                <div><p>No stats to display</p></div>
             )
         }
     }
