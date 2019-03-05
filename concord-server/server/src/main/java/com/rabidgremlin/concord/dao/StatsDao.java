@@ -32,7 +32,6 @@ public interface StatsDao
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
       "WHERE completed = true AND phrases.label=votes.label " +
-      // "AND votes.label != 'TRASH' AND votes.label != 'SKIPPED' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -40,8 +39,7 @@ public interface StatsDao
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
-      "WHERE completed = true AND phrases.label=votes.label " +
-      "AND votes.label != 'TRASH' " +
+      "WHERE votes.label != 'TRASH' AND completed = true AND phrases.label=votes.label " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -56,8 +54,7 @@ public interface StatsDao
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +
-      "WHERE phraseId in (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
-      // "AND label != 'TRASH' AND label != 'SKIPPED' " +
+      "WHERE phraseId IN (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -65,8 +62,7 @@ public interface StatsDao
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +
-      "WHERE phraseId in (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
-      "AND label != 'TRASH' " +
+      "WHERE label != 'TRASH' AND phraseId IN (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -76,7 +72,7 @@ public interface StatsDao
       "FROM votes " +
       "WHERE label = 'TRASH' " +
       "GROUP BY userId " +
-      "ORDER BY voteCount desc")
+      "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getCountOfTrashVotesPerUser();
 

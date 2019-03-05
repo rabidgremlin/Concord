@@ -2,6 +2,7 @@ package com.rabidgremlin.concord.resources;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.collect.ImmutableSet;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.auth.Caller;
@@ -27,7 +29,7 @@ import io.swagger.annotations.ApiParam;
 public class StatsResource
 {
 
-  private static final String USER_TO_IGNORE = "BULK_UPLOAD";
+  private static final Set<String> USERS_TO_IGNORE = ImmutableSet.of("BULK_UPLOAD");
 
   private final StatsDao statsDao;
 
@@ -39,13 +41,6 @@ public class StatsResource
   {
     this.statsDao = statsDao;
     this.consensusLevel = consensusLevel;
-  }
-
-  private List<UserVoteCount> withoutIgnoredUsers(List<UserVoteCount> list)
-  {
-    return list.stream()
-        .filter(u -> !u.getUserId().equals(USER_TO_IGNORE))
-        .collect(Collectors.toList());
   }
 
   private int getVotesForUser(List<UserVoteCount> list, String userId)
@@ -65,19 +60,17 @@ public class StatsResource
     log.info("{} getting all user stats.", caller);
     log.debug("Consensus level = {}", consensusLevel);
 
-    List<UserVoteCount> totalVoteCounts = withoutIgnoredUsers(statsDao.getTotalCountOfVotesMadePerUser());
-    List<UserVoteCount> completedVoteCounts = withoutIgnoredUsers(statsDao.getCompletedCountOfVotesMadePerUser());
-    List<UserVoteCount> trashedVoteCounts = withoutIgnoredUsers(statsDao.getCountOfTrashVotesPerUser());
-    List<UserVoteCount> totalVoteCountsForPhrasesWithConsensus = withoutIgnoredUsers(
-        statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(consensusLevel));
-    List<UserVoteCount> completedVoteCountsIgnoringTrash = withoutIgnoredUsers(
-        statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash());
-    List<UserVoteCount> totalVotesForPhrasesWithConsensusIgnoringTrash = withoutIgnoredUsers(
-        statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(consensusLevel));
+    List<UserVoteCount> totalVoteCounts = statsDao.getTotalCountOfVotesMadePerUser();
+    List<UserVoteCount> completedVoteCounts = statsDao.getCompletedCountOfVotesMadePerUser();
+    List<UserVoteCount> trashedVoteCounts = statsDao.getCountOfTrashVotesPerUser();
+    List<UserVoteCount> totalVoteCountsForPhrasesWithConsensus = statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(consensusLevel);
+    List<UserVoteCount> completedVoteCountsIgnoringTrash = statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash();
+    List<UserVoteCount> totalVotesForPhrasesWithConsensusIgnoringTrash = statsDao
+        .getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(consensusLevel);
 
     List<UserStats> userStats = totalVoteCounts.stream()
         // only include users who have voted
-        .filter(totalVoteCount -> totalVoteCount.getVoteCount() > 0)
+        .filter(userVoteCount -> userVoteCount.getVoteCount() > 0 && !USERS_TO_IGNORE.contains(userVoteCount.getUserId()))
         .map(totalVoteCount -> {
           String userId = totalVoteCount.getUserId();
           int total = totalVoteCount.getVoteCount();
