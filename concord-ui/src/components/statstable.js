@@ -137,54 +137,28 @@ export default class StatsTable extends Component {
     }
 
     /**
-     * Sort rows and update the data state, render() will then update the UI
+     * Sort rows for the given property according to the supplier function
      */
-    sortRows = (sortDir, supplier) => {
-        const data = this.state.data;
-        data.sort((a, b) => sortDir * (supplier(a) - supplier(b)));
-        this.setState({data: data})
+    sortRows = (property, sortDir, supplier) => {
+        this.clearSorts();
+        this.setState({
+            [property]: sortDir,
+            data: this.state.data.sort((a, b) => sortDir * (supplier(a) - supplier(b)))
+        })
     };
 
-    sortByTotal = (sortDir) => {
-        this.clearSorts();
-        this.setState({totalSortDir: sortDir});
-        this.sortRows(sortDir, (a) => a.totalVotes);
-    };
+    sortByTotal = (sortDir) => this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
 
-    sortByTotalWithConsensus = (sortDir) => {
-        this.clearSorts();
-        this.setState({totalWithConsensusSortDir: sortDir});
-        this.sortRows(sortDir, (a) => a.totalVotesWithConsensus);
-    };
+    sortByTotalWithConsensus = (sortDir) => this.sortRows('totalWithConsensusSortDir', sortDir, (a) => a.totalVotesWithConsensus);
 
-    sortByCompleted = (sortDir) => {
-        this.clearSorts();
-        this.setState({completedSortDir: sortDir});
-        this.sortRows(sortDir, (a) => (a.completedVotes));
-    };
+    sortByCompleted = (sortDir) => this.sortRows('completedSortDir', sortDir, (a) => (a.completedVotes));
 
-    sortByTrashed = (sortDir) => {
-        this.clearSorts();
-        this.setState({trashSortDir: sortDir});
-        this.sortRows(sortDir, (a) => (a.trashVotes));
-    };
+    sortByTrashed = (sortDir) => this.sortRows('trashSortDir', sortDir, (a) => (a.trashVotes));
 
-    sortByAccuracyRate = (sortDir) => {
-        this.clearSorts();
-        this.setState({accuracyRateSortDir: sortDir});
-        this.sortRows(sortDir, (a) => this.toPercentage(a.completedVotes, a.totalVotesWithConsensus));
-    };
+    sortByAccuracyRate = (sortDir) => this.sortRows('accuracyRateSortDir', sortDir, (a) => this.toPercentage(a.completedVotes, a.totalVotesWithConsensus));
 
-    sortByTrashedRate = (sortDir) => {
-        this.clearSorts();
-        this.setState({trashRateSortDir: sortDir});
-        this.sortRows(sortDir, (a) => this.toPercentage(a.trashVotes, a.totalVotes));
-    };
+    sortByTrashedRate = (sortDir) => this.sortRows('trashRateSortDir', sortDir, (a) => this.toPercentage(a.trashVotes, a.totalVotes));
 
-    sortByAccuracyRateNoTrash = (sortDir) => {
-        this.clearSorts();
-        this.setState({accuracyRateNoTrashSortDir: sortDir});
-        this.sortRows(sortDir, (a) => this.toPercentage(a.completedVotesIgnoringTrash, a.totalVotesWithConsensusIgnoringTrash));
-    };
+    sortByAccuracyRateNoTrash = (sortDir) => this.sortRows('accuracyRateNoTrashSortDir', sortDir, (a) => this.toPercentage(a.completedVotesIgnoringTrash, a.totalVotesWithConsensusIgnoringTrash));
 
 }

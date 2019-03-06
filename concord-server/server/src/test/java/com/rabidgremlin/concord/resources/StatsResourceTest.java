@@ -12,6 +12,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -100,6 +101,7 @@ public class StatsResourceTest
   }
 
   @Test
+  @Ignore("Decided to keep BULK_UPLOAD in the stats.")
   public void shouldFilterOutBulkUploadUser()
   {
     // Given
