@@ -17,6 +17,7 @@ export default class StatsTable extends Component {
         super(props);
         this.state = ({
             data: [],
+            loading: true
         })
     }
 
@@ -26,13 +27,18 @@ export default class StatsTable extends Component {
             .then(results => results.json())
             // filter out users with less than 50 votes (they have inflated accuracy ratings)
             .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
-            .then(results => this.setState({data: results}))
+            .then(results => this.setState({data: results, loading: false}))
             .then(() => this.sortByTotal(-1));
     }
 
     toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
     render() {
+        if (this.state.loading) {
+            return (
+                <div><p>loading...</p></div>
+            )
+        }
         const data = this.state.data;
         const dataLength = data.length;
         if (dataLength > 0) {
@@ -53,7 +59,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}
                                                    onSortChange={this.sortByTotalWithConsensus}>
-                                    Total Phrases With Consensus
+                                    Total Phrases <br/>(with consensus)
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
                                                    onSortChange={this.sortByCompleted}>
@@ -65,7 +71,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.accuracyRateSortDir || null}
                                                    onSortChange={this.sortByAccuracyRate}>
-                                    Accuracy Rate
+                                    Accuracy Rating
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
                                                    onSortChange={this.sortByTrashedRate}>
@@ -73,7 +79,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
                                                    onSortChange={this.sortByAccuracyRateNoTrash}>
-                                    Accuracy Rate <br/>(ignoring trashed phrases)
+                                    Accuracy Rating <br/>(ignoring trashed phrases)
                                 </DataTableHeadCell>
                             </DataTableRow>
                         </DataTableHead>
@@ -85,16 +91,16 @@ export default class StatsTable extends Component {
                                             {data[i].userId}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {data[i].totalVotes}
+                                            {data[i].totalVotes.toLocaleString()}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {data[i].totalVotesWithConsensus}
+                                            {data[i].totalVotesWithConsensus.toLocaleString()}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {data[i].completedVotes}
+                                            {data[i].completedVotes.toLocaleString()}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
-                                            {data[i].trashVotes}
+                                            {data[i].trashVotes.toLocaleString()}
                                         </DataTableCell>
                                         <DataTableCell alignEnd>
                                             {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%

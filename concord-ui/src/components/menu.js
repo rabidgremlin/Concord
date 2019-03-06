@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, List, ListItem} from 'rmwc';
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, Icon, List, MenuItem} from 'rmwc';
 import {Link} from "react-router-dom";
 
 export default class Menu extends Component {
@@ -31,12 +31,16 @@ export default class Menu extends Component {
                 </DrawerHeader>
                 <DrawerContent>
                     <List>
-                        <ListItem style={{fontSize: '20px'}}>
-                            <Link to="/labels">Labels</Link>
-                        </ListItem>
-                        <ListItem style={{fontSize: '20px'}}>
-                            <Link to="/stats">User Stats</Link>
-                        </ListItem>
+                        <Link to="/labels" style={{textDecoration: 'none'}}>
+                            <MenuItem style={{paddingLeft: 13}}>
+                                <Icon icon="outlined_flag"/> Labels
+                            </MenuItem>
+                        </Link>
+                        <Link to="/stats" style={{textDecoration: 'none'}}>
+                            <MenuItem style={{paddingLeft: 13}}>
+                                <Icon icon="bar_chart"/> Stats
+                            </MenuItem>
+                        </Link>
                     </List>
                 </DrawerContent>
             </Drawer>
