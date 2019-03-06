@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Drawer,
   DrawerContent,
@@ -7,8 +7,8 @@ import {
   Icon,
   List,
   MenuItem
-} from "rmwc";
-import { Link } from "react-router-dom";
+} from 'rmwc';
+import { Link } from 'react-router-dom';
 
 export default class Menu extends Component {
   constructor(props) {
@@ -30,18 +30,18 @@ export default class Menu extends Component {
     return (
       <Drawer modal open={this.state.menuOpen} onClose={this.props.toggleMenu}>
         <DrawerHeader>
-          <DrawerTitle style={{ fontSize: "30px" }}>Concord</DrawerTitle>
+          <DrawerTitle style={{ fontSize: '30px' }}>Concord</DrawerTitle>
         </DrawerHeader>
         <DrawerContent>
           <List>
-            <Link to="/labels" style={{ textDecoration: "none" }}>
+            <Link to='/labels' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon="outlined_flag" /> Labels
+                <Icon icon='outlined_flag' /> Labels
               </MenuItem>
             </Link>
-            <Link to="/stats" style={{ textDecoration: "none" }}>
+            <Link to='/stats' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon="bar_chart" /> Stats
+                <Icon icon='bar_chart' /> Stats
               </MenuItem>
             </Link>
           </List>

@@ -1,17 +1,17 @@
-import reducer from "./label";
+import reducer from './label';
 
-describe("label reducer", () => {
-  it("should return the initial state", () => {
+describe('label reducer', () => {
+  it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       loading: true,
       error: false
     });
   });
 
-  it("should handle call to get all labels", () => {
+  it('should handle call to get all labels', () => {
     expect(
       reducer([], {
-        type: "CALL_GET_ALL_LABELS"
+        type: 'CALL_GET_ALL_LABELS'
       })
     ).toEqual({
       loading: true,
@@ -19,14 +19,14 @@ describe("label reducer", () => {
     });
   });
 
-  it("should handle successful call to get all labels", () => {
+  it('should handle successful call to get all labels', () => {
     const testLabelData = {
-      label: "Hello",
+      label: 'Hello',
       id: 123
     };
     expect(
       reducer([], {
-        type: "CALL_GET_ALL_LABELS_SUCCEEDED",
+        type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
         labelData: testLabelData
       })
     ).toEqual({
@@ -36,10 +36,10 @@ describe("label reducer", () => {
     });
   });
 
-  it("should handle unsuccessful call to get all labels", () => {
+  it('should handle unsuccessful call to get all labels', () => {
     expect(
       reducer([], {
-        type: "CALL_GET_ALL_LABELS_FAILED"
+        type: 'CALL_GET_ALL_LABELS_FAILED'
       })
     ).toEqual({
       loading: false,

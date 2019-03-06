@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { getAllLabels } from "../api";
-import { connect } from "react-redux";
-import { Button } from "@rmwc/button";
-import "./searchbar.css";
-import Select from "react-select";
+import React, { Component } from 'react';
+import { getAllLabels } from '../api';
+import { connect } from 'react-redux';
+import { Button } from '@rmwc/button';
+import './searchbar.css';
+import Select from 'react-select';
 
 //function convertLabelDataToLabels(data)
 //{
@@ -14,9 +14,9 @@ export class Searchbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      labels: [{ label: "Loading labels..." }],
-      shortDescription: "",
-      longDescription: ""
+      labels: [{ label: 'Loading labels...' }],
+      shortDescription: '',
+      longDescription: ''
     };
   }
 
@@ -31,7 +31,7 @@ export class Searchbar extends Component {
     }
   }
 
-  handleChange = selectedOption => {
+  handleChange = (selectedOption) => {
     this.setState({
       value: selectedOption,
       shortDescription: selectedOption.shortDescription,
@@ -50,19 +50,19 @@ export class Searchbar extends Component {
       if (this.props.labelData) {
         let labels = this.state.labels;
         return (
-          <div className="searchBar">
+          <div className='searchBar'>
             <Select
-              className="labelSelector"
+              className='labelSelector'
               value={this.state.value}
               onChange={this.handleChange}
               options={labels}
             />
-            <div className="description-box">
-              <p className="desc-sml">{this.state.shortDescription}</p>
+            <div className='description-box'>
+              <p className='desc-sml'>{this.state.shortDescription}</p>
               {this.state.longDescription}
             </div>
             <Button
-              className="labelBtn"
+              className='labelBtn'
               onClick={() => {
                 this.props.makeVote(this.state.value.label);
               }}
@@ -77,7 +77,7 @@ export class Searchbar extends Component {
   }
 }
 
-export default connect(state => ({
+export default connect((state) => ({
   loading: state.label.loading,
   labelData: state.label.labelData
 }))(Searchbar);

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { getNextPhrase, voteForPhraseLabel } from "../api";
-import Searchbar from "./searchbar";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getNextPhrase, voteForPhraseLabel } from '../api';
+import Searchbar from './searchbar';
 
 import {
   Card,
@@ -13,8 +13,8 @@ import {
   GridCell,
   Icon,
   Typography
-} from "rmwc";
-import { FormattedNumber } from "react-intl";
+} from 'rmwc';
+import { FormattedNumber } from 'react-intl';
 
 const keyMappings = {
   7: 0,
@@ -41,36 +41,36 @@ export class LabelPhrase extends Component {
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
-    window.addEventListener("keyup", this.handleKeyPress);
+    window.addEventListener('keyup', this.handleKeyPress);
   }
 
-  handleKeyPress = event => {
-    let keyCode = event.code.replace("Numpad", "");
-    let labels = document.getElementsByClassName("mdc-layout-grid__inner")[0]
+  handleKeyPress = (event) => {
+    let keyCode = event.code.replace('Numpad', '');
+    let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0]
       .childNodes;
     labels.forEach(function(index) {
-      index.style = "border: none";
+      index.style = 'border: none';
     });
 
     let labelIndex = keyMappings[keyCode];
-    if (typeof labelIndex !== "undefined") {
+    if (typeof labelIndex !== 'undefined') {
       if (labels.length - 1 > labelIndex) {
-        labels[labelIndex].style = "border: 2px solid darkgray";
+        labels[labelIndex].style = 'border: 2px solid darkgray';
         this.setState({
           currentLabel: this.props.phraseData.possibleLabels[labelIndex].label
         });
       }
     }
 
-    if (keyCode === "Subtract" || keyCode === "Minus") {
-      this.makeVote("TRASH");
+    if (keyCode === 'Subtract' || keyCode === 'Minus') {
+      this.makeVote('TRASH');
     }
 
-    if (keyCode === "ArrowRight" || keyCode === "Plus") {
-      this.makeVote("SKIPPED");
+    if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
+      this.makeVote('SKIPPED');
     }
 
-    if (keyCode === "Enter") {
+    if (keyCode === 'Enter') {
       if (this.state.currentLabel !== null) {
         this.makeVote(this.state.currentLabel);
       }
@@ -100,34 +100,34 @@ export class LabelPhrase extends Component {
           <div>
             <div
               style={{
-                position: "fixed",
-                bottom: "1rem",
-                right: "1rem",
-                zIndex: "1",
-                textAlign: "center"
+                position: 'fixed',
+                bottom: '1rem',
+                right: '1rem',
+                zIndex: '1',
+                textAlign: 'center'
               }}
             >
-              <div className="tooltip">
-                <span className="tooltiptext">Delete</span>
+              <div className='tooltip'>
+                <span className='tooltiptext'>Delete</span>
                 <Fab
-                  icon="delete"
-                  className="tooltip"
-                  style={{ bottom: "0.5rem" }}
+                  icon='delete'
+                  className='tooltip'
+                  style={{ bottom: '0.5rem' }}
                   onClick={() => {
-                    this.makeVote("TRASH");
+                    this.makeVote('TRASH');
                   }}
                 />
               </div>
 
               <br />
 
-              <div className="tooltip">
-                <span className="tooltiptext">Skip</span>
+              <div className='tooltip'>
+                <span className='tooltiptext'>Skip</span>
                 <Fab
-                  icon="skip_next"
+                  icon='skip_next'
                   mini
                   onClick={() => {
-                    this.makeVote("SKIPPED");
+                    this.makeVote('SKIPPED');
                   }}
                 />
               </div>
@@ -135,26 +135,26 @@ export class LabelPhrase extends Component {
 
             <div>
               <Typography
-                style={{ width: "100%", textAlign: "center" }}
-                use="headline3"
-                tag="h1"
-                className="phrase-msg"
+                style={{ width: '100%', textAlign: 'center' }}
+                use='headline3'
+                tag='h1'
+                className='phrase-msg'
               >
                 {this.props.phraseData.phrase}
               </Typography>
             </div>
             <Grid>
               {this.props.phraseData.possibleLabels.map((label, i) => (
-                <GridCell span="3" phone="4" tablet="2" desktop="4" key={i}>
-                  <Card style={{ width: "100%" }}>
+                <GridCell span='3' phone='4' tablet='2' desktop='4' key={i}>
+                  <Card style={{ width: '100%' }}>
                     <CardPrimaryAction
                       onClick={() => {
                         this.makeVote(label.label);
                       }}
                     >
-                      <div style={{ padding: "0 1rem 1rem 1rem" }}>
-                        <Typography use="headline6" tag="h2">
-                          {label.label} -{" "}
+                      <div style={{ padding: '0 1rem 1rem 1rem' }}>
+                        <Typography use='headline6' tag='h2'>
+                          {label.label} -{' '}
                           <FormattedNumber
                             value={label.score * 100}
                             minimumFractionDigits={2}
@@ -162,24 +162,24 @@ export class LabelPhrase extends Component {
                           %
                         </Typography>
                         <Typography
-                          use="subtitle2"
-                          tag="h3"
-                          theme="text-secondary-on-background"
-                          style={{ marginTop: "-1rem" }}
+                          use='subtitle2'
+                          tag='h3'
+                          theme='text-secondary-on-background'
+                          style={{ marginTop: '-1rem' }}
                         >
                           {label.shortDescription}
                         </Typography>
                         <Typography
-                          use="body1"
-                          tag="div"
-                          theme="text-secondary-on-background"
+                          use='body1'
+                          tag='div'
+                          theme='text-secondary-on-background'
                           style={{
-                            minHeight: "4.3em",
-                            maxHeight: "4.3em",
-                            overflow: "hidden",
-                            display: "-webkit-box",
-                            WebkitLineClamp: "3",
-                            WebkitBoxOrient: "vertical"
+                            minHeight: '4.3em',
+                            maxHeight: '4.3em',
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: '3',
+                            WebkitBoxOrient: 'vertical'
                           }}
                         >
                           {label.longDescription}
@@ -192,7 +192,7 @@ export class LabelPhrase extends Component {
                           this.makeVote(label.label);
                         }}
                       >
-                        Label phrase <Icon icon="arrow_forward" />
+                        Label phrase <Icon icon='arrow_forward' />
                       </CardAction>
                     </CardActions>
                   </Card>
@@ -200,19 +200,19 @@ export class LabelPhrase extends Component {
               ))}
 
               <GridCell
-                span="3"
-                phone="4"
-                tablet="2"
-                desktop="4"
-                key={"searchbar"}
+                span='3'
+                phone='4'
+                tablet='2'
+                desktop='4'
+                key={'searchbar'}
               >
                 <Card
-                  style={{ minWidth: "300px" }}
+                  style={{ minWidth: '300px' }}
                   onClick={() => {
                     this.setState({ currentLabel: null });
                   }}
                 >
-                  <Searchbar makeVote={label => this.makeVote(label)} />
+                  <Searchbar makeVote={(label) => this.makeVote(label)} />
                 </Card>
               </GridCell>
             </Grid>
@@ -229,7 +229,7 @@ export class LabelPhrase extends Component {
   }
 }
 
-export default connect(state => ({
+export default connect((state) => ({
   error: state.nextPhrase.error,
   loading: state.nextPhrase.loading,
   phraseData: state.nextPhrase.phraseData

@@ -1,4 +1,4 @@
-import request from "superagent";
+import request from 'superagent';
 
 import {
   callCreateSessionFailed,
@@ -9,24 +9,24 @@ import {
   callGetNextPhraseSucceeded,
   callVoteForPhraseLabelFailed,
   callVoteForPhraseLabelSucceeded
-} from "./actions";
+} from './actions';
 
-export const apiService = store => next => action => {
+export const apiService = (store) => (next) => (action) => {
   /*
     Pass all actions through by default
     */
-  console.log("ACTION is before " + action.type);
+  console.log('ACTION is before ' + action.type);
   next(action);
-  console.log("ACTION is after " + action.type);
+  console.log('ACTION is after ' + action.type);
   switch (action.type) {
-    case "CALL_CREATE_SESSION":
+    case 'CALL_CREATE_SESSION':
       /*
             In case we receive an action to send an API request, send the appropriate request
             */
       request
-        .post("/api/sessions")
+        .post('/api/sessions')
         .send({ userId: action.userId, password: action.password })
-        .set("Accept", "application/json")
+        .set('Accept', 'application/json')
         .end((err, res) => {
           if (err) {
             /*
@@ -42,12 +42,12 @@ export const apiService = store => next => action => {
           next(callCreateSessionSucceeded(data.token));
         });
       break;
-    case "CALL_GET_NEXT_PHRASE":
-      console.log("getting phrase");
+    case 'CALL_GET_NEXT_PHRASE':
+      console.log('getting phrase');
       request
-        .get("/api/phrases/next")
+        .get('/api/phrases/next')
         //.send({ userId: action.userId, password: action.password })
-        .set("Accept", "application/json")
+        .set('Accept', 'application/json')
         .end((err, res) => {
           if (err) {
             /*
@@ -63,14 +63,14 @@ export const apiService = store => next => action => {
           next(callGetNextPhraseSucceeded(data));
         });
       break;
-    case "CALL_VOTE_FOR_PHRASE_LABEL":
+    case 'CALL_VOTE_FOR_PHRASE_LABEL':
       /*
             In case we receive an action to send an API request, send the appropriate request
             */
       request
-        .post("/api/phrases/" + action.phraseId + "/votes/")
+        .post('/api/phrases/' + action.phraseId + '/votes/')
         .send({ label: action.label })
-        .set("Accept", "application/json")
+        .set('Accept', 'application/json')
         .end((err, res) => {
           if (err) {
             /*
@@ -81,11 +81,11 @@ export const apiService = store => next => action => {
           next(callVoteForPhraseLabelSucceeded());
         });
       break;
-    case "CALL_GET_ALL_LABELS":
-      console.log("getting labels");
+    case 'CALL_GET_ALL_LABELS':
+      console.log('getting labels');
       request
-        .get("/api/labels")
-        .set("Accept", "application/json")
+        .get('/api/labels')
+        .set('Accept', 'application/json')
         .end((err, res) => {
           if (err) {
             return next(callGetAllLabelsFailed(err));
@@ -98,7 +98,7 @@ export const apiService = store => next => action => {
         Do nothing if the action does not interest us
         */
     default:
-      console.log("doing nothing for " + action.type);
+      console.log('doing nothing for ' + action.type);
       break;
   }
 };

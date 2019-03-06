@@ -1,53 +1,53 @@
-import * as actions from "./actions";
+import * as actions from './actions';
 
 /**
  * HANLDE SESSION ####################
  */
 
-describe("actions", () => {
-  it("should create an action to create a session", () => {
+describe('actions', () => {
+  it('should create an action to create a session', () => {
     const expectedAction = {
-      type: "CALL_CREATE_SESSION"
+      type: 'CALL_CREATE_SESSION'
     };
     expect(actions.callCreateSession()).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action to reset an error flag", () => {
+describe('actions', () => {
+  it('should create an action to reset an error flag', () => {
     const expectedAction = {
-      type: "RESET_ERROR"
+      type: 'RESET_ERROR'
     };
     expect(actions.resetError()).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for failure to create a session", () => {
-    const error = "Failed to create";
+describe('actions', () => {
+  it('should create an action for failure to create a session', () => {
+    const error = 'Failed to create';
     const expectedAction = {
-      type: "CALL_CREATE_SESSION_FAILED",
+      type: 'CALL_CREATE_SESSION_FAILED',
       error
     };
     expect(actions.callCreateSessionFailed(error)).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for successful session creation", () => {
-    const token = "1234";
+describe('actions', () => {
+  it('should create an action for successful session creation', () => {
+    const token = '1234';
     const expectedAction = {
-      type: "CALL_CREATE_SESSION_SUCCEEDED",
+      type: 'CALL_CREATE_SESSION_SUCCEEDED',
       token
     };
     expect(actions.callCreateSessionSucceeded(token)).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action to kill session", () => {
+describe('actions', () => {
+  it('should create an action to kill session', () => {
     const expectedAction = {
-      type: "KILL_SESSION"
+      type: 'KILL_SESSION'
     };
     expect(actions.killSession()).toEqual(expectedAction);
   });
@@ -57,34 +57,34 @@ describe("actions", () => {
  * HANDLE NEXT PHRASE ####################
  */
 
-describe("actions", () => {
-  it("should create an action to get next phrase", () => {
+describe('actions', () => {
+  it('should create an action to get next phrase', () => {
     const expectedAction = {
-      type: "CALL_GET_NEXT_PHRASE"
+      type: 'CALL_GET_NEXT_PHRASE'
     };
     expect(actions.callGetNextPhrase()).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for failure to get next phrase", () => {
-    const error = "Failed to retrieve phrase";
+describe('actions', () => {
+  it('should create an action for failure to get next phrase', () => {
+    const error = 'Failed to retrieve phrase';
     const expectedAction = {
-      type: "CALL_GET_NEXT_PHRASE_FAILED",
+      type: 'CALL_GET_NEXT_PHRASE_FAILED',
       error
     };
     expect(actions.callGetNextPhraseFailed(error)).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for successful next phrase retrieval", () => {
+describe('actions', () => {
+  it('should create an action for successful next phrase retrieval', () => {
     const phraseData = {
-      label: "Hello",
-      id: "1234"
+      label: 'Hello',
+      id: '1234'
     };
     const expectedAction = {
-      type: "CALL_GET_NEXT_PHRASE_SUCCEEDED",
+      type: 'CALL_GET_NEXT_PHRASE_SUCCEEDED',
       phraseData
     };
     expect(actions.callGetNextPhraseSucceeded(phraseData)).toEqual(
@@ -97,30 +97,30 @@ describe("actions", () => {
  * HANDLE VOTES ####################
  */
 
-describe("actions", () => {
-  it("should create an action to vote for a phrase label", () => {
+describe('actions', () => {
+  it('should create an action to vote for a phrase label', () => {
     const expectedAction = {
-      type: "CALL_VOTE_FOR_PHRASE_LABEL"
+      type: 'CALL_VOTE_FOR_PHRASE_LABEL'
     };
     expect(actions.callVoteForPhraseLabel()).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for failure to get next phrase", () => {
-    const error = "Failed to retrieve phrase";
+describe('actions', () => {
+  it('should create an action for failure to get next phrase', () => {
+    const error = 'Failed to retrieve phrase';
     const expectedAction = {
-      type: "CALL_VOTE_FOR_PHRASE_LABEL_FAILED",
+      type: 'CALL_VOTE_FOR_PHRASE_LABEL_FAILED',
       error
     };
     expect(actions.callVoteForPhraseLabelFailed(error)).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for successful next phrase retrieval", () => {
+describe('actions', () => {
+  it('should create an action for successful next phrase retrieval', () => {
     const expectedAction = {
-      type: "CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED"
+      type: 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED'
     };
     expect(actions.callVoteForPhraseLabelSucceeded()).toEqual(expectedAction);
   });
@@ -130,34 +130,34 @@ describe("actions", () => {
  *  HANDLE LABELS
  */
 
-describe("actions", () => {
-  it("should create an action to vote for a phrase label", () => {
+describe('actions', () => {
+  it('should create an action to vote for a phrase label', () => {
     const expectedAction = {
-      type: "CALL_GET_ALL_LABELS"
+      type: 'CALL_GET_ALL_LABELS'
     };
     expect(actions.callGetAllLabels()).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for failure to get next phrase", () => {
-    const error = "Failed to retrieve phrase";
+describe('actions', () => {
+  it('should create an action for failure to get next phrase', () => {
+    const error = 'Failed to retrieve phrase';
     const expectedAction = {
-      type: "CALL_GET_ALL_LABELS_FAILED",
+      type: 'CALL_GET_ALL_LABELS_FAILED',
       error
     };
     expect(actions.callGetAllLabelsFailed(error)).toEqual(expectedAction);
   });
 });
 
-describe("actions", () => {
-  it("should create an action for successful next phrase retrieval", () => {
+describe('actions', () => {
+  it('should create an action for successful next phrase retrieval', () => {
     const labelData = {
-      NAME: "Hello",
-      id: "4321"
+      NAME: 'Hello',
+      id: '4321'
     };
     const expectedAction = {
-      type: "CALL_GET_ALL_LABELS_SUCCEEDED",
+      type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
       labelData
     };
     expect(actions.callGetAllLabelsSucceeded(labelData)).toEqual(

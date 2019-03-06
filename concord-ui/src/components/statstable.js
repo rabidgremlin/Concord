@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 import {
   DataTable,
@@ -8,8 +8,8 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from "rmwc/DataTable";
-import "@rmwc/data-table/data-table.css";
+} from 'rmwc/DataTable';
+import '@rmwc/data-table/data-table.css';
 
 export default class StatsTable extends Component {
   constructor(props) {
@@ -21,11 +21,11 @@ export default class StatsTable extends Component {
   }
 
   componentWillMount() {
-    fetch("/api/stats")
-      .then(results => results.json())
+    fetch('/api/stats')
+      .then((results) => results.json())
       // filter out users with less than 50 votes (they have inflated accuracy ratings)
-      .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
-      .then(results => this.setState({ data: results, loading: false }))
+      .then((results) => results.filter((v, i) => results[i].totalVotes >= 50))
+      .then((results) => this.setState({ data: results, loading: false }))
       .then(() => this.sortByAccuracyRateNoTrash(-1));
   }
 
@@ -49,8 +49,8 @@ export default class StatsTable extends Component {
       );
     }
     return (
-      <DataTable style={{ minHeight: "500px", width: "100%" }}>
-        <DataTableContent style={{ fontSize: "20px" }}>
+      <DataTable style={{ minHeight: '500px', width: '100%' }}>
+        <DataTableContent style={{ fontSize: '20px' }}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
@@ -109,38 +109,38 @@ export default class StatsTable extends Component {
           </DataTableHead>
           <DataTableBody>
             {[...Array(dataLength)].map((v, i) => (
-              <DataTableRow key={i} style={{ width: "20%" }}>
+              <DataTableRow key={i} style={{ width: '20%' }}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].totalVotes.toLocaleString()}
                 </DataTableCell>
                 {/*<DataTableCell alignEnd>*/}
                 {/*{data[i].totalVotesWithConsensus.toLocaleString()}*/}
                 {/*</DataTableCell>*/}
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].completedVotes.toLocaleString()}
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].trashVotes.toLocaleString()}
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.toPercentage(
                     data[i].completedVotes,
                     data[i].totalVotesWithConsensus
                   )}
                   %
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: "10%" }}>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.toPercentage(
                     data[i].completedVotesIgnoringTrash,
                     data[i].totalVotesWithConsensusIgnoringTrash
                   )}
                   %
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: "20%" }} />
+                <DataTableCell alignEnd style={{ width: '20%' }} />
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -177,34 +177,34 @@ export default class StatsTable extends Component {
     });
   };
 
-  sortByTotal = sortDir =>
-    this.sortRows("totalSortDir", sortDir, a => a.totalVotes);
+  sortByTotal = (sortDir) =>
+    this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
 
-  sortByTotalWithConsensus = sortDir =>
+  sortByTotalWithConsensus = (sortDir) =>
     this.sortRows(
-      "totalWithConsensusSortDir",
+      'totalWithConsensusSortDir',
       sortDir,
-      a => a.totalVotesWithConsensus
+      (a) => a.totalVotesWithConsensus
     );
 
-  sortByCompleted = sortDir =>
-    this.sortRows("completedSortDir", sortDir, a => a.completedVotes);
+  sortByCompleted = (sortDir) =>
+    this.sortRows('completedSortDir', sortDir, (a) => a.completedVotes);
 
-  sortByTrashed = sortDir =>
-    this.sortRows("trashSortDir", sortDir, a => a.trashVotes);
+  sortByTrashed = (sortDir) =>
+    this.sortRows('trashSortDir', sortDir, (a) => a.trashVotes);
 
-  sortByAccuracyRate = sortDir =>
-    this.sortRows("accuracyRateSortDir", sortDir, a =>
+  sortByAccuracyRate = (sortDir) =>
+    this.sortRows('accuracyRateSortDir', sortDir, (a) =>
       this.toPercentage(a.completedVotes, a.totalVotesWithConsensus)
     );
 
-  sortByTrashedRate = sortDir =>
-    this.sortRows("trashRateSortDir", sortDir, a =>
+  sortByTrashedRate = (sortDir) =>
+    this.sortRows('trashRateSortDir', sortDir, (a) =>
       this.toPercentage(a.trashVotes, a.totalVotes)
     );
 
-  sortByAccuracyRateNoTrash = sortDir =>
-    this.sortRows("accuracyRateNoTrashSortDir", sortDir, a =>
+  sortByAccuracyRateNoTrash = (sortDir) =>
+    this.sortRows('accuracyRateNoTrashSortDir', sortDir, (a) =>
       this.toPercentage(
         a.completedVotesIgnoringTrash,
         a.totalVotesWithConsensusIgnoringTrash

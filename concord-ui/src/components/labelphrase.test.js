@@ -1,8 +1,8 @@
-import React from "react";
-import { LabelPhrase } from "./labelphrase";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-import { Card, CardPrimaryAction, Fab, Grid, GridCell } from "rmwc";
+import React from 'react';
+import { LabelPhrase } from './labelphrase';
+import Enzyme, { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { Card, CardPrimaryAction, Fab, Grid, GridCell } from 'rmwc';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -10,20 +10,20 @@ function setup() {
   const props = {
     dispatch: jest.fn(),
     phraseData: {
-      msg: "Hello world",
+      msg: 'Hello world',
       id: 1234,
       possibleLabels: [
         {
-          label: "HelloIntent",
+          label: 'HelloIntent',
           score: 0.5,
-          shortDescription: "Hello intention",
-          longDescription: "User saying hello"
+          shortDescription: 'Hello intention',
+          longDescription: 'User saying hello'
         },
         {
-          label: "GreetingIntent",
+          label: 'GreetingIntent',
           score: 0.24,
-          shortDescription: "Greeting intention",
-          longDescription: "User saying a greeting"
+          shortDescription: 'Greeting intention',
+          longDescription: 'User saying a greeting'
         }
       ]
     }
@@ -36,9 +36,9 @@ function setup() {
   };
 }
 
-describe("labelPhrase", () => {
+describe('labelPhrase', () => {
   const { labelPhrase, props } = setup();
-  it("renders without crashing", () => {
+  it('renders without crashing', () => {
     expect(labelPhrase.find(LabelPhrase));
     expect(labelPhrase.find(Grid).length).toBe(1);
     expect(labelPhrase.find(Grid).containsMatchingElement(Card));
@@ -51,7 +51,7 @@ describe("labelPhrase", () => {
     let delIcon = labelPhrase.find(Fab).get(0);
     let skipIcon = labelPhrase.find(Fab).get(1);
 
-    expect(delIcon.props.icon === "delete").toEqual(true);
-    expect(skipIcon.props.icon === "skip_next").toEqual(true);
+    expect(delIcon.props.icon === 'delete').toEqual(true);
+    expect(skipIcon.props.icon === 'skip_next').toEqual(true);
   });
 });
