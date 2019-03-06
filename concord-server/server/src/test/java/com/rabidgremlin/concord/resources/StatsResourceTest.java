@@ -3,7 +3,6 @@ package com.rabidgremlin.concord.resources;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -37,7 +36,7 @@ public class StatsResourceTest
   public void setup()
   {
     MockitoAnnotations.initMocks(this);
-    statsResource = new StatsResource(statsDao, 3);
+    statsResource = new StatsResource(statsDao);
   }
 
   @Test
@@ -67,9 +66,9 @@ public class StatsResourceTest
     when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(totalCounts);
     when(statsDao.getCompletedCountOfVotesMadePerUser()).thenReturn(completedCounts);
     when(statsDao.getCountOfTrashVotesPerUser()).thenReturn(trashedCounts);
-    when(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(anyInt())).thenReturn(totalCountsBeyondConsensus);
+    when(statsDao.getTotalCountOfVotesMadePerUserWithConsensus()).thenReturn(totalCountsBeyondConsensus);
     when(statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash()).thenReturn(dummyScores);
-    when(statsDao.getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(anyInt())).thenReturn(dummyScores);
+    when(statsDao.getTotalCountOfVotesMadePerUsersWithConsensusIgnoringTrash()).thenReturn(dummyScores);
 
     // When
     Response response = statsResource.getUserStats(caller);

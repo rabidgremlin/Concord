@@ -3,7 +3,6 @@ package com.rabidgremlin.concord.dao;
 import java.util.List;
 
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import com.rabidgremlin.concord.api.UserVoteCount;
@@ -51,26 +50,23 @@ public interface StatsDao
   /**
    * Returns the total count of votes made per user, for phrases which have been voted on more or equal times of the
    * margin.
-   *
-   * @param margin the amount of times a phrase must be voted on to be considered in the query. Recommend setting to the
-   *          consensus level.
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes v1 " +
-      "JOIN(SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) v2 ON v1.phraseId = v2.phraseId " +
+      "FROM votes v " +
+      "JOIN(SELECT phraseId FROM phrases WHERE completed = true) p ON v.phraseId = p.phraseId " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(@Bind("margin") int margin);
+  List<UserVoteCount> getTotalCountOfVotesMadePerUserWithConsensus();
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes v1 " +
-      "JOIN(SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) v2 ON v1.phraseId = v2.phraseId " +
+      "FROM votes v " +
+      "JOIN(SELECT phraseId FROM phrases WHERE label != 'TRASH' AND completed = true) p ON v.phraseId = p.phraseId " +
       "WHERE label != 'TRASH' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getCountOfVotesMadePerUserForPhrasesBeyondVoteMarginIgnoringTrash(@Bind("margin") int margin);
+  List<UserVoteCount> getTotalCountOfVotesMadePerUsersWithConsensusIgnoringTrash();
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +

@@ -22,8 +22,7 @@ export default class StatsTable extends Component {
     }
 
     componentWillMount() {
-        console.log("Fetching stats");
-        fetch('/api/stats', {credentials: "same-origin"})
+        fetch('/api/stats')
             .then(results => results.json())
             // filter out users with less than 50 votes (they have inflated accuracy ratings)
             .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
@@ -41,87 +40,85 @@ export default class StatsTable extends Component {
         }
         const data = this.state.data;
         const dataLength = data.length;
-        if (dataLength > 0) {
-            console.log("Rendering stats");
-            return (
-                <DataTable
-                    style={{minHeight: '500px', width: '100%'}} // HACK HACK
-                >
-                    <DataTableContent style={{fontSize: '20px'}}>
-                        <DataTableHead>
-                            <DataTableRow>
-                                <DataTableHeadCell>
-                                    User
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.totalSortDir || null}
-                                                   onSortChange={this.sortByTotal}>
-                                    Total Phrases
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}
-                                                   onSortChange={this.sortByTotalWithConsensus}>
-                                    Total Phrases <br/>(with consensus)
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
-                                                   onSortChange={this.sortByCompleted}>
-                                    Completed Phrases
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.trashSortDir || null}
-                                                   onSortChange={this.sortByTrashed}>
-                                    Trashed Phrases
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.accuracyRateSortDir || null}
-                                                   onSortChange={this.sortByAccuracyRate}>
-                                    Accuracy Rating
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
-                                                   onSortChange={this.sortByTrashedRate}>
-                                    Trash Rate
-                                </DataTableHeadCell>
-                                <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
-                                                   onSortChange={this.sortByAccuracyRateNoTrash}>
-                                    Accuracy Rating <br/>(without trashed phrases)
-                                </DataTableHeadCell>
-                            </DataTableRow>
-                        </DataTableHead>
-                        <DataTableBody>
-                            {[...Array(dataLength)]
-                                .map((v, i) => (
-                                    <DataTableRow key={i}>
-                                        <DataTableCell>
-                                            {data[i].userId}
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {data[i].totalVotes.toLocaleString()}
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {data[i].totalVotesWithConsensus.toLocaleString()}
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {data[i].completedVotes.toLocaleString()}
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {data[i].trashVotes.toLocaleString()}
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
-                                        </DataTableCell>
-                                        <DataTableCell alignEnd>
-                                            {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}%
-                                        </DataTableCell>
-                                    </DataTableRow>
-                                ))}
-                        </DataTableBody>
-                    </DataTableContent>
-                </DataTable>
-            )
-        } else {
+        if (dataLength <= 0) {
             return (
                 <div><p>No stats to display</p></div>
             )
         }
+        return (
+            <DataTable
+                style={{minHeight: '500px', width: '100%'}}
+            >
+                <DataTableContent style={{fontSize: '20px'}}>
+                    <DataTableHead>
+                        <DataTableRow>
+                            <DataTableHeadCell>
+                                User
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.totalSortDir || null}
+                                               onSortChange={this.sortByTotal}>
+                                Total Phrases
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}
+                                               onSortChange={this.sortByTotalWithConsensus}>
+                                Total Phrases <br/>(with consensus)
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
+                                               onSortChange={this.sortByCompleted}>
+                                Completed Phrases
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.trashSortDir || null}
+                                               onSortChange={this.sortByTrashed}>
+                                Trashed Phrases
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.accuracyRateSortDir || null}
+                                               onSortChange={this.sortByAccuracyRate}>
+                                Accuracy Rating
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.trashRateSortDir || null}
+                                               onSortChange={this.sortByTrashedRate}>
+                                Trash Rate
+                            </DataTableHeadCell>
+                            <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
+                                               onSortChange={this.sortByAccuracyRateNoTrash}>
+                                Accuracy Rating <br/>(without trashed phrases)
+                            </DataTableHeadCell>
+                        </DataTableRow>
+                    </DataTableHead>
+                    <DataTableBody>
+                        {[...Array(dataLength)]
+                            .map((v, i) => (
+                                <DataTableRow key={i}>
+                                    <DataTableCell>
+                                        {data[i].userId}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].totalVotes.toLocaleString()}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].totalVotesWithConsensus.toLocaleString()}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].completedVotes.toLocaleString()}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {data[i].trashVotes.toLocaleString()}
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
+                                    </DataTableCell>
+                                    <DataTableCell alignEnd>
+                                        {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}%
+                                    </DataTableCell>
+                                </DataTableRow>
+                            ))}
+                    </DataTableBody>
+                </DataTableContent>
+            </DataTable>
+        )
     }
 
     /**
