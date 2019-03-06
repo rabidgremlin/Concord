@@ -27,7 +27,7 @@ export default class StatsTable extends Component {
             // filter out users with less than 50 votes (they have inflated accuracy ratings)
             .then(results => results.filter((v, i) => results[i].totalVotes >= 50))
             .then(results => this.setState({data: results, loading: false}))
-            .then(() => this.sortByTotal(-1));
+            .then(() => this.sortByAccuracyRateNoTrash(-1));
     }
 
     toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
@@ -59,10 +59,12 @@ export default class StatsTable extends Component {
                                                onSortChange={this.sortByTotal}>
                                 Total Phrases
                             </DataTableHeadCell>
-                            <DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}
-                                               onSortChange={this.sortByTotalWithConsensus}>
-                                Total Phrases <br/>(with consensus)
-                            </DataTableHeadCell>
+                            {/*<DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}*/}
+                                               {/*onSortChange={this.sortByTotalWithConsensus}>*/}
+                                {/*Total Phrases
+                                <br/>
+                                (with consensus)*/}
+                            {/*</DataTableHeadCell>*/}
                             <DataTableHeadCell alignEnd sort={this.state.completedSortDir || null}
                                                onSortChange={this.sortByCompleted}>
                                 Completed Phrases
@@ -81,38 +83,42 @@ export default class StatsTable extends Component {
                             </DataTableHeadCell>
                             <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
                                                onSortChange={this.sortByAccuracyRateNoTrash}>
-                                Accuracy Rating <br/>(without trashed phrases)
+                                Accuracy Rating
+                                <br/>
+                                (ignoring trashed phrases)
                             </DataTableHeadCell>
+                            <DataTableHeadCell/>
                         </DataTableRow>
                     </DataTableHead>
                     <DataTableBody>
                         {[...Array(dataLength)]
                             .map((v, i) => (
-                                <DataTableRow key={i}>
+                                <DataTableRow key={i} style={{width: '20%'}}>
                                     <DataTableCell>
                                         {data[i].userId}
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {data[i].totalVotes.toLocaleString()}
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
-                                        {data[i].totalVotesWithConsensus.toLocaleString()}
-                                    </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    {/*<DataTableCell alignEnd>*/}
+                                        {/*{data[i].totalVotesWithConsensus.toLocaleString()}*/}
+                                    {/*</DataTableCell>*/}
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {data[i].completedVotes.toLocaleString()}
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {data[i].trashVotes.toLocaleString()}
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
                                     </DataTableCell>
-                                    <DataTableCell alignEnd>
+                                    <DataTableCell alignEnd style={{width: '10%'}}>
                                         {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}%
                                     </DataTableCell>
+                                    <DataTableCell alignEnd style={{width: '20%'}}/>
                                 </DataTableRow>
                             ))}
                     </DataTableBody>
