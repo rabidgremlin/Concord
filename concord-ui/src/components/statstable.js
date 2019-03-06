@@ -79,7 +79,7 @@ export default class StatsTable extends Component {
                                 </DataTableHeadCell>
                                 <DataTableHeadCell alignEnd sort={this.state.accuracyRateNoTrashSortDir || null}
                                                    onSortChange={this.sortByAccuracyRateNoTrash}>
-                                    Accuracy Rating <br/>(ignoring trashed phrases)
+                                    Accuracy Rating <br/>(without trashed phrases)
                                 </DataTableHeadCell>
                             </DataTableRow>
                         </DataTableHead>

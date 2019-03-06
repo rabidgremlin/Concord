@@ -57,7 +57,7 @@ public class StatsResource
   @Path("/")
   public Response getUserStats(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("{} getting all user stats.", caller);
+    log.info("{} getting user stats.", caller);
     log.debug("Consensus level = {}", consensusLevel);
 
     List<UserVoteCount> totalVoteCounts = statsDao.getTotalCountOfVotesMadePerUser();

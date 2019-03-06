@@ -30,7 +30,8 @@ public interface StatsDao
    * voted for.
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
+      "FROM votes " +
+      "JOIN phrases ON phrases.phraseId=votes.phraseId " +
       "WHERE completed = true AND phrases.label=votes.label " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
@@ -38,8 +39,10 @@ public interface StatsDao
   List<UserVoteCount> getCompletedCountOfVotesMadePerUser();
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes JOIN phrases ON phrases.phraseId=votes.phraseId " +
-      "WHERE votes.label != 'TRASH' AND completed = true AND phrases.label=votes.label " +
+      "FROM votes " +
+      "JOIN phrases ON phrases.phraseId=votes.phraseId " +
+      "WHERE completed = true AND phrases.label=votes.label " +
+      "AND votes.label != 'TRASH' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
@@ -53,16 +56,17 @@ public interface StatsDao
    *          consensus level.
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes " +
-      "WHERE phraseId IN (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
+      "FROM votes v1 " +
+      "JOIN(SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) v2 ON v1.phraseId = v2.phraseId " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
   List<UserVoteCount> getCountOfVotesMadePerUserForPhrasesBeyondVoteMargin(@Bind("margin") int margin);
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes " +
-      "WHERE label != 'TRASH' AND phraseId IN (SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) " +
+      "FROM votes v1 " +
+      "JOIN(SELECT phraseId FROM votes GROUP BY phraseId HAVING COUNT(phraseId) >= :margin) v2 ON v1.phraseId = v2.phraseId " +
+      "WHERE label != 'TRASH' " +
       "GROUP BY userId " +
       "ORDER BY voteCount DESC")
   @RegisterBeanMapper(UserVoteCount.class)
