@@ -1,110 +1,106 @@
-import request from 'superagent'
+import request from "superagent";
 
 import {
-    callCreateSessionFailed,
-    callCreateSessionSucceeded,
-    callGetAllLabelsFailed,
-    callGetAllLabelsSucceeded,
-    callGetNextPhraseFailed,
-    callGetNextPhraseSucceeded,
-    callVoteForPhraseLabelFailed,
-    callVoteForPhraseLabelSucceeded
-} from './actions'
-
+  callCreateSessionFailed,
+  callCreateSessionSucceeded,
+  callGetAllLabelsFailed,
+  callGetAllLabelsSucceeded,
+  callGetNextPhraseFailed,
+  callGetNextPhraseSucceeded,
+  callVoteForPhraseLabelFailed,
+  callVoteForPhraseLabelSucceeded
+} from "./actions";
 
 export const apiService = store => next => action => {
-
-    /*
+  /*
     Pass all actions through by default
     */
-    console.log('ACTION is before ' + action.type);
-    next(action);
-    console.log('ACTION is after ' + action.type);
-    switch (action.type) {
-        case 'CALL_CREATE_SESSION':
-            /*
+  console.log("ACTION is before " + action.type);
+  next(action);
+  console.log("ACTION is after " + action.type);
+  switch (action.type) {
+    case "CALL_CREATE_SESSION":
+      /*
             In case we receive an action to send an API request, send the appropriate request
             */
-            request
-                .post('/api/sessions')
-                .send({userId: action.userId, password: action.password})
-                .set('Accept', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-                        /*
+      request
+        .post("/api/sessions")
+        .send({ userId: action.userId, password: action.password })
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          if (err) {
+            /*
                         in case there is any error, dispatch an action containing the error
                         */
-                        return next(callCreateSessionFailed(err))
-                    }
-                    const data = JSON.parse(res.text);
-                    /*
+            return next(callCreateSessionFailed(err));
+          }
+          const data = JSON.parse(res.text);
+          /*
                     Once data is received, dispatch an action telling the application
                     that data was received successfully, along with the parsed data
                     */
-                    next(callCreateSessionSucceeded(data.token))
-                });
-            break;
-        case 'CALL_GET_NEXT_PHRASE':
-            console.log('getting phrase');
-            request
-                .get('/api/phrases/next')
-                //.send({ userId: action.userId, password: action.password })
-                .set('Accept', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-                        /*
+          next(callCreateSessionSucceeded(data.token));
+        });
+      break;
+    case "CALL_GET_NEXT_PHRASE":
+      console.log("getting phrase");
+      request
+        .get("/api/phrases/next")
+        //.send({ userId: action.userId, password: action.password })
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          if (err) {
+            /*
                         in case there is any error, dispatch an action containing the error
                         */
-                        return next(callGetNextPhraseFailed(err))
-                    }
-                    const data = JSON.parse(res.text);
-                    /*
+            return next(callGetNextPhraseFailed(err));
+          }
+          const data = JSON.parse(res.text);
+          /*
                     Once data is received, dispatch an action telling the application
                     that data was received successfully, along with the parsed data
                     */
-                    next(callGetNextPhraseSucceeded(data))
-                });
-            break;
-        case 'CALL_VOTE_FOR_PHRASE_LABEL':
-            /*
+          next(callGetNextPhraseSucceeded(data));
+        });
+      break;
+    case "CALL_VOTE_FOR_PHRASE_LABEL":
+      /*
             In case we receive an action to send an API request, send the appropriate request
             */
-            request
-                .post('/api/phrases/' + action.phraseId + '/votes/')
-                .send({label: action.label})
-                .set('Accept', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-                        /*
+      request
+        .post("/api/phrases/" + action.phraseId + "/votes/")
+        .send({ label: action.label })
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          if (err) {
+            /*
                         in case there is any error, dispatch an action containing the error
                         */
-                        return next(callVoteForPhraseLabelFailed(err))
-                    }
-                    next(callVoteForPhraseLabelSucceeded())
-                });
-            break;
-        case 'CALL_GET_ALL_LABELS':
-            console.log("getting labels");
-            request
-                .get('/api/labels')
-                .set('Accept', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-
-                        return next(callGetAllLabelsFailed(err))
-                    }
-                    const data = JSON.parse(res.text);
-                    next(callGetAllLabelsSucceeded(data))
-                });
-            break;
-        /*
+            return next(callVoteForPhraseLabelFailed(err));
+          }
+          next(callVoteForPhraseLabelSucceeded());
+        });
+      break;
+    case "CALL_GET_ALL_LABELS":
+      console.log("getting labels");
+      request
+        .get("/api/labels")
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          if (err) {
+            return next(callGetAllLabelsFailed(err));
+          }
+          const data = JSON.parse(res.text);
+          next(callGetAllLabelsSucceeded(data));
+        });
+      break;
+    /*
         Do nothing if the action does not interest us
         */
-        default:
-            console.log('doing nothing for ' + action.type);
-            break;
-    }
-
+    default:
+      console.log("doing nothing for " + action.type);
+      break;
+  }
 };
 
 //export default apiService
