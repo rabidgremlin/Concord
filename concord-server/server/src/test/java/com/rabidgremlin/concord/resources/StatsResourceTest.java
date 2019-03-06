@@ -64,12 +64,12 @@ public class StatsResourceTest
         new UserVoteCount("user1", 0),
         new UserVoteCount("user2", 0),
         new UserVoteCount("user3", 0));
-    when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(totalCounts);
-    when(statsDao.getCompletedCountOfVotesMadePerUser()).thenReturn(completedCounts);
+    when(statsDao.getCountOfTotalVotesPerUser()).thenReturn(totalCounts);
+    when(statsDao.getCountOfCompletedVotesPerUser()).thenReturn(completedCounts);
     when(statsDao.getCountOfTrashVotesPerUser()).thenReturn(trashedCounts);
-    when(statsDao.getTotalCountOfVotesMadePerUserWithConsensus()).thenReturn(totalCountsBeyondConsensus);
-    when(statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash()).thenReturn(dummyScores);
-    when(statsDao.getTotalCountOfVotesMadePerUsersWithConsensusIgnoringTrash()).thenReturn(dummyScores);
+    when(statsDao.getCountOfTotalVotesWithConsensusPerUser()).thenReturn(totalCountsBeyondConsensus);
+    when(statsDao.getCountOfCompletedVotesPerUserIgnoringTrash()).thenReturn(dummyScores);
+    when(statsDao.getCountOfTotalVotesWithConsensusPerUserIgnoringTrash()).thenReturn(dummyScores);
 
     // When
     Response response = statsResource.getUserStats(caller);
@@ -106,7 +106,7 @@ public class StatsResourceTest
   {
     // Given
     List<UserVoteCount> dummyVotes = Collections.singletonList(new UserVoteCount("BULK_UPLOAD", 9999));
-    when(statsDao.getTotalCountOfVotesMadePerUser()).thenReturn(dummyVotes);
+    when(statsDao.getCountOfTotalVotesPerUser()).thenReturn(dummyVotes);
 
     // When
     Response response = statsResource.getUserStats(caller);

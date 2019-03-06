@@ -7,6 +7,9 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import com.rabidgremlin.concord.api.UserVoteCount;
 
+/*
+ * NOTE: not filtering SKIPPED we check against the consensus
+ */
 public interface StatsDao
 {
 
@@ -15,65 +18,53 @@ public interface StatsDao
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
+      "GROUP BY userId ")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getTotalCountOfVotesMadePerUser();
+  List<UserVoteCount> getCountOfTotalVotesPerUser();
 
-  /*
-   * NOTE: not filtering SKIPPED we check against the consensus
-   */
+  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
+      "FROM votes " +
+      "WHERE label = 'TRASH' " +
+      "GROUP BY userId ")
+  @RegisterBeanMapper(UserVoteCount.class)
+  List<UserVoteCount> getCountOfTrashVotesPerUser();
 
   /**
    * Returns the count of votes made per user, for phrases which have been marked complete with the same label the user
    * voted for.
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes " +
-      "JOIN phrases ON phrases.phraseId=votes.phraseId " +
-      "WHERE completed = true AND phrases.label=votes.label " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
+      "FROM votes v " +
+      "JOIN(SELECT phraseId, label FROM phrases WHERE completed = true) p ON v.phraseId = p.phraseId " +
+      "WHERE v.label = p.label " +
+      "GROUP BY userId ")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getCompletedCountOfVotesMadePerUser();
+  List<UserVoteCount> getCountOfCompletedVotesPerUser();
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes " +
-      "JOIN phrases ON phrases.phraseId=votes.phraseId " +
-      "WHERE completed = true AND phrases.label=votes.label " +
-      "AND votes.label != 'TRASH' " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
+      "FROM votes v " +
+      "JOIN(SELECT phraseId, label FROM phrases WHERE completed = true AND label != 'TRASH') p on v.phraseId = p.phraseId " +
+      "WHERE p.label = v.label " +
+      "GROUP BY userId ")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getCompletedCountOfVotesMadePerUserIgnoringTrash();
+  List<UserVoteCount> getCountOfCompletedVotesPerUserIgnoringTrash();
 
   /**
-   * Returns the total count of votes made per user, for phrases which have been voted on more or equal times of the
-   * margin.
+   * Returns the count of votes made per user, for phrases which have been marked complete (reached consensus).
    */
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes v " +
       "JOIN(SELECT phraseId FROM phrases WHERE completed = true) p ON v.phraseId = p.phraseId " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
+      "GROUP BY userId ")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getTotalCountOfVotesMadePerUserWithConsensus();
+  List<UserVoteCount> getCountOfTotalVotesWithConsensusPerUser();
 
   @SqlQuery("SELECT userId, COUNT(*) voteCount " +
       "FROM votes v " +
-      "JOIN(SELECT phraseId FROM phrases WHERE label != 'TRASH' AND completed = true) p ON v.phraseId = p.phraseId " +
-      "WHERE label != 'TRASH' " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
+      "JOIN(SELECT phraseId FROM phrases WHERE completed = true AND label != 'TRASH') p ON v.phraseId = p.phraseId " +
+      "WHERE label != 'TRASH' " + // must check votes.label too since votes.label could be different to phrases.label
+      "GROUP BY userId ")
   @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getTotalCountOfVotesMadePerUsersWithConsensusIgnoringTrash();
-
-  @SqlQuery("SELECT userId, COUNT(*) voteCount " +
-      "FROM votes " +
-      "WHERE label = 'TRASH' " +
-      "GROUP BY userId " +
-      "ORDER BY voteCount DESC")
-  @RegisterBeanMapper(UserVoteCount.class)
-  List<UserVoteCount> getCountOfTrashVotesPerUser();
+  List<UserVoteCount> getCountOfTotalVotesWithConsensusPerUserIgnoringTrash();
 
 }

@@ -52,13 +52,13 @@ public class StatsResource
   {
     log.info("{} getting user stats.", caller);
 
-    List<UserVoteCount> totalVoteCounts = statsDao.getTotalCountOfVotesMadePerUser();
-    List<UserVoteCount> completedVoteCounts = statsDao.getCompletedCountOfVotesMadePerUser();
+    List<UserVoteCount> totalVoteCounts = statsDao.getCountOfTotalVotesPerUser();
+    List<UserVoteCount> completedVoteCounts = statsDao.getCountOfCompletedVotesPerUser();
     List<UserVoteCount> trashedVoteCounts = statsDao.getCountOfTrashVotesPerUser();
-    List<UserVoteCount> totalVoteCountsForPhrasesWithConsensus = statsDao.getTotalCountOfVotesMadePerUserWithConsensus();
-    List<UserVoteCount> completedVoteCountsIgnoringTrash = statsDao.getCompletedCountOfVotesMadePerUserIgnoringTrash();
+    List<UserVoteCount> totalVoteCountsForPhrasesWithConsensus = statsDao.getCountOfTotalVotesWithConsensusPerUser();
+    List<UserVoteCount> completedVoteCountsIgnoringTrash = statsDao.getCountOfCompletedVotesPerUserIgnoringTrash();
     List<UserVoteCount> totalVotesForPhrasesWithConsensusIgnoringTrash = statsDao
-        .getTotalCountOfVotesMadePerUsersWithConsensusIgnoringTrash();
+        .getCountOfTotalVotesWithConsensusPerUserIgnoringTrash();
 
     List<UserStats> userStats = totalVoteCounts.stream()
         // only include users who have voted
