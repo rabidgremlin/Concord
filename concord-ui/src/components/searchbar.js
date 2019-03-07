@@ -5,11 +5,6 @@ import { Button } from '@rmwc/button';
 import './searchbar.css';
 import Select from 'react-select';
 
-//function convertLabelDataToLabels(data)
-//{
-//    return data.map(x => x['label'])
-//}
-
 export class Searchbar extends Component {
   constructor(props) {
     super(props);

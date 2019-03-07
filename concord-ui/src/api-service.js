@@ -7,6 +7,8 @@ import {
   callGetAllLabelsSucceeded,
   callGetNextPhraseFailed,
   callGetNextPhraseSucceeded,
+  callGetUserStatsFailed,
+  callGetUserStatsSucceeded,
   callVoteForPhraseLabelFailed,
   callVoteForPhraseLabelSucceeded
 } from './actions';
@@ -36,8 +38,8 @@ export const apiService = (store) => (next) => (action) => {
           }
           const data = JSON.parse(res.text);
           /*
-                    Once data is received, dispatch an action telling the application
-                    that data was received successfully, along with the parsed data
+                    Once statsData is received, dispatch an action telling the application
+                    that statsData was received successfully, along with the parsed statsData
                     */
           next(callCreateSessionSucceeded(data.token));
         });
@@ -57,8 +59,8 @@ export const apiService = (store) => (next) => (action) => {
           }
           const data = JSON.parse(res.text);
           /*
-                    Once data is received, dispatch an action telling the application
-                    that data was received successfully, along with the parsed data
+                    Once statsData is received, dispatch an action telling the application
+                    that statsData was received successfully, along with the parsed statsData
                     */
           next(callGetNextPhraseSucceeded(data));
         });
@@ -92,6 +94,19 @@ export const apiService = (store) => (next) => (action) => {
           }
           const data = JSON.parse(res.text);
           next(callGetAllLabelsSucceeded(data));
+        });
+      break;
+    case 'CALL_GET_USER_STATS':
+      console.log('getting user stats');
+      request
+        .get('/api/stats')
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+          if (err) {
+            return next(callGetUserStatsFailed(err));
+          }
+          const data = JSON.parse(res.text);
+          next(callGetUserStatsSucceeded(data));
         });
       break;
     /*

@@ -30,8 +30,6 @@ const keyMappings = {
 };
 
 export class LabelPhrase extends Component {
-  //state = { dirty: false }
-  //handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
   constructor(props) {
     super(props);
     this.state = {
@@ -80,11 +78,6 @@ export class LabelPhrase extends Component {
   makeVote(label) {
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
     this.setState({ currentLabel: null });
-
-    // HACk HACK need to move to react-thunk
-    /*setTimeout(() => {
-          this.props.dispatch(callGetNextPhrase());
-        }, 1500)*/
   }
 
   render() {

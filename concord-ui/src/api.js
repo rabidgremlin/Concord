@@ -12,7 +12,10 @@ import {
   callGetNextPhraseSucceeded,
   callVoteForPhraseLabel,
   callVoteForPhraseLabelFailed,
-  callVoteForPhraseLabelSucceeded
+  callVoteForPhraseLabelSucceeded,
+  callGetUserStats,
+  callGetUserStatsFailed,
+  callGetUserStatsSucceeded
 } from './actions';
 
 export function createSession(userId, password) {
@@ -65,10 +68,7 @@ export function voteForPhraseLabel(phraseId, label) {
       .set('Accept', 'application/json')
       .then(() => dispatch(callVoteForPhraseLabelSucceeded()))
       .then(() => dispatch(getNextPhrase()))
-      .catch((err) => {
-        //dispatch(itemsIsLoading(false));
-        dispatch(callVoteForPhraseLabelFailed(err));
-      });
+      .catch((err) => dispatch(callVoteForPhraseLabelFailed(err)));
   };
 }
 
@@ -78,12 +78,20 @@ export function getAllLabels() {
     request
       .get('/api/labels')
       .set('Accept', 'application/json')
-      .then((res) => {
-        return JSON.parse(res.text);
-      })
+      .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetAllLabelsSucceeded(data)))
-      .catch((err) => {
-        dispatch(callGetAllLabelsFailed(err));
-      });
+      .catch((err) => dispatch(callGetAllLabelsFailed(err)));
+  };
+}
+
+export function getUserStats() {
+  return (dispatch) => {
+    dispatch(callGetUserStats());
+    request
+      .get('/api/stats')
+      .set('Accept', 'application/json')
+      .then((res) => JSON.parse(res.text))
+      .then((data) => dispatch(callGetUserStatsSucceeded(data)))
+      .catch((err) => dispatch(callGetUserStatsFailed(err)));
   };
 }

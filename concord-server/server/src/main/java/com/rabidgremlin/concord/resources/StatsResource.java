@@ -49,7 +49,6 @@ public class StatsResource
 
   @GET
   @Timed
-  @Path("/")
   public Response getUserStats(@ApiParam(hidden = true) @Auth Caller caller)
   {
     log.info("{} getting user stats.", caller);

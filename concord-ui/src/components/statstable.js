@@ -10,23 +10,28 @@ import {
   DataTableRow
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
+import { getUserStats } from '../api';
+import { connect } from 'react-redux';
 
-export default class Userstats extends Component {
+export class StatsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      loading: true
+      statsData: [],
+      doneFirstSort: false
     };
   }
 
-  componentWillMount() {
-    fetch('/api/stats')
-      .then((results) => results.json())
-      // filter out users with less than 50 votes (they have inflated agreement ratings)
-      .then((results) => results.filter((v, i) => results[i].totalVotes >= 50))
-      .then((results) => this.setState({ data: results, loading: false }))
-      .then(() => this.sortByScore(-1));
+  componentDidMount() {
+    this.props.dispatch(getUserStats());
+  }
+
+  componentDidUpdate(oldProps) {
+    const newProps = this.props;
+    if (oldProps.loading !== newProps.loading) {
+      this.setState({ statsData: newProps.statsData });
+      // this.sortByScore(-1);
+    }
   }
 
   /**
@@ -58,14 +63,14 @@ export default class Userstats extends Component {
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
   render() {
-    if (this.state.loading) {
+    if (this.props.loading || !this.props.statsData || !this.state.statsData) {
       return (
         <div>
           <p>loading...</p>
         </div>
       );
     }
-    const data = this.state.data;
+    const data = this.state.statsData;
     const dataLength = data.length;
     if (dataLength <= 0) {
       return (
@@ -74,8 +79,12 @@ export default class Userstats extends Component {
         </div>
       );
     }
+    if (!this.state.doneFirstSort) {
+      this.sortByScore(-1);
+      this.setState({ doneFirstSort: true });
+    }
     return (
-      <DataTable style={{ minHeight: '500px', width: '100%' }}>
+      <DataTable style={{ minHeight: window.innerHeight * 0.9, width: '100%' }}>
         <DataTableContent style={{ fontSize: '20px' }}>
           <DataTableHead>
             <DataTableRow>
@@ -139,7 +148,7 @@ export default class Userstats extends Component {
               <DataTableRow key={i} style={{ width: '20%' }}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {Userstats.computeScore(data[i]).toLocaleString()}
+                  {StatsTable.computeScore(data[i]).toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].totalVotes.toLocaleString()}
@@ -176,9 +185,6 @@ export default class Userstats extends Component {
     );
   }
 
-  /**
-   * Clears the column sort arrows
-   */
   clearSorts() {
     this.setState({
       scoreSortDir: null,
@@ -199,14 +205,14 @@ export default class Userstats extends Component {
     this.clearSorts();
     this.setState({
       [property]: sortDir,
-      data: this.state.data.sort(
+      statsData: this.state.statsData.sort(
         (a, b) => sortDir * (supplier(a) - supplier(b))
       )
     });
   };
 
   sortByScore = (sortDir) =>
-    this.sortRows('scoreSortDir', sortDir, (a) => Userstats.computeScore(a));
+    this.sortRows('scoreSortDir', sortDir, (a) => StatsTable.computeScore(a));
 
   sortByTotal = (sortDir) =>
     this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
@@ -235,3 +241,9 @@ export default class Userstats extends Component {
       )
     );
 }
+
+export default connect((state) => ({
+  error: state.stats.error,
+  loading: state.stats.loading,
+  statsData: state.stats.statsData
+}))(StatsTable);
