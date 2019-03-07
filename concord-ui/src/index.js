@@ -3,17 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 //import registerServiceWorker from './registerServiceWorker';
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, compose } from 'redux'
-import rootReducer from './reducers'
-import { addLocaleData, IntlProvider} from 'react-intl';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import rootReducer from './reducers';
+import { addLocaleData, IntlProvider } from 'react-intl';
 import englishLocaleData from 'react-intl/locale-data/en';
 import thunk from 'redux-thunk';
 
 //import { apiService } from './api-service'
 
 import 'material-components-web/dist/material-components-web.min.css';
-import WebFont from 'webfontloader'
+import WebFont from 'webfontloader';
 
 WebFont.load({
   google: {
@@ -23,7 +23,10 @@ WebFont.load({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunk))
+);
 
 //const store = createStore(rootReducer, composeEnhancers());
 
@@ -31,10 +34,11 @@ addLocaleData([...englishLocaleData]);
 
 ReactDOM.render(
   <Provider store={store}>
-    <IntlProvider locale="en">
+    <IntlProvider locale='en'>
       <App />
     </IntlProvider>
-  </Provider>
-  , document.getElementById('root'));
+  </Provider>,
+  document.getElementById('root')
+);
 
 //registerServiceWorker();
