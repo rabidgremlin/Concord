@@ -48,7 +48,7 @@ public class LabelsResource
   @Consumes(MediaType.APPLICATION_JSON)
   public Response upsert(@ApiParam(hidden = true) @Auth Caller caller, Label label)
   {
-    log.info("Caller {} adding new label {}", caller, label);
+    log.info("{} adding new label {}", caller, label);
 
     labelsDao.upsert(label);
 
@@ -59,7 +59,7 @@ public class LabelsResource
   @Timed
   public Response getLabels(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("Caller {} getting next phrase to label", caller);
+    log.info("{} getting next phrase to label", caller);
 
     List<Label> labels = labelsDao.getLabels();
 
@@ -72,7 +72,7 @@ public class LabelsResource
   @Transaction
   public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<Label> labels)
   {
-    log.info("Caller {} uploading csv of labels {}", caller, labels);
+    log.info("{} uploading csv of labels {}", caller, labels);
 
     labelsDao.deleteAllLabels();
 

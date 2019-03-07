@@ -45,9 +45,8 @@ export function getNextPhrase() {
       .set('Accept', 'application/json')
       .then((res) => {
         //console.log("res", JSON.stringify(res));
-        const data = JSON.parse(res.text);
         //TODO: dispatch(itemsIsLoading(false));
-        return data;
+        return JSON.parse(res.text);
       })
       .then((data) => dispatch(callGetNextPhraseSucceeded(data)))
       .catch((err) => {
@@ -64,7 +63,7 @@ export function voteForPhraseLabel(phraseId, label) {
       .post('/api/phrases/' + phraseId + '/votes/')
       .send({ label: label })
       .set('Accept', 'application/json')
-      .then((res) => dispatch(callVoteForPhraseLabelSucceeded()))
+      .then(() => dispatch(callVoteForPhraseLabelSucceeded()))
       .then(() => dispatch(getNextPhrase()))
       .catch((err) => {
         //dispatch(itemsIsLoading(false));
@@ -80,8 +79,7 @@ export function getAllLabels() {
       .get('/api/labels')
       .set('Accept', 'application/json')
       .then((res) => {
-        const data = JSON.parse(res.text);
-        return data;
+        return JSON.parse(res.text);
       })
       .then((data) => dispatch(callGetAllLabelsSucceeded(data)))
       .catch((err) => {

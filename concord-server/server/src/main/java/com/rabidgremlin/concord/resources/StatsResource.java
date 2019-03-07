@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,6 +23,7 @@ import com.rabidgremlin.concord.dao.StatsDao;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
 
+@PermitAll
 @Path("stats")
 @Produces(MediaType.APPLICATION_JSON)
 public class StatsResource

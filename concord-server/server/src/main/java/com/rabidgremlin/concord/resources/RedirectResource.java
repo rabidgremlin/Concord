@@ -17,7 +17,6 @@ import com.codahale.metrics.annotation.Timed;
 @Path("/")
 public class RedirectResource
 {
-  private Logger log = LoggerFactory.getLogger(RedirectResource.class);
 
   @GET
   @Timed
