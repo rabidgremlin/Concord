@@ -72,7 +72,7 @@ export class App extends Component {
               />
               <Switch>
                 <Route exact path='/labels' component={LabelPhrase} />
-                <Route path='/stats' component={Userstats} />
+                <Route exact path='/stats' component={Userstats} />
               </Switch>
               <Redirect from='/' to='/labels' />
             </div>
