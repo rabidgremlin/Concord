@@ -30,35 +30,37 @@ export class StatsTable extends Component {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
       this.setState({ statsData: newProps.statsData });
-      // this.sortByScore(-1);
     }
   }
 
   /**
-   * Idea behind the score:
+   * Score = total_votes * agreement_rating, except trash_votes are weighted lower.
+   *
+   * Rationale:
    * - Encourage:
-   *  - Voting more
-   *  - Voting correctly
-   *  - Trashing correctly
+   *  - Voting more (include total_votes)
+   *    - NOT total_votes_with_consensus (else unfair to users that vote on phrases that don't meet consensus)
+   *  - Voting correctly (include agreement_rating)
+   *  - Trashing correctly (include agreement_rating NOT agreement_rating_no_trash, else BULK_UPLOAD wins)
    * - Discourage:
-   *  - Voting less (being slow, not playing etc.)
-   *  - Trashing incorrectly
-   *  - Skipping incorrectly
-   *    - skipping is included in consensus, therefore, if you skip but others don't score goes down
+   *  - Not voting (being slow, not playing etc.)
+   *  - Spamming trash/skip
+   *    - trashing has lower weight since only one user gets to vote (else unfair to users that never see the phrase)
+   *    - skipping is included in consensus, therefore, if you skip but others don't the agreement rating goes down
+   *      - (no special behaviour needs to be applied to skip, unless we change to a true skip (abstain))
    */
-  static computeScore(userStats) {
+  computeScore = (userStats) => {
     if (userStats.totalVotesWithConsensus <= 0) {
       return 0;
     }
-    // agreement goes up with trash votes; therefore trashing can both increase and decrease the score
-    // trashing has lower weight since only one user gets to vote (else unfair to users that never see the phrase)
-    // include total votes in the score (else unfair to users that vote on phrases that don't meet consensus)
     const agreementRating =
       userStats.completedVotes / userStats.totalVotesWithConsensus;
+    // const agreementRatingNoTrash = userStats.completedVotesIgnoringTrash / userStats.totalVotesWithConsensusIgnoringTrash;
+    // trash votes have 1/3 the weight, but trashing also improves agreement rating...
     const score =
-      (userStats.totalVotes - userStats.trashVotes / 2) * agreementRating;
+      (userStats.totalVotes - (userStats.trashVotes * 2) / 3) * agreementRating;
     return Math.trunc(score);
-  }
+  };
 
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
@@ -84,7 +86,7 @@ export class StatsTable extends Component {
       this.setState({ doneFirstSort: true });
     }
     return (
-      <DataTable style={{ minHeight: window.innerHeight * 0.9, width: '100%' }}>
+      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
         <DataTableContent style={{ fontSize: '20px' }}>
           <DataTableHead>
             <DataTableRow>
@@ -109,13 +111,6 @@ export class StatsTable extends Component {
                 onSortChange={this.sortByCompleted}
               >
                 Completed Phrases
-              </DataTableHeadCell>
-              <DataTableHeadCell
-                alignEnd
-                sort={this.state.trashSortDir || null}
-                onSortChange={this.sortByTrashed}
-              >
-                Trashed Phrases
               </DataTableHeadCell>
               <DataTableHeadCell
                 alignEnd
@@ -148,16 +143,13 @@ export class StatsTable extends Component {
               <DataTableRow key={i} style={{ width: '20%' }}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {StatsTable.computeScore(data[i]).toLocaleString()}
+                  {this.computeScore(data[i]).toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].totalVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].completedVotes.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data[i].trashVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.toPercentage(
@@ -185,7 +177,7 @@ export class StatsTable extends Component {
     );
   }
 
-  clearSorts() {
+  clearSorts = () => {
     this.setState({
       scoreSortDir: null,
       totalSortDir: null,
@@ -196,7 +188,7 @@ export class StatsTable extends Component {
       trashRateSortDir: null,
       agreementRateNoTrashSortDir: null
     });
-  }
+  };
 
   /**
    * Sort rows for the given property according to the supplier function
@@ -212,16 +204,13 @@ export class StatsTable extends Component {
   };
 
   sortByScore = (sortDir) =>
-    this.sortRows('scoreSortDir', sortDir, (a) => StatsTable.computeScore(a));
+    this.sortRows('scoreSortDir', sortDir, (a) => this.computeScore(a));
 
   sortByTotal = (sortDir) =>
     this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
 
   sortByCompleted = (sortDir) =>
     this.sortRows('completedSortDir', sortDir, (a) => a.completedVotes);
-
-  sortByTrashed = (sortDir) =>
-    this.sortRows('trashSortDir', sortDir, (a) => a.trashVotes);
 
   sortByAgreementRate = (sortDir) =>
     this.sortRows('agreementRateSortDir', sortDir, (a) =>
