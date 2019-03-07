@@ -11,7 +11,7 @@ import {
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 
-export default class StatsTable extends Component {
+export default class Userstats extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,10 +23,38 @@ export default class StatsTable extends Component {
   componentWillMount() {
     fetch('/api/stats')
       .then((results) => results.json())
-      // filter out users with less than 50 votes (they have inflated accuracy ratings)
+      // filter out users with less than 50 votes (they have inflated agreement ratings)
       .then((results) => results.filter((v, i) => results[i].totalVotes >= 50))
       .then((results) => this.setState({ data: results, loading: false }))
-      .then(() => this.sortByAccuracyRateNoTrash(-1));
+      .then(() => this.sortByScore(-1));
+  }
+
+  /**
+   * Idea behind the score:
+   * - Encourage:
+   *  - Voting more
+   *  - Voting correctly
+   *  - Trashing correctly
+   * - Discourage:
+   *  - Voting less (being slow, not playing etc.)
+   *  - Trashing incorrectly
+   *  - Skipping incorrectly
+   *    - skipping is included in consensus, therefore, if you skip but others don't score goes down
+   */
+  static computeScore(userStats) {
+    if (userStats.totalVotesWithConsensus <= 0) {
+      return 0;
+    }
+    // agreement goes up with trash votes; therefore trashing can both increase and decrease the score
+    // trashing has lower weight since only one user gets to vote (else unfair to users that never see the phrase)
+    // include total votes in the score (else unfair to users that vote on phrases that don't meet consensus)
+    const agreementRating =
+      userStats.completedVotes / userStats.totalVotesWithConsensus;
+    // const agreementRatingNoTrash = (userStats.completedVotesIgnoringTrash / userStats.totalVotesWithConsensusIgnoringTrash);
+    // possibly do agreementRating squared ???
+    const score =
+      (userStats.totalVotes - userStats.trashVotes / 2) * agreementRating;
+    return Math.trunc(score);
   }
 
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
@@ -56,6 +84,13 @@ export default class StatsTable extends Component {
               <DataTableHeadCell>User</DataTableHeadCell>
               <DataTableHeadCell
                 alignEnd
+                sort={this.state.scoreSortDir || null}
+                onSortChange={this.sortByScore}
+              >
+                Score
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
                 sort={this.state.totalSortDir || null}
                 onSortChange={this.sortByTotal}
               >
@@ -83,10 +118,10 @@ export default class StatsTable extends Component {
               </DataTableHeadCell>
               <DataTableHeadCell
                 alignEnd
-                sort={this.state.accuracyRateSortDir || null}
-                onSortChange={this.sortByAccuracyRate}
+                sort={this.state.agreementRateSortDir || null}
+                onSortChange={this.sortByAgreementRate}
               >
-                Accuracy Rating
+                Agreement Rating
               </DataTableHeadCell>
               <DataTableHeadCell
                 alignEnd
@@ -97,20 +132,23 @@ export default class StatsTable extends Component {
               </DataTableHeadCell>
               <DataTableHeadCell
                 alignEnd
-                sort={this.state.accuracyRateNoTrashSortDir || null}
-                onSortChange={this.sortByAccuracyRateNoTrash}
+                sort={this.state.agreementRateNoTrashSortDir || null}
+                onSortChange={this.sortByAgreementRateNoTrash}
               >
-                Accuracy Rating
+                Agreement Rating
                 <br />
                 (ignoring trashed phrases)
               </DataTableHeadCell>
-              <DataTableHeadCell />
+              <DataTableHeadCell alignEnd />
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>
             {[...Array(dataLength)].map((v, i) => (
               <DataTableRow key={i} style={{ width: '20%' }}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {Userstats.computeScore(data[i]).toLocaleString()}
+                </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].totalVotes.toLocaleString()}
                 </DataTableCell>
@@ -140,7 +178,7 @@ export default class StatsTable extends Component {
                   )}
                   %
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '20%' }} />
+                <DataTableCell alignEnd />
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -154,13 +192,14 @@ export default class StatsTable extends Component {
    */
   clearSorts() {
     this.setState({
+      scoreSortDir: null,
       totalSortDir: null,
       totalWithConsensusSortDir: null,
       completedSortDir: null,
       trashSortDir: null,
-      accuracyRateSortDir: null,
+      agreementRateSortDir: null,
       trashRateSortDir: null,
-      accuracyRateNoTrashSortDir: null
+      agreementRateNoTrashSortDir: null
     });
   }
 
@@ -176,6 +215,9 @@ export default class StatsTable extends Component {
       )
     });
   };
+
+  sortByScore = (sortDir) =>
+    this.sortRows('scoreSortDir', sortDir, (a) => Userstats.computeScore(a));
 
   sortByTotal = (sortDir) =>
     this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
@@ -193,8 +235,8 @@ export default class StatsTable extends Component {
   sortByTrashed = (sortDir) =>
     this.sortRows('trashSortDir', sortDir, (a) => a.trashVotes);
 
-  sortByAccuracyRate = (sortDir) =>
-    this.sortRows('accuracyRateSortDir', sortDir, (a) =>
+  sortByAgreementRate = (sortDir) =>
+    this.sortRows('agreementRateSortDir', sortDir, (a) =>
       this.toPercentage(a.completedVotes, a.totalVotesWithConsensus)
     );
 
@@ -203,8 +245,8 @@ export default class StatsTable extends Component {
       this.toPercentage(a.trashVotes, a.totalVotes)
     );
 
-  sortByAccuracyRateNoTrash = (sortDir) =>
-    this.sortRows('accuracyRateNoTrashSortDir', sortDir, (a) =>
+  sortByAgreementRateNoTrash = (sortDir) =>
+    this.sortRows('agreementRateNoTrashSortDir', sortDir, (a) =>
       this.toPercentage(
         a.completedVotesIgnoringTrash,
         a.totalVotesWithConsensusIgnoringTrash
