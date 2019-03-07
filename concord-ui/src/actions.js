@@ -62,7 +62,7 @@ export const callVoteForPhraseLabelSucceeded = () => ({
 });
 
 /**
- * HANLDE LABELS
+ * HANDLE LABELS
  */
 
 export const callGetAllLabels = () => ({
@@ -77,4 +77,22 @@ export const callGetAllLabelsFailed = (error) => ({
 export const callGetAllLabelsSucceeded = (labelData) => ({
   type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
   labelData
+});
+
+/**
+ * HANDLE STATS
+ */
+
+export const callGetUserStats = () => ({
+  type: 'CALL_GET_USER_STATS'
+});
+
+export const callGetUserStatsFailed = (error) => ({
+  type: 'CALL_GET_USER_STATS_FAILED',
+  error
+});
+
+export const callGetUserStatsSucceeded = (data) => ({
+  type: 'CALL_GET_USER_STATS_SUCCEEDED',
+  statsData: data
 });

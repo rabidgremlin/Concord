@@ -1,20 +1,22 @@
 import request from 'superagent';
 
-import { callCreateSession } from './actions';
-import { callCreateSessionSucceeded } from './actions';
-import { callCreateSessionFailed } from './actions';
-
-import { callGetNextPhrase } from './actions';
-import { callGetNextPhraseSucceeded } from './actions';
-import { callGetNextPhraseFailed } from './actions';
-
-import { callVoteForPhraseLabel } from './actions';
-import { callVoteForPhraseLabelSucceeded } from './actions';
-import { callVoteForPhraseLabelFailed } from './actions';
-
-import { callGetAllLabels } from './actions';
-import { callGetAllLabelsSucceeded } from './actions';
-import { callGetAllLabelsFailed } from './actions';
+import {
+  callCreateSession,
+  callCreateSessionFailed,
+  callCreateSessionSucceeded,
+  callGetAllLabels,
+  callGetAllLabelsFailed,
+  callGetAllLabelsSucceeded,
+  callGetNextPhrase,
+  callGetNextPhraseFailed,
+  callGetNextPhraseSucceeded,
+  callVoteForPhraseLabel,
+  callVoteForPhraseLabelFailed,
+  callVoteForPhraseLabelSucceeded,
+  callGetUserStats,
+  callGetUserStatsFailed,
+  callGetUserStatsSucceeded
+} from './actions';
 
 export function createSession(userId, password) {
   return (dispatch) => {
@@ -46,9 +48,8 @@ export function getNextPhrase() {
       .set('Accept', 'application/json')
       .then((res) => {
         //console.log("res", JSON.stringify(res));
-        const data = JSON.parse(res.text);
         //TODO: dispatch(itemsIsLoading(false));
-        return data;
+        return JSON.parse(res.text);
       })
       .then((data) => dispatch(callGetNextPhraseSucceeded(data)))
       .catch((err) => {
@@ -65,12 +66,9 @@ export function voteForPhraseLabel(phraseId, label) {
       .post('/api/phrases/' + phraseId + '/votes/')
       .send({ label: label })
       .set('Accept', 'application/json')
-      .then((res) => dispatch(callVoteForPhraseLabelSucceeded()))
+      .then(() => dispatch(callVoteForPhraseLabelSucceeded()))
       .then(() => dispatch(getNextPhrase()))
-      .catch((err) => {
-        //dispatch(itemsIsLoading(false));
-        dispatch(callVoteForPhraseLabelFailed(err));
-      });
+      .catch((err) => dispatch(callVoteForPhraseLabelFailed(err)));
   };
 }
 
@@ -80,13 +78,20 @@ export function getAllLabels() {
     request
       .get('/api/labels')
       .set('Accept', 'application/json')
-      .then((res) => {
-        const data = JSON.parse(res.text);
-        return data;
-      })
+      .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetAllLabelsSucceeded(data)))
-      .catch((err) => {
-        dispatch(callGetAllLabelsFailed(err));
-      });
+      .catch((err) => dispatch(callGetAllLabelsFailed(err)));
+  };
+}
+
+export function getUserStats() {
+  return (dispatch) => {
+    dispatch(callGetUserStats());
+    request
+      .get('/api/stats')
+      .set('Accept', 'application/json')
+      .then((res) => JSON.parse(res.text))
+      .then((data) => dispatch(callGetUserStatsSucceeded(data)))
+      .catch((err) => dispatch(callGetUserStatsFailed(err)));
   };
 }

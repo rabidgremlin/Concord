@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { TextField } from 'rmwc';
-import { Grid, GridCell } from 'rmwc/Grid';
-import { Card } from 'rmwc/Card';
-import { Typography } from 'rmwc/Typography';
-import { Button } from 'rmwc/Button';
+import { Button, Card, Grid, GridCell, TextField, Typography } from 'rmwc';
 
 import { connect } from 'react-redux';
-//import { callCreateSession } from './actions'
-
 import { createSession } from '../api';
+
+//import { callCreateSession } from './actions'
 
 export class Login extends Component {
   state = { email: '', password: '', invalidData: true };
@@ -64,12 +60,9 @@ export class Login extends Component {
                 style={{ margin: '1rem 1rem 1rem 1rem' }}
                 disabled={this.state.invalidData}
                 onClick={() => {
-                  //this.props.history.push('/labelphrase')
-                  //alert('hello');
                   this.props.dispatch(
                     createSession(this.state.email, this.state.password)
                   );
-                  //callCreateSession(this.state.email,this.state.password);
                 }}
               >
                 Login

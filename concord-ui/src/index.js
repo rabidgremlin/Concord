@@ -4,16 +4,15 @@ import './index.css';
 import App from './App';
 //import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import rootReducer from './reducers';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import englishLocaleData from 'react-intl/locale-data/en';
 import thunk from 'redux-thunk';
-
-//import { apiService } from './api-service'
-
 import 'material-components-web/dist/material-components-web.min.css';
 import WebFont from 'webfontloader';
+
+//import { apiService } from './api-service'
 
 WebFont.load({
   google: {

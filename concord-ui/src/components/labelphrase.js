@@ -1,30 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getNextPhrase } from '../api';
-import { voteForPhraseLabel } from '../api';
+import { getNextPhrase, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
 import {
   Card,
-  CardPrimaryAction,
-  // CardMedia,
   CardAction,
-  CardActions
-  // CardActionButtons,
-  // CardActionIcons
-} from 'rmwc/Card';
-
-import { Typography } from 'rmwc/Typography';
-
-import { Grid, GridCell } from 'rmwc/Grid';
-import {
-  FormattedNumber
-  //FormattedDate
-} from 'react-intl';
-
-import { Fab } from 'rmwc/Fab';
-
-import { Icon } from 'rmwc/Icon';
+  CardActions,
+  CardPrimaryAction,
+  Fab,
+  Grid,
+  GridCell,
+  Icon,
+  Typography
+} from 'rmwc';
+import { FormattedNumber } from 'react-intl';
 
 const keyMappings = {
   7: 0,
@@ -40,8 +30,6 @@ const keyMappings = {
 };
 
 export class LabelPhrase extends Component {
-  //state = { dirty: false }
-  //handleChange = (val) => (evt) => { this.setState({ ...this.state, [val]: evt.target.value }) }
   constructor(props) {
     super(props);
     this.state = {
@@ -76,7 +64,7 @@ export class LabelPhrase extends Component {
       this.makeVote('TRASH');
     }
 
-    if (keyCode === 'ArrowRight') {
+    if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
       this.makeVote('SKIPPED');
     }
 
@@ -90,11 +78,6 @@ export class LabelPhrase extends Component {
   makeVote(label) {
     this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
     this.setState({ currentLabel: null });
-
-    // HACk HACK need to move to react-thunk
-    /*setTimeout(() => {
-      this.props.dispatch(callGetNextPhrase());
-    }, 1500)*/
   }
 
   render() {
@@ -244,17 +227,3 @@ export default connect((state) => ({
   loading: state.nextPhrase.loading,
   phraseData: state.nextPhrase.phraseData
 }))(LabelPhrase);
-
-/*
- <GridTile key={i}>
-                <GridTilePrimary>
-                  <GridTilePrimaryContent>
-                    <div>{label.longDescription}</div>
-                  </GridTilePrimaryContent>
-                </GridTilePrimary>
-                <GridTileSecondary>
-                  <GridTileIcon>info</GridTileIcon>
-                  <GridTileTitle>{label.label} <br/> {label.shortDescription}</GridTileTitle>
-                </GridTileSecondary>
-              </GridTile>
-              */

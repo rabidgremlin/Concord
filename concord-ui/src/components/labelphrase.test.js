@@ -2,9 +2,7 @@ import React from 'react';
 import { LabelPhrase } from './labelphrase';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Grid, GridCell } from 'rmwc/Grid';
-import { Card, CardPrimaryAction } from 'rmwc/Card';
-import { Fab } from 'rmwc/Fab';
+import { Card, CardPrimaryAction, Fab, Grid, GridCell } from 'rmwc';
 
 Enzyme.configure({ adapter: new Adapter() });
 

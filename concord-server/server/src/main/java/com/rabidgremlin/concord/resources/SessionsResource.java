@@ -43,6 +43,7 @@ public class SessionsResource
   @POST
   public Response generateExpiredToken(NewSessionRequest newSessionRequest)
   {
+    log.info("Generating token.");
     try
     {
       if (credentialsValidator.validateCredentials(newSessionRequest.getUserId(), newSessionRequest.getPassword()))

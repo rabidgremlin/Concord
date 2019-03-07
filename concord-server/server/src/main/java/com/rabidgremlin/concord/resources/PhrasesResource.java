@@ -80,7 +80,7 @@ public class PhrasesResource
   @Path("/next")
   public Response getNextPhraseToLabel(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("Caller {} getting next phrase to label", caller);
+    log.info("{} getting next phrase to label", caller);
 
     Phrase nextPhrase = phrasesDao.getNextPhraseToLabelForUser(caller.getToken());
 
@@ -126,7 +126,7 @@ public class PhrasesResource
   @Timed
   public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
   {
-    log.info("Caller {} uploading csv of phrases {}", caller, unlabelledPhrases);
+    log.info("{} uploading csv of phrases {}", caller, unlabelledPhrases);
 
     uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
 
@@ -139,7 +139,7 @@ public class PhrasesResource
   @Timed
   public synchronized Response downloadCsv(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("Caller {} marking phrases and downloading csv of completedPhrases", caller);
+    log.info("{} marking phrases and downloading csv of completedPhrases", caller);
 
     log.info("Searching for votes over margin {}...", consensusLevel);
     List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseOverMarginWithTop2Votes(consensusLevel);
@@ -164,7 +164,7 @@ public class PhrasesResource
   @Timed
   public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("Caller {} purging completed votes and phrases {}", caller);
+    log.info("{} purging completed votes and phrases {}", caller);
 
     List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
     int amount = phraseIdentifiers.size();
@@ -183,7 +183,7 @@ public class PhrasesResource
   // TODO: Create proper model class for incoming label
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
-    log.info("Caller {} casting vote for {}", caller, phraseId);
+    log.info("{} casting vote for {}", caller, phraseId);
 
     votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
 

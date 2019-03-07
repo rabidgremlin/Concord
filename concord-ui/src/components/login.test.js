@@ -2,9 +2,7 @@ import React from 'react';
 import { Login } from './login';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Grid } from 'rmwc/Grid';
-import { Card } from 'rmwc/Card';
-import { Button } from 'rmwc/Button';
+import { Button, Card, Grid } from 'rmwc';
 
 Enzyme.configure({ adapter: new Adapter() });
 
