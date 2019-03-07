@@ -3,11 +3,10 @@ package com.rabidgremlin.concord.resources;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -35,9 +34,9 @@ public class PhrasesResourceTest
 
   private PhrasesResource resource;
 
-  private List<SuggestedLabel> labels = new ArrayList<>();
+  private final List<SuggestedLabel> labels = new ArrayList<>();
 
-  private List<UnlabelledPhrase> unlabelledPhrases = new ArrayList<>();
+  private final List<UnlabelledPhrase> unlabelledPhrases = new ArrayList<>();
 
   @Mock
   private PhrasesDao phrasesDaoMock;
@@ -140,7 +139,7 @@ public class PhrasesResourceTest
     Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
 
     verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
-    verify(phrasesDaoMock, times(1)).markPhrasesComplete(Arrays.asList(trashedPhraseId), Arrays.asList("TRASH"));
+    verify(phrasesDaoMock, times(1)).markPhrasesComplete(Collections.singletonList(trashedPhraseId), Collections.singletonList("TRASH"));
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
@@ -160,7 +159,7 @@ public class PhrasesResourceTest
     Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
 
     verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
-    verify(phrasesDaoMock, times(0)).markPhrasesComplete(Arrays.asList(trashedPhraseId), Arrays.asList("TRASH"));
+    verify(phrasesDaoMock, times(0)).markPhrasesComplete(Collections.singletonList(trashedPhraseId), Collections.singletonList("TRASH"));
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());

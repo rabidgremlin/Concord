@@ -27,11 +27,11 @@ import com.rabidgremlin.concord.plugin.CredentialsValidator;
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionsResource
 {
-  private Logger log = LoggerFactory.getLogger(SessionsResource.class);
+  private final Logger log = LoggerFactory.getLogger(SessionsResource.class);
 
-  private CredentialsValidator credentialsValidator;
+  private final CredentialsValidator credentialsValidator;
 
-  private byte[] jwtTokenSecret;
+  private final byte[] jwtTokenSecret;
 
   public SessionsResource(byte[] jwtTokenSecret, CredentialsValidator credentialsValidator)
   {

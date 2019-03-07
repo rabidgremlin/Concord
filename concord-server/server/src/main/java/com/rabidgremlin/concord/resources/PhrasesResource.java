@@ -48,19 +48,19 @@ public class PhrasesResource
   @Context
   protected UriInfo uriInfo;
 
-  private Logger log = LoggerFactory.getLogger(PhrasesResource.class);
+  private final Logger log = LoggerFactory.getLogger(PhrasesResource.class);
 
-  private PhrasesDao phrasesDao;
+  private final PhrasesDao phrasesDao;
 
-  private VotesDao votesDao;
+  private final VotesDao votesDao;
 
-  private UploadDao uploadDao;
+  private final UploadDao uploadDao;
 
-  private LabelSuggester labelSuggester;
+  private final LabelSuggester labelSuggester;
 
-  private int consensusLevel;
+  private final int consensusLevel;
 
-  private boolean completeOnTrash;
+  private final boolean completeOnTrash;
 
   private final static String LABEL_TRASH = "TRASH";
 

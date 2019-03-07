@@ -34,9 +34,9 @@ public class LabelsResource
   @Context
   private UriInfo uriInfo;
 
-  private Logger log = LoggerFactory.getLogger(LabelsResource.class);
+  private final Logger log = LoggerFactory.getLogger(LabelsResource.class);
 
-  private LabelsDao labelsDao;
+  private final LabelsDao labelsDao;
 
   public LabelsResource(LabelsDao labelsDao)
   {

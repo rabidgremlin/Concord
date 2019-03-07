@@ -8,7 +8,7 @@ import java.security.Principal;
 public class Caller
     implements Principal
 {
-  private String token;
+  private final String token;
 
   public Caller(String token)
   {

@@ -58,7 +58,7 @@ public class ConcordServerApplication
     extends Application<ConcordServerConfiguration>
 {
 
-  private Logger log = LoggerFactory.getLogger(ConcordServerApplication.class);
+  private final Logger log = LoggerFactory.getLogger(ConcordServerApplication.class);
 
   public static void main(String[] args)
     throws Exception

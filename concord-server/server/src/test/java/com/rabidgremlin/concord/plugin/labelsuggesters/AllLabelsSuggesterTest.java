@@ -22,7 +22,7 @@ public class AllLabelsSuggesterTest
 
   private String phrase;
 
-  private List<SystemLabel> systemLabels = new ArrayList<>();
+  private final List<SystemLabel> systemLabels = new ArrayList<>();
 
   @Mock
   private SystemLabelStore labelStoreMock;

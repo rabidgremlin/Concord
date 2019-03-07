@@ -3,7 +3,6 @@ package com.rabidgremlin.concord.resources;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class LabelsResourceTest
 {
   private LabelsResource labelsResource;
 
-  private List<Label> labels = new ArrayList<>();
+  private final List<Label> labels = new ArrayList<>();
 
   @Mock
   private Caller callerMock;

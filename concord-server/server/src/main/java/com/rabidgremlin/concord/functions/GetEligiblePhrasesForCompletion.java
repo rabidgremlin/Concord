@@ -18,11 +18,11 @@ import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 public class GetEligiblePhrasesForCompletion
 {
 
-  private List<GroupedPhraseVote> phraseVotes;
+  private final List<GroupedPhraseVote> phraseVotes;
 
-  private int consensusLevel;
+  private final int consensusLevel;
 
-  private Logger log = LoggerFactory.getLogger(GetEligiblePhrasesForCompletion.class);
+  private final Logger log = LoggerFactory.getLogger(GetEligiblePhrasesForCompletion.class);
 
   public GetEligiblePhrasesForCompletion(List<GroupedPhraseVote> phraseVotes, int consensusLevel)
   {

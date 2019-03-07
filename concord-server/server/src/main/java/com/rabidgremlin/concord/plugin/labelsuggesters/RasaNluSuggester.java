@@ -61,22 +61,25 @@ public class RasaNluSuggester
       throw new RuntimeException(e);
     }
 
-    ArrayList<SuggestedLabel> suggestedLabels = new ArrayList<>();
+    List<SuggestedLabel> suggestedLabels = new ArrayList<>();
 
-    for (RasaNluRanking ranking : response.body().getIntentRanking())
+    if (response.body() != null)
     {
-      SuggestedLabel tempLabel = new SuggestedLabel();
-      tempLabel.setLabel(ranking.name);
-      tempLabel.setScore(ranking.confidence);
-
-      SystemLabel matchingSystemLable = systemLabelsMap.get(ranking.name.toLowerCase());
-      if (matchingSystemLable != null)
+      for (RasaNluRanking ranking : response.body().getIntentRanking())
       {
-        tempLabel.setLongDescription(matchingSystemLable.getLongDescription());
-        tempLabel.setShortDescription(matchingSystemLable.getShortDescription());
-      }
+        SuggestedLabel tempLabel = new SuggestedLabel();
+        tempLabel.setLabel(ranking.name);
+        tempLabel.setScore(ranking.confidence);
 
-      suggestedLabels.add(tempLabel);
+        SystemLabel matchingSystemLable = systemLabelsMap.get(ranking.name.toLowerCase());
+        if (matchingSystemLable != null)
+        {
+          tempLabel.setLongDescription(matchingSystemLable.getLongDescription());
+          tempLabel.setShortDescription(matchingSystemLable.getShortDescription());
+        }
+
+        suggestedLabels.add(tempLabel);
+      }
     }
 
     return suggestedLabels;

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class AssetsSecurityHeadersFilter
     implements Filter
 {
-  private Logger log = LoggerFactory.getLogger(AssetsSecurityHeadersFilter.class);
+  private final Logger log = LoggerFactory.getLogger(AssetsSecurityHeadersFilter.class);
 
   @Override
   public void init(FilterConfig filterConfig)
