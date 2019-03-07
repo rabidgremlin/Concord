@@ -50,8 +50,6 @@ export default class Userstats extends Component {
     // include total votes in the score (else unfair to users that vote on phrases that don't meet consensus)
     const agreementRating =
       userStats.completedVotes / userStats.totalVotesWithConsensus;
-    // const agreementRatingNoTrash = (userStats.completedVotesIgnoringTrash / userStats.totalVotesWithConsensusIgnoringTrash);
-    // possibly do agreementRating squared ???
     const score =
       (userStats.totalVotes - userStats.trashVotes / 2) * agreementRating;
     return Math.trunc(score);
@@ -96,12 +94,6 @@ export default class Userstats extends Component {
               >
                 Total Phrases
               </DataTableHeadCell>
-              {/*<DataTableHeadCell alignEnd sort={this.state.totalWithConsensusSortDir || null}*/}
-              {/*onSortChange={this.sortByTotalWithConsensus}>*/}
-              {/*Total Phrases
-                                <br/>
-                                (with consensus)*/}
-              {/*</DataTableHeadCell>*/}
               <DataTableHeadCell
                 alignEnd
                 sort={this.state.completedSortDir || null}
@@ -152,9 +144,6 @@ export default class Userstats extends Component {
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].totalVotes.toLocaleString()}
                 </DataTableCell>
-                {/*<DataTableCell alignEnd>*/}
-                {/*{data[i].totalVotesWithConsensus.toLocaleString()}*/}
-                {/*</DataTableCell>*/}
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data[i].completedVotes.toLocaleString()}
                 </DataTableCell>
@@ -221,13 +210,6 @@ export default class Userstats extends Component {
 
   sortByTotal = (sortDir) =>
     this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
-
-  sortByTotalWithConsensus = (sortDir) =>
-    this.sortRows(
-      'totalWithConsensusSortDir',
-      sortDir,
-      (a) => a.totalVotesWithConsensus
-    );
 
   sortByCompleted = (sortDir) =>
     this.sortRows('completedSortDir', sortDir, (a) => a.completedVotes);
