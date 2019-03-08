@@ -1,4 +1,4 @@
-import reducer from './stat';
+import reducer from './userstat';
 
 describe('stat reducer', () => {
   it('should return the initial state', () => {

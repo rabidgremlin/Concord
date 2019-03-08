@@ -13,7 +13,7 @@ import '@rmwc/data-table/data-table.css';
 import { getUserStats } from '../api';
 import { connect } from 'react-redux';
 
-export class StatsTable extends Component {
+export class UserStatsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -232,7 +232,7 @@ export class StatsTable extends Component {
 }
 
 export default connect((state) => ({
-  error: state.stats.error,
-  loading: state.stats.loading,
-  statsData: state.stats.statsData
-}))(StatsTable);
+  error: state.userStats.error,
+  loading: state.userStats.loading,
+  statsData: state.userStats.statsData
+}))(UserStatsTable);

@@ -38,9 +38,14 @@ export default class Menu extends Component {
                 <Icon icon='outlined_flag' /> Labels
               </MenuItem>
             </Link>
-            <Link to='/stats' style={{ textDecoration: 'none' }}>
+            <Link to='/stats/user' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='bar_chart' /> Stats
+                <Icon icon='bar_chart' /> User Stats
+              </MenuItem>
+            </Link>
+            <Link to='/stats/system' style={{ textDecoration: 'none' }}>
+              <MenuItem style={{ paddingLeft: 13 }}>
+                <Icon icon='assignment' /> System Stats
               </MenuItem>
             </Link>
           </List>

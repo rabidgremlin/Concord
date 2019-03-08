@@ -13,7 +13,8 @@ import { SimpleDialog } from 'rmwc';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
-import Statstable from './components/statstable';
+import UserStatsTable from './components/userstatstable';
+import SystemStatsTable from './components/systemstatstable';
 
 export class App extends Component {
   constructor(props) {
@@ -72,7 +73,12 @@ export class App extends Component {
               />
               <Switch>
                 <Route exact path='/labels' component={LabelPhrase} />
-                <Route exact path='/stats' component={Statstable} />
+                <Route exact path='/stats/user' component={UserStatsTable} />
+                <Route
+                  exact
+                  path='/stats/system'
+                  component={SystemStatsTable}
+                />
               </Switch>
               <Redirect from='/' to='/labels' />
             </div>

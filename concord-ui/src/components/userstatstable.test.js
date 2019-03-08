@@ -10,7 +10,7 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from 'rmwc/DataTable';
-import { StatsTable } from './statstable';
+import { UserStatsTable } from './userstatstable';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -30,7 +30,7 @@ function setup() {
       }
     ]
   };
-  const statsTable = shallow(<StatsTable {...props} />);
+  const statsTable = shallow(<UserStatsTable {...props} />);
   console.log(statsTable.debug());
   return {
     props,
@@ -38,11 +38,11 @@ function setup() {
   };
 }
 
-describe('StatsTable', () => {
+describe('UserStatsTable', () => {
   it('renders without crashing', () => {
     const { statsTable, props } = setup();
-    expect(statsTable.find(StatsTable));
-    expect(statsTable.find(StatsTable).containsMatchingElement(DataTable));
+    expect(statsTable.find(UserStatsTable));
+    expect(statsTable.find(UserStatsTable).containsMatchingElement(DataTable));
     expect(
       statsTable.find(DataTable).containsMatchingElement(DataTableContent)
     );
