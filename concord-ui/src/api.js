@@ -15,7 +15,10 @@ import {
   callVoteForPhraseLabelSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
-  callGetUserStatsSucceeded
+  callGetUserStatsSucceeded,
+  callGetSystemStats,
+  callGetSystemStatsSucceeded,
+  callGetSystemStatsFailed
 } from './actions';
 
 export function createSession(userId, password) {
@@ -93,5 +96,17 @@ export function getUserStats() {
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetUserStatsSucceeded(data)))
       .catch((err) => dispatch(callGetUserStatsFailed(err)));
+  };
+}
+
+export function getSystemStats() {
+  return (dispatch) => {
+    dispatch(callGetSystemStats());
+    request
+      .get('/api/stats/system')
+      .set('Accept', 'application/json')
+      .then((res) => JSON.parse(res.text))
+      .then((data) => dispatch(callGetSystemStatsSucceeded(data)))
+      .catch((err) => dispatch(callGetSystemStatsFailed(err)));
   };
 }

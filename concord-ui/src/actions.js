@@ -96,3 +96,17 @@ export const callGetUserStatsSucceeded = (data) => ({
   type: 'CALL_GET_USER_STATS_SUCCEEDED',
   statsData: data
 });
+
+export const callGetSystemStats = () => ({
+  type: 'CALL_GET_SYSTEM_STATS'
+});
+
+export const callGetSystemStatsFailed = (error) => ({
+  type: 'CALL_GET_SYSTEM_STATS_FAILED',
+  error
+});
+
+export const callGetSystemStatsSucceeded = (data) => ({
+  type: 'CALL_GET_SYSTEM_STATS_SUCCEEDED',
+  statsData: data
+});
