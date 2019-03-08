@@ -74,11 +74,7 @@ export class App extends Component {
               <Switch>
                 <Route exact path='/labels' component={LabelPhrase} />
                 <Route exact path='/stats/user' component={UserStatsTable} />
-                <Route
-                  exact
-                  path='/stats/system'
-                  component={SystemStatsTable}
-                />
+                <Route exact path='/stats/system' component={SystemStatsTable} />
               </Switch>
               <Redirect from='/' to='/labels' />
             </div>
