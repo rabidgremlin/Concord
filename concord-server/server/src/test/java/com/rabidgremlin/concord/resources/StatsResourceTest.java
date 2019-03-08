@@ -131,7 +131,12 @@ public class StatsResourceTest
     // Given
     when(systemStatsDao.getTotalCountOfPhrases()).thenReturn(100);
     when(systemStatsDao.getCountOfCompletedPhrases()).thenReturn(50);
+    when(systemStatsDao.getCountOfPhrasesWithConsensus(anyInt())).thenReturn(50);
     when(systemStatsDao.getCountOfPhrasesWithConsensusThatAreNotCompleted(anyInt())).thenReturn(25);
+    when(systemStatsDao.getCountOfLabelsUsed()).thenReturn(30);
+    when(systemStatsDao.getCountOfVotes()).thenReturn(1000);
+    when(systemStatsDao.getCountOfLabels()).thenReturn(60);
+    when(systemStatsDao.getCountOfUsers()).thenReturn(3);
 
     // When
     Response response = statsResource.getSystemStats(caller);
@@ -141,7 +146,7 @@ public class StatsResourceTest
     assertThat(response.getStatus(), is(200));
     assertThat(response.getStatusInfo().toString(), is("OK"));
     assertThat(response.getEntity(), instanceOf(SystemStats.class));
-    assertThat(response.getEntity(), is(new SystemStats(100, 50, 25)));
+    assertThat(response.getEntity(), is(new SystemStats(100, 50, 50, 25, 30, 1000, 60, 3)));
   }
 
 }

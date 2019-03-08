@@ -40,12 +40,12 @@ export default class Menu extends Component {
             </Link>
             <Link to='/stats/user' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='bar_chart' /> User Stats
+                <Icon icon='supervisor_account' /> User Stats
               </MenuItem>
             </Link>
             <Link to='/stats/system' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='assignment' /> System Stats
+                <Icon icon='bar_chart' /> System Stats
               </MenuItem>
             </Link>
           </List>

@@ -96,9 +96,16 @@ public class StatsResource
 
     int totalPhrases = systemStatsDao.getTotalCountOfPhrases();
     int completedPhrases = systemStatsDao.getCountOfCompletedPhrases();
+    int phrasesWithConsensus = systemStatsDao.getCountOfPhrasesWithConsensus(consensusLevel);
     int phrasesWithConsensusNotCompleted = systemStatsDao.getCountOfPhrasesWithConsensusThatAreNotCompleted(consensusLevel);
+    int labelsUsed = systemStatsDao.getCountOfLabelsUsed();
+    int totalVotes = systemStatsDao.getCountOfVotes();
+    int totalLabels = systemStatsDao.getCountOfLabels();
+    int userCount = systemStatsDao.getCountOfUsers();
 
-    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensusNotCompleted);
+    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,
+        totalLabels,
+        userCount);
 
     return Response.ok().entity(systemStats).build();
   }
