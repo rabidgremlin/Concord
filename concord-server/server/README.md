@@ -46,5 +46,5 @@ curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorizati
 
 #### Get user stats
 ```
-curl -v -X GET http://127.0.0.1:9000/api/stats --header "Authorization: Bearer XXXXXX"
+curl -v -X GET http://127.0.0.1:9000/api/stats/user --header "Authorization: Bearer XXXXXX"
 ```

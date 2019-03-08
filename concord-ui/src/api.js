@@ -88,7 +88,7 @@ export function getUserStats() {
   return (dispatch) => {
     dispatch(callGetUserStats());
     request
-      .get('/api/stats')
+      .get('/api/stats/user')
       .set('Accept', 'application/json')
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetUserStatsSucceeded(data)))

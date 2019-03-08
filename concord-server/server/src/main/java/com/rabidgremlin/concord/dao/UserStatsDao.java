@@ -7,10 +7,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import com.rabidgremlin.concord.api.UserVoteCount;
 
-/*
- * NOTE: not filtering SKIPPED we check against the consensus
- */
-public interface StatsDao
+public interface UserStatsDao
 {
 
   /**
