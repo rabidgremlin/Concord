@@ -33,9 +33,14 @@ export default class Menu extends Component {
         </DrawerHeader>
         <DrawerContent>
           <List>
-            <Link to='/labels' style={{ textDecoration: 'none' }}>
+            <Link to='/phrases/label' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='outlined_flag' /> Labels
+                <Icon icon='outlined_flag' /> Vote
+              </MenuItem>
+            </Link>
+            <Link to='/phrases/upload' style={{ textDecoration: 'none' }}>
+              <MenuItem style={{ paddingLeft: 13 }}>
+                <Icon icon='playlist_add' /> Upload
               </MenuItem>
             </Link>
             <Link to='/stats' style={{ textDecoration: 'none' }}>

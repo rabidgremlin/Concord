@@ -14,6 +14,7 @@ import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
 import Statstable from './components/statstable';
+import UploadPhrase from './components/uploadphrase';
 
 export class App extends Component {
   constructor(props) {
@@ -71,10 +72,11 @@ export class App extends Component {
                 }}
               />
               <Switch>
-                <Route exact path='/labels' component={LabelPhrase} />
+                <Route exact path='/phrases/label' component={LabelPhrase} />
+                <Route exact path='/phrases/upload' component={UploadPhrase} />
                 <Route exact path='/stats' component={Statstable} />
               </Switch>
-              <Redirect from='/' to='/labels' />
+              <Redirect from='/' to='/phrases/label' />
             </div>
           </Router>
         </ThemeProvider>
