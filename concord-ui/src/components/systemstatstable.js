@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 export class SystemStatsTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { statsData: {}, labelData: [], doneFirstSort: false };
   }
 
   componentDidMount() {
@@ -24,8 +24,22 @@ export class SystemStatsTable extends Component {
 
   componentDidUpdate(oldProps) {
     const newProps = this.props;
-    if (oldProps.loading !== newProps.loading) {
-      this.setState({ statsData: newProps.statsData });
+    if (oldProps.loading !== newProps.loading && newProps.statsData) {
+      const data = newProps.statsData;
+      this.setState({
+        statsData: {
+          totalPhrases: data.totalPhrases,
+          completedPhrases: data.completedPhrases,
+          phrasesWithConsensus: data.phrasesWithConsensus,
+          phrasesWithConsensusNotCompleted:
+            data.phrasesWithConsensusNotCompleted,
+          totalLabels: data.totalLabels,
+          labelsUsed: data.labelsUsed,
+          totalVotes: data.totalVotes,
+          userCount: data.userCount
+        },
+        labelData: data.labelCountStats
+      });
     }
   }
 
@@ -37,69 +51,142 @@ export class SystemStatsTable extends Component {
         </div>
       );
     }
-    const data = this.state.statsData;
-    const dataLength = Object.keys(data).length;
-    if (dataLength <= 0) {
+    if (Object.keys(this.state.statsData).length <= 0) {
       return (
         <div>
           <p>No stats to display</p>
         </div>
       );
     }
+    if (!this.state.doneFirstSort) {
+      this.sortByLabelVoteCount(-1);
+      this.setState({ doneFirstSort: true });
+    }
     return (
-      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '20px' }}>
-          <DataTableHead>
-            <DataTableRow>
-              <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
-              <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
-              <DataTableHeadCell alignEnd>
-                Phrases With Consensus
-              </DataTableHeadCell>
-              <DataTableHeadCell alignEnd>
-                Phrases With Consensus
-                <br /> (not completed)
-              </DataTableHeadCell>
-              <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
-              <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
-              <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
-              <DataTableHeadCell alignEnd>Users</DataTableHeadCell>
-              <DataTableHeadCell alignEnd />
-            </DataTableRow>
-          </DataTableHead>
-          <DataTableBody>
-            <DataTableRow>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.totalPhrases.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.completedPhrases.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.phrasesWithConsensus.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.phrasesWithConsensusNotCompleted.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.totalLabels.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.labelsUsed.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.totalVotes.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd style={{ width: '10%' }}>
-                {data.userCount.toLocaleString()}
-              </DataTableCell>
-              <DataTableCell alignEnd />
-            </DataTableRow>
-          </DataTableBody>
-        </DataTableContent>
-      </DataTable>
+      <div>
+        <DataTable style={{ width: '100%' }}>
+          <DataTableContent style={{ fontSize: '20px' }}>
+            <DataTableHead>
+              <DataTableRow>
+                <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>
+                  Completed Phrases
+                </DataTableHeadCell>
+                <DataTableHeadCell>Phrases With Consensus</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>
+                  Phrases With Consensus
+                  <br /> (not completed)
+                </DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Users</DataTableHeadCell>
+                <DataTableHeadCell />
+              </DataTableRow>
+            </DataTableHead>
+            <DataTableBody>
+              <DataTableRow>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.totalPhrases.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.completedPhrases.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.phrasesWithConsensus.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.phrasesWithConsensusNotCompleted.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.totalLabels.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.labelsUsed.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.totalVotes.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.state.statsData.userCount.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell />
+              </DataTableRow>
+            </DataTableBody>
+          </DataTableContent>
+        </DataTable>
+        <DataTable style={{ width: '100%' }}>
+          <DataTableContent style={{ fontSize: '20px' }}>
+            <DataTableHead>
+              <DataTableRow>
+                <DataTableHeadCell>Label</DataTableHeadCell>
+                <DataTableHeadCell
+                  alignEnd
+                  sort={this.state.voteCountSortDir || null}
+                  onSortChange={this.sortByLabelVoteCount}
+                >
+                  Votes
+                </DataTableHeadCell>
+                <DataTableHeadCell
+                  alignEnd
+                  sort={this.state.completedCountSortDir || null}
+                  onSortChange={this.sortByLabelCompletedCount}
+                >
+                  Completed
+                </DataTableHeadCell>
+                <DataTableHeadCell alignEnd />
+              </DataTableRow>
+            </DataTableHead>
+            <DataTableBody>
+              {[...Array(this.state.labelData.length)].map((v, i) => (
+                <DataTableRow key={i}>
+                  <DataTableCell style={{ width: '20%' }}>
+                    {this.state.labelData[i].label}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {this.state.labelData[i].voteCount.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {this.state.labelData[
+                      i
+                    ].completedPhraseCount.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell />
+                </DataTableRow>
+              ))}
+            </DataTableBody>
+          </DataTableContent>
+        </DataTable>
+      </div>
     );
   }
+
+  clearSorts = () => {
+    this.setState({
+      voteCountSortDir: null,
+      completedCountSortDir: null
+    });
+  };
+
+  sortRows = (property, sortDir, supplier) => {
+    this.clearSorts();
+    this.setState({
+      [property]: sortDir,
+      labelData: this.state.labelData.sort(
+        (a, b) => sortDir * (supplier(a) - supplier(b))
+      )
+    });
+  };
+
+  sortByLabelVoteCount = (sortDir) =>
+    this.sortRows('voteCountSortDir', sortDir, (a) => a.voteCount);
+
+  sortByLabelCompletedCount = (sortDir) =>
+    this.sortRows(
+      'completedCountSortDir',
+      sortDir,
+      (a) => a.completedPhraseCount
+    );
 }
 
 export default connect((state) => ({

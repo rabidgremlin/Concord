@@ -140,7 +140,7 @@ export class UserStatsTable extends Component {
           </DataTableHead>
           <DataTableBody>
             {[...Array(dataLength)].map((v, i) => (
-              <DataTableRow key={i} style={{ width: '20%' }}>
+              <DataTableRow key={i}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.computeScore(data[i]).toLocaleString()}

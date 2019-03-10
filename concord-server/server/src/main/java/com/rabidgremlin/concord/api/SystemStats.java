@@ -1,5 +1,7 @@
 package com.rabidgremlin.concord.api;
 
+import java.util.List;
+
 import com.google.common.base.Objects;
 
 public class SystemStats
@@ -21,9 +23,11 @@ public class SystemStats
 
   private final int userCount;
 
+  private final List<LabelCountStats> labelCountStats;
+
   public SystemStats(int totalPhrases, int completedPhrases, int phrasesWithConsensus, int phrasesWithConsensusNotCompleted, int labelsUsed, int totalVotes,
     int totalLabels,
-    int userCount)
+    int userCount, List<LabelCountStats> labelCountStats)
   {
     this.totalPhrases = totalPhrases;
     this.completedPhrases = completedPhrases;
@@ -33,6 +37,7 @@ public class SystemStats
     this.totalVotes = totalVotes;
     this.totalLabels = totalLabels;
     this.userCount = userCount;
+    this.labelCountStats = labelCountStats;
   }
 
   public int getTotalPhrases()
@@ -75,6 +80,11 @@ public class SystemStats
     return userCount;
   }
 
+  public List<LabelCountStats> getLabelCountStats()
+  {
+    return labelCountStats;
+  }
+
   @Override
   public boolean equals(Object o)
   {
@@ -94,14 +104,15 @@ public class SystemStats
         labelsUsed == that.labelsUsed &&
         totalVotes == that.totalVotes &&
         totalLabels == that.totalLabels &&
-        userCount == that.userCount;
+        userCount == that.userCount &&
+        Objects.equal(labelCountStats, that.labelCountStats);
   }
 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes, totalLabels,
-        userCount);
+        userCount, labelCountStats);
   }
 
   @Override
@@ -116,6 +127,7 @@ public class SystemStats
         ", totalVotes=" + totalVotes +
         ", totalLabels=" + totalLabels +
         ", userCount=" + userCount +
+        ", labelCountStats=" + labelCountStats +
         '}';
   }
 

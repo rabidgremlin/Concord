@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.collect.ImmutableList;
+import com.rabidgremlin.concord.api.LabelCount;
+import com.rabidgremlin.concord.api.LabelCountStats;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
@@ -38,6 +41,8 @@ public class StatsResource
 
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
 
+  private static final List<String> EXTRA_LABELS = ImmutableList.of("TRASH", "SKIPPED");
+
   public StatsResource(UserStatsDao userStatsDao, SystemStatsDao systemStatsDao, int consensusLevel)
   {
     this.userStatsDao = userStatsDao;
@@ -48,7 +53,7 @@ public class StatsResource
   private int getVotesForUser(List<UserVoteCount> list, String userId)
   {
     return list.stream()
-        .filter(u -> u.getUserId().equals(userId))
+        .filter(userVoteCount -> userVoteCount.getUserId().equals(userId))
         .findFirst()
         .map(UserVoteCount::getVoteCount)
         .orElse(0);
@@ -87,6 +92,15 @@ public class StatsResource
     return Response.ok().entity(userStats).build();
   }
 
+  private int getCountsForLabel(List<LabelCount> labelCounts, String label)
+  {
+    return labelCounts.stream()
+        .filter(labelCount -> labelCount.getLabel().equals(label))
+        .findFirst()
+        .map(LabelCount::getCount)
+        .orElse(0);
+  }
+
   @GET
   @Timed
   @Path("/system")
@@ -103,9 +117,21 @@ public class StatsResource
     int totalLabels = systemStatsDao.getCountOfLabels();
     int userCount = systemStatsDao.getCountOfUsers();
 
+    List<String> labelNames = systemStatsDao.getLabelNames();
+    labelNames.addAll(EXTRA_LABELS);
+    List<LabelCount> labelVoteCounts = systemStatsDao.getLabelVoteCounts();
+    List<LabelCount> labelCompletedPhraseCounts = systemStatsDao.getCompletedPhraseLabelCounts();
+    List<LabelCountStats> labelCountStats = labelNames.stream()
+        .map(label -> {
+          int voteCount = getCountsForLabel(labelVoteCounts, label);
+          int completedPhraseCount = getCountsForLabel(labelCompletedPhraseCounts, label);
+          return new LabelCountStats(label, voteCount, completedPhraseCount);
+        })
+        .filter(label -> label.getVoteCount() > 0 || label.getCompletedPhraseCount() > 0)
+        .collect(Collectors.toList());
+
     SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,
-        totalLabels,
-        userCount);
+        totalLabels, userCount, labelCountStats);
 
     return Response.ok().entity(systemStats).build();
   }

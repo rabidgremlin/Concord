@@ -1,7 +1,12 @@
 package com.rabidgremlin.concord.dao;
 
+import java.util.List;
+
+import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+
+import com.rabidgremlin.concord.api.LabelCount;
 
 public interface SystemStatsDao
 {
@@ -46,5 +51,19 @@ public interface SystemStatsDao
   @SqlQuery("SELECT COUNT(*) " +
       "FROM (SELECT userId FROM votes WHERE userId != '" + USER_TO_IGNORE + "' GROUP BY userId) ALIAS")
   int getCountOfUsers();
+
+  @SqlQuery("SELECT label FROM labels")
+  List<String> getLabelNames();
+
+  @SqlQuery("SELECT label, COUNT(*) count " +
+      "FROM phrases " +
+      "WHERE label is not NULL AND completed = true " +
+      "GROUP BY label")
+  @RegisterBeanMapper(LabelCount.class)
+  List<LabelCount> getCompletedPhraseLabelCounts();
+
+  @SqlQuery("SELECT label, COUNT(*) count FROM votes GROUP BY label")
+  @RegisterBeanMapper(LabelCount.class)
+  List<LabelCount> getLabelVoteCounts();
 
 }

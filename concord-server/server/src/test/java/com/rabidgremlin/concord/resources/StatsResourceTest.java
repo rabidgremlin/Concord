@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.rabidgremlin.concord.api.LabelCount;
+import com.rabidgremlin.concord.api.LabelCountStats;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
@@ -137,6 +139,9 @@ public class StatsResourceTest
     when(systemStatsDao.getCountOfVotes()).thenReturn(1000);
     when(systemStatsDao.getCountOfLabels()).thenReturn(60);
     when(systemStatsDao.getCountOfUsers()).thenReturn(3);
+    when(systemStatsDao.getLabelNames()).thenReturn(Arrays.asList("TRASH", "SKIP", "WhereTaxi"));
+    when(systemStatsDao.getLabelVoteCounts()).thenReturn(Collections.singletonList(new LabelCount("TRASH", 10)));
+    when(systemStatsDao.getCompletedPhraseLabelCounts()).thenReturn(Collections.singletonList(new LabelCount("TRASH", 10)));
 
     // When
     Response response = statsResource.getSystemStats(caller);
@@ -146,7 +151,7 @@ public class StatsResourceTest
     assertThat(response.getStatus(), is(200));
     assertThat(response.getStatusInfo().toString(), is("OK"));
     assertThat(response.getEntity(), instanceOf(SystemStats.class));
-    assertThat(response.getEntity(), is(new SystemStats(100, 50, 50, 25, 30, 1000, 60, 3)));
+    assertThat(response.getEntity(), is(new SystemStats(100, 50, 50, 25, 30, 1000, 60, 3, Collections.singletonList(new LabelCountStats("TRASH", 10, 10)))));
   }
 
 }
