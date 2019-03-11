@@ -15,7 +15,7 @@ import {
   callVoteForPhraseLabelSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
-  callGetUserStatsSucceeded
+  callGetUserStatsSucceeded, callPostPhrases, callPostPhrasesSucceeded, callPostPhrasesFailed
 } from './actions';
 
 export function createSession(userId, password) {
@@ -25,17 +25,9 @@ export function createSession(userId, password) {
       .post('/api/sessions')
       .send({ userId: userId, password: password })
       .set('Accept', 'application/json')
-      .then((res) => {
-        //console.log("res", JSON.stringify(res));
-        const data = JSON.parse(res.text);
-        //TODO: dispatch(itemsIsLoading(false));
-        return data.token;
-      })
+      .then((res) => JSON.parse(res.text).token)
       .then((token) => dispatch(callCreateSessionSucceeded(token)))
-      .catch((err) => {
-        //dispatch(itemsIsLoading(false));
-        dispatch(callCreateSessionFailed(err));
-      });
+      .catch((err) => dispatch(callCreateSessionFailed(err)));
   };
 }
 
@@ -94,4 +86,16 @@ export function getUserStats() {
       .then((data) => dispatch(callGetUserStatsSucceeded(data)))
       .catch((err) => dispatch(callGetUserStatsFailed(err)));
   };
+}
+
+export function postPhrases(unlabelledPhrases){
+  return (dispatch) => {
+    dispatch(callPostPhrases());
+    request
+      .post('/api/phrases/bulk')
+      .send({unlabelledPhrases: unlabelledPhrases})
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callPostPhrasesSucceeded()))
+      .catch((err) => dispatch(callPostPhrasesFailed(err)));
+  }
 }

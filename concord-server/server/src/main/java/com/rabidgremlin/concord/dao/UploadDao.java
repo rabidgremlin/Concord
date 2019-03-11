@@ -1,14 +1,13 @@
 package com.rabidgremlin.concord.dao;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface UploadDao
 {
@@ -20,7 +19,7 @@ public interface UploadDao
   PhrasesDao phrasesDao();
 
   @Transaction
-  default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases)
+  default void uploadUnlabelledPhrases(String userId, List<UnlabelledPhrase> unlabelledPhrases)
   {
     List<UnlabelledPhrase> batchedPhrases = unlabelledPhrases.stream()
         .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equalsIgnoreCase("text"))
@@ -40,7 +39,8 @@ public interface UploadDao
     // If there was a possible label, cast one vote for that phrase label
     batchedPhrases.stream()
         .filter(phrase -> StringUtils.isNotEmpty(phrase.getPossibleLabel()))
-        .forEach(phrase -> votesDao().upsert(DigestUtils.md5Hex(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD"));
+        .forEach(phrase -> votesDao().upsert(DigestUtils.md5Hex(phrase.getText()),
+            phrase.getPossibleLabel(), StringUtils.isNotEmpty(userId) ? userId : "BULK_UPLOAD"));
   }
 
 }

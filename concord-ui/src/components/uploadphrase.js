@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { TextField, Button } from 'rmwc';
+import {connect} from "react-redux";
+import {postPhrases} from "../api";
 
-export default class UploadPhrase extends Component {
+export class UploadPhrase extends Component {
   constructor(props) {
     super(props);
   }
 
   submitTextField = () => {
     console.log('submitting');
+    this.props.dispatch(postPhrases([{text: 'hi hi', possibleLabel: 'bye'}, {text: 'hello', possibleLabel: 'bye'}]));
   };
 
   render() {
@@ -19,7 +22,6 @@ export default class UploadPhrase extends Component {
           outlined
           fullwidth
           label='Enter phrases, each on a new line'
-          characterCount
           helpText={{
             children: 'The field is required'
           }}
@@ -28,3 +30,8 @@ export default class UploadPhrase extends Component {
     );
   }
 }
+
+export default connect((state) => ({
+  error: state.uploadPhrase.error,
+  loading: state.uploadPhrase.loading,
+}))(UploadPhrase);

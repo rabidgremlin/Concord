@@ -29,4 +29,13 @@ public class UnlabelledPhrase
     this.possibleLabel = possibleLabel;
   }
 
+  @Override
+  public String toString()
+  {
+    return "UnlabelledPhrase{" +
+        "text='" + text + '\'' +
+        ", possibleLabel='" + possibleLabel + '\'' +
+        '}';
+  }
+
 }

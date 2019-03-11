@@ -122,13 +122,13 @@ public class PhrasesResource
 
   @POST
   @Path("bulk")
-  @Consumes("text/json")
+  @Consumes(MediaType.APPLICATION_JSON)
   @Timed
   public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases phrases)
   {
-    log.info("{} adding phrases {}", caller, phrases);
+    log.info("{} uploading json of phrases {}", caller, phrases);
 
-    uploadDao.uploadUnlabelledPhrases(phrases.getUnlabelledPhrases());
+    uploadDao.uploadUnlabelledPhrases(caller.getName(), phrases.getUnlabelledPhrases());
 
     return Response.ok().build();
   }
@@ -141,7 +141,7 @@ public class PhrasesResource
   {
     log.info("{} uploading csv of phrases {}", caller, unlabelledPhrases);
 
-    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
+    uploadDao.uploadUnlabelledPhrases("", unlabelledPhrases);
 
     return Response.ok().build();
   }
