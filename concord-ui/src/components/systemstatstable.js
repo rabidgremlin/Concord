@@ -36,8 +36,7 @@ export class SystemStatsTable extends Component {
           totalPhrases: data.totalPhrases,
           completedPhrases: data.completedPhrases,
           phrasesWithConsensus: data.phrasesWithConsensus,
-          phrasesWithConsensusNotCompleted:
-            data.phrasesWithConsensusNotCompleted,
+          phrasesWithConsensusNotCompleted: data.phrasesWithConsensusNotCompleted,
           totalLabels: data.totalLabels,
           labelsUsed: data.labelsUsed,
           totalVotes: data.totalVotes,
@@ -88,9 +87,7 @@ export class SystemStatsTable extends Component {
             <DataTableHead>
               <DataTableRow>
                 <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>
-                  Completed Phrases
-                </DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
                 <DataTableHeadCell>Phrases With Consensus</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>
                   Phrases With Consensus
@@ -159,16 +156,12 @@ export class SystemStatsTable extends Component {
             <DataTableBody>
               {[...Array(this.state.labelData.length)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '20%' }}>
-                    {this.state.labelData[i].label}
-                  </DataTableCell>
+                  <DataTableCell style={{ width: '20%' }}>{this.state.labelData[i].label}</DataTableCell>
                   <DataTableCell alignEnd style={{ width: '10%' }}>
                     {this.state.labelData[i].voteCount.toLocaleString()}
                   </DataTableCell>
                   <DataTableCell alignEnd style={{ width: '10%' }}>
-                    {this.state.labelData[
-                      i
-                    ].completedPhraseCount.toLocaleString()}
+                    {this.state.labelData[i].completedPhraseCount.toLocaleString()}
                   </DataTableCell>
                   <DataTableCell />
                 </DataTableRow>
@@ -191,21 +184,14 @@ export class SystemStatsTable extends Component {
     this.clearSorts();
     this.setState({
       [property]: sortDir,
-      labelData: this.state.labelData.sort(
-        (a, b) => sortDir * (supplier(a) - supplier(b))
-      )
+      labelData: this.state.labelData.sort((a, b) => sortDir * (supplier(a) - supplier(b)))
     });
   };
 
-  sortByLabelVoteCount = (sortDir) =>
-    this.sortRows('voteCountSortDir', sortDir, (a) => a.voteCount);
+  sortByLabelVoteCount = (sortDir) => this.sortRows('voteCountSortDir', sortDir, (a) => a.voteCount);
 
   sortByLabelCompletedCount = (sortDir) =>
-    this.sortRows(
-      'completedCountSortDir',
-      sortDir,
-      (a) => a.completedPhraseCount
-    );
+    this.sortRows('completedCountSortDir', sortDir, (a) => a.completedPhraseCount);
 }
 
 export default connect((state) => ({

@@ -66,12 +66,10 @@ export class UserStatsTable extends Component {
     if (userStats.totalVotesWithConsensus <= 0) {
       return 0;
     }
-    const agreementRating =
-      userStats.completedVotes / userStats.totalVotesWithConsensus;
+    const agreementRating = userStats.completedVotes / userStats.totalVotesWithConsensus;
     // const agreementRatingNoTrash = userStats.completedVotesIgnoringTrash / userStats.totalVotesWithConsensusIgnoringTrash;
     // trash votes have 1/3 the weight, but trashing also improves agreement rating...
-    const score =
-      (userStats.totalVotes - (userStats.trashVotes * 2) / 3) * agreementRating;
+    const score = (userStats.totalVotes - (userStats.trashVotes * 2) / 3) * agreementRating;
     return Math.trunc(score);
   };
 
@@ -105,18 +103,10 @@ export class UserStatsTable extends Component {
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
-              <DataTableHeadCell
-                alignEnd
-                sort={this.state.scoreSortDir || null}
-                onSortChange={this.sortByScore}
-              >
+              <DataTableHeadCell alignEnd sort={this.state.scoreSortDir || null} onSortChange={this.sortByScore}>
                 Score
               </DataTableHeadCell>
-              <DataTableHeadCell
-                alignEnd
-                sort={this.state.totalSortDir || null}
-                onSortChange={this.sortByTotal}
-              >
+              <DataTableHeadCell alignEnd sort={this.state.totalSortDir || null} onSortChange={this.sortByTotal}>
                 Total Phrases
               </DataTableHeadCell>
               <DataTableHeadCell
@@ -166,20 +156,13 @@ export class UserStatsTable extends Component {
                   {data[i].completedVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(
-                    data[i].completedVotes,
-                    data[i].totalVotesWithConsensus
-                  )}
-                  %
+                  {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(
-                    data[i].completedVotesIgnoringTrash,
-                    data[i].totalVotesWithConsensusIgnoringTrash
-                  )}
+                  {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}
                   %
                 </DataTableCell>
                 <DataTableCell alignEnd />
@@ -211,20 +194,15 @@ export class UserStatsTable extends Component {
     this.clearSorts();
     this.setState({
       [property]: sortDir,
-      statsData: this.state.statsData.sort(
-        (a, b) => sortDir * (supplier(a) - supplier(b))
-      )
+      statsData: this.state.statsData.sort((a, b) => sortDir * (supplier(a) - supplier(b)))
     });
   };
 
-  sortByScore = (sortDir) =>
-    this.sortRows('scoreSortDir', sortDir, (a) => this.computeScore(a));
+  sortByScore = (sortDir) => this.sortRows('scoreSortDir', sortDir, (a) => this.computeScore(a));
 
-  sortByTotal = (sortDir) =>
-    this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
+  sortByTotal = (sortDir) => this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
 
-  sortByCompleted = (sortDir) =>
-    this.sortRows('completedSortDir', sortDir, (a) => a.completedVotes);
+  sortByCompleted = (sortDir) => this.sortRows('completedSortDir', sortDir, (a) => a.completedVotes);
 
   sortByAgreementRate = (sortDir) =>
     this.sortRows('agreementRateSortDir', sortDir, (a) =>
@@ -232,16 +210,11 @@ export class UserStatsTable extends Component {
     );
 
   sortByTrashedRate = (sortDir) =>
-    this.sortRows('trashRateSortDir', sortDir, (a) =>
-      this.toPercentage(a.trashVotes, a.totalVotes)
-    );
+    this.sortRows('trashRateSortDir', sortDir, (a) => this.toPercentage(a.trashVotes, a.totalVotes));
 
   sortByAgreementRateNoTrash = (sortDir) =>
     this.sortRows('agreementRateNoTrashSortDir', sortDir, (a) =>
-      this.toPercentage(
-        a.completedVotesIgnoringTrash,
-        a.totalVotesWithConsensusIgnoringTrash
-      )
+      this.toPercentage(a.completedVotesIgnoringTrash, a.totalVotesWithConsensusIgnoringTrash)
     );
 }
 

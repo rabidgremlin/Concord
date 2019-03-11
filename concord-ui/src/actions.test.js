@@ -87,9 +87,7 @@ describe('actions', () => {
       type: 'CALL_GET_NEXT_PHRASE_SUCCEEDED',
       phraseData
     };
-    expect(actions.callGetNextPhraseSucceeded(phraseData)).toEqual(
-      expectedAction
-    );
+    expect(actions.callGetNextPhraseSucceeded(phraseData)).toEqual(expectedAction);
   });
 });
 
@@ -160,8 +158,6 @@ describe('actions', () => {
       type: 'CALL_GET_ALL_LABELS_SUCCEEDED',
       labelData
     };
-    expect(actions.callGetAllLabelsSucceeded(labelData)).toEqual(
-      expectedAction
-    );
+    expect(actions.callGetAllLabelsSucceeded(labelData)).toEqual(expectedAction);
   });
 });

@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch
-} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Login from './components/login';
 import Menu from './components/menu';
@@ -49,30 +44,14 @@ export class App extends Component {
 
   render() {
     const LabelPage = (props) => {
-      return (
-        <LabelPhrase
-          reloadApiData={this.state.reloadApiData}
-          enableRefresh={this.enableRefresh}
-          {...props}
-        />
-      );
+      return <LabelPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
     };
     const UserStatsPage = (props) => {
-      return (
-        <UserStatsTable
-          reloadApiData={this.state.reloadApiData}
-          enableRefresh={this.enableRefresh}
-          {...props}
-        />
-      );
+      return <UserStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
     };
     const SystemStatsPage = (props) => {
       return (
-        <SystemStatsTable
-          reloadApiData={this.state.reloadApiData}
-          enableRefresh={this.enableRefresh}
-          {...props}
-        />
+        <SystemStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
       );
     };
 
@@ -106,10 +85,7 @@ export class App extends Component {
         >
           <Router basename={process.env.PUBLIC_URL}>
             <div>
-              <Menu
-                menuOpen={this.state.menuOpen}
-                toggleMenu={this.toggleMenu}
-              />
+              <Menu menuOpen={this.state.menuOpen} toggleMenu={this.toggleMenu} />
               <Navbar
                 logout={this.logout}
                 toggleMenu={this.toggleMenu}

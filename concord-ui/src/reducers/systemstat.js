@@ -1,7 +1,4 @@
-const systemStatsReducer = (
-  state = { loading: true, error: false },
-  action
-) => {
+const systemStatsReducer = (state = { loading: true, error: false }, action) => {
   switch (action.type) {
     case 'CALL_GET_SYSTEM_STATS':
       return { loading: true, error: false };

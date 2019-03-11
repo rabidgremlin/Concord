@@ -30,29 +30,13 @@ describe('SystemStatsTable', () => {
   it('renders without crashing', () => {
     const { statsTable, props } = setup();
     expect(statsTable.find(SystemStatsTable));
-    expect(
-      statsTable.find(SystemStatsTable).containsMatchingElement(DataTable)
-    );
-    expect(
-      statsTable.find(DataTable).containsMatchingElement(DataTableContent)
-    );
-    expect(
-      statsTable.find(DataTableContent).containsMatchingElement(DataTableHead)
-    );
-    expect(
-      statsTable.find(DataTableHead).containsMatchingElement(DataTableRow)
-    );
-    expect(
-      statsTable.find(DataTableRow).containsMatchingElement(DataTableHeadCell)
-    );
-    expect(
-      statsTable.find(DataTableContent).containsMatchingElement(DataTableBody)
-    );
-    expect(
-      statsTable.find(DataTableBody).containsMatchingElement(DataTableRow)
-    );
-    expect(
-      statsTable.find(DataTableRow).containsMatchingElement(DataTableCell)
-    );
+    expect(statsTable.find(SystemStatsTable).containsMatchingElement(DataTable));
+    expect(statsTable.find(DataTable).containsMatchingElement(DataTableContent));
+    expect(statsTable.find(DataTableContent).containsMatchingElement(DataTableHead));
+    expect(statsTable.find(DataTableHead).containsMatchingElement(DataTableRow));
+    expect(statsTable.find(DataTableRow).containsMatchingElement(DataTableHeadCell));
+    expect(statsTable.find(DataTableContent).containsMatchingElement(DataTableBody));
+    expect(statsTable.find(DataTableBody).containsMatchingElement(DataTableRow));
+    expect(statsTable.find(DataTableRow).containsMatchingElement(DataTableCell));
   });
 });

@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Toolbar,
-  ToolbarIcon,
-  ToolbarRow,
-  ToolbarSection,
-  ToolbarTitle
-} from 'rmwc';
+import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from 'rmwc';
 
 export default class Navbar extends Component {
   render() {
@@ -17,10 +11,7 @@ export default class Navbar extends Component {
             <ToolbarTitle style={{ fontSize: '30px' }}>Concord</ToolbarTitle>
           </ToolbarSection>
           <ToolbarSection alignEnd>
-            <ToolbarIcon
-              icon='refresh'
-              onClick={this.props.refreshChildComponent}
-            />
+            <ToolbarIcon icon='refresh' onClick={this.props.refreshChildComponent} />
             <ToolbarIcon icon='exit_to_app' onClick={this.props.logout} />
           </ToolbarSection>
         </ToolbarRow>
