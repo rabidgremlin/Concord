@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   DataTable,
@@ -9,17 +9,17 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from 'rmwc/DataTable';
-import {Button} from 'rmwc';
 import '@rmwc/data-table/data-table.css';
-import {getUserStats} from '../api';
-import {connect} from 'react-redux';
+import { getUserStats } from '../api';
+import { connect } from 'react-redux';
 
 export class UserStatsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       statsData: [],
-      doneFirstSort: false
+      doneFirstSort: false,
+      reloadApiData: false
     };
   }
 
@@ -30,7 +30,19 @@ export class UserStatsTable extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
-      this.setState({statsData: newProps.statsData});
+      this.setState({ statsData: newProps.statsData });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        statsData: [],
+        doneFirstSort: false
+      });
+      // refresh the API data
+      this.props.dispatch(getUserStats());
     }
   }
 
@@ -65,15 +77,6 @@ export class UserStatsTable extends Component {
 
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
-  reloadData = () => {
-    console.log("REFRESHING user stats");
-    this.setState({
-      statsData: [],
-      doneFirstSort: false
-    });
-    this.props.dispatch(getUserStats());
-  };
-
   render() {
     if (this.props.loading || !this.props.statsData || !this.state.statsData) {
       return (
@@ -92,102 +95,98 @@ export class UserStatsTable extends Component {
       );
     }
     if (!this.state.doneFirstSort) {
-      console.log("sorting table");
       this.sortByScore(-1);
-      this.setState({doneFirstSort: true});
+      this.setState({ doneFirstSort: true });
     }
     return (
-      <div>
-        <Button onClick={this.reloadData}>REFRESH</Button>
-        <DataTable style={{minHeight: dataLength * 20, width: '100%'}}>
-          <DataTableContent style={{fontSize: '20px'}}>
-            <DataTableHead>
-              <DataTableRow>
-                <DataTableHeadCell>User</DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.scoreSortDir || null}
-                  onSortChange={this.sortByScore}
-                >
-                  Score
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.totalSortDir || null}
-                  onSortChange={this.sortByTotal}
-                >
-                  Total Phrases
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.completedSortDir || null}
-                  onSortChange={this.sortByCompleted}
-                >
-                  Completed Phrases
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.agreementRateSortDir || null}
-                  onSortChange={this.sortByAgreementRate}
-                >
-                  Agreement Rating
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.trashRateSortDir || null}
-                  onSortChange={this.sortByTrashedRate}
-                >
-                  Trash Rate
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.agreementRateNoTrashSortDir || null}
-                  onSortChange={this.sortByAgreementRateNoTrash}
-                >
-                  Agreement Rating
-                  <br/>
-                  (ignoring trashed phrases)
-                </DataTableHeadCell>
-                <DataTableHeadCell alignEnd/>
+      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
+        <DataTableContent style={{ fontSize: '20px' }}>
+          <DataTableHead>
+            <DataTableRow>
+              <DataTableHeadCell>User</DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.scoreSortDir || null}
+                onSortChange={this.sortByScore}
+              >
+                Score
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.totalSortDir || null}
+                onSortChange={this.sortByTotal}
+              >
+                Total Phrases
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.completedSortDir || null}
+                onSortChange={this.sortByCompleted}
+              >
+                Completed Phrases
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.agreementRateSortDir || null}
+                onSortChange={this.sortByAgreementRate}
+              >
+                Agreement Rating
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.trashRateSortDir || null}
+                onSortChange={this.sortByTrashedRate}
+              >
+                Trash Rate
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                alignEnd
+                sort={this.state.agreementRateNoTrashSortDir || null}
+                onSortChange={this.sortByAgreementRateNoTrash}
+              >
+                Agreement Rating
+                <br />
+                (ignoring trashed phrases)
+              </DataTableHeadCell>
+              <DataTableHeadCell alignEnd />
+            </DataTableRow>
+          </DataTableHead>
+          <DataTableBody>
+            {[...Array(dataLength)].map((v, i) => (
+              <DataTableRow key={i}>
+                <DataTableCell>{data[i].userId}</DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.computeScore(data[i]).toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {data[i].totalVotes.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {data[i].completedVotes.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.toPercentage(
+                    data[i].completedVotes,
+                    data[i].totalVotesWithConsensus
+                  )}
+                  %
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {this.toPercentage(
+                    data[i].completedVotesIgnoringTrash,
+                    data[i].totalVotesWithConsensusIgnoringTrash
+                  )}
+                  %
+                </DataTableCell>
+                <DataTableCell alignEnd />
               </DataTableRow>
-            </DataTableHead>
-            <DataTableBody>
-              {[...Array(dataLength)].map((v, i) => (
-                <DataTableRow key={i}>
-                  <DataTableCell>{data[i].userId}</DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {this.computeScore(data[i]).toLocaleString()}
-                  </DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {data[i].totalVotes.toLocaleString()}
-                  </DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {data[i].completedVotes.toLocaleString()}
-                  </DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {this.toPercentage(
-                      data[i].completedVotes,
-                      data[i].totalVotesWithConsensus
-                    )}
-                    %
-                  </DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
-                  </DataTableCell>
-                  <DataTableCell alignEnd style={{width: '10%'}}>
-                    {this.toPercentage(
-                      data[i].completedVotesIgnoringTrash,
-                      data[i].totalVotesWithConsensusIgnoringTrash
-                    )}
-                    %
-                  </DataTableCell>
-                  <DataTableCell alignEnd/>
-                </DataTableRow>
-              ))}
-            </DataTableBody>
-          </DataTableContent>
-        </DataTable>
-      </div>
+            ))}
+          </DataTableBody>
+        </DataTableContent>
+      </DataTable>
     );
   }
 

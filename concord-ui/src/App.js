@@ -15,23 +15,28 @@ import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
 import UserStatsTable from './components/userstatstable';
 import SystemStatsTable from './components/systemstatstable';
+import { NotFound } from './components/notfound';
 
 export class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { menuOpen: false };
+    this.state = { menuOpen: false, reloadApiData: false };
   }
 
   logout = () => this.props.dispatch(killSession());
 
   toggleMenu = () => this.setState({ menuOpen: !this.state.menuOpen });
 
-  reloadComponent = () => {
-    console.log("refreshing");
-    this.setState(this.state)
-  };
+  refreshChildComponent = () =>
+    this.setState({ reloadApiData: !this.state.reloadApiData });
 
   render() {
+    const UserStatsPage = (props) => {
+      return (
+        <UserStatsTable reloadApiData={this.state.reloadApiData} {...props} />
+      );
+    };
+
     if (!this.props.logged_in) {
       return (
         <ThemeProvider
@@ -66,7 +71,11 @@ export class App extends Component {
                 menuOpen={this.state.menuOpen}
                 toggleMenu={this.toggleMenu}
               />
-              <Navbar logout={this.logout} toggleMenu={this.toggleMenu} reloadComponent={this.reloadComponent}/>
+              <Navbar
+                logout={this.logout}
+                toggleMenu={this.toggleMenu}
+                refreshChildComponent={this.refreshChildComponent}
+              />
               <SimpleDialog
                 title='Error'
                 body={this.props.errorMsg}
@@ -78,8 +87,13 @@ export class App extends Component {
               />
               <Switch>
                 <Route exact path='/labels' component={LabelPhrase} />
-                <Route exact path='/stats/user' component={UserStatsTable} />
-                <Route exact path='/stats/system' component={SystemStatsTable} />
+                <Route exact path='/stats/user' render={UserStatsPage} />
+                <Route
+                  exact
+                  path='/stats/system'
+                  component={SystemStatsTable}
+                />
+                <Route component={NotFound} />
               </Switch>
               <Redirect from='/' to='/labels' />
             </div>

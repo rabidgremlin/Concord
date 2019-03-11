@@ -18,7 +18,6 @@ export default class Menu extends Component {
     };
   }
 
-  // updated from parent, allows another component to toggle the menu
   componentWillReceiveProps(nextProps) {
     if (nextProps.menuOpen !== this.state.menuOpen) {
       this.setState({ menuOpen: nextProps.menuOpen });
