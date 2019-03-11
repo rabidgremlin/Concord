@@ -60,9 +60,7 @@ export class Login extends Component {
                 style={{ margin: '1rem 1rem 1rem 1rem' }}
                 disabled={this.state.invalidData}
                 onClick={() => {
-                  this.props.dispatch(
-                    createSession(this.state.email, this.state.password)
-                  );
+                  this.props.dispatch(createSession(this.state.email, this.state.password));
                 }}
               >
                 Login
@@ -75,6 +73,4 @@ export class Login extends Component {
   }
 }
 
-export default connect((state) => ({ logged_in: state.session.logged_in }))(
-  Login
-);
+export default connect((state) => ({ logged_in: state.session.logged_in }))(Login);

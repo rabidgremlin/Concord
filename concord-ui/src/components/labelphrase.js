@@ -3,17 +3,7 @@ import { connect } from 'react-redux';
 import { getNextPhrase, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
-import {
-  Card,
-  CardAction,
-  CardActions,
-  CardPrimaryAction,
-  Fab,
-  Grid,
-  GridCell,
-  Icon,
-  Typography
-} from 'rmwc';
+import { Card, CardAction, CardActions, CardPrimaryAction, Fab, Grid, GridCell, Icon, Typography } from 'rmwc';
 import { FormattedNumber } from 'react-intl';
 
 const keyMappings = {
@@ -44,8 +34,7 @@ export class LabelPhrase extends Component {
 
   handleKeyPress = (event) => {
     let keyCode = event.code.replace('Numpad', '');
-    let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0]
-      .childNodes;
+    let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0].childNodes;
     labels.forEach(function(index) {
       index.style = 'border: none';
     });
@@ -147,12 +136,7 @@ export class LabelPhrase extends Component {
                     >
                       <div style={{ padding: '0 1rem 1rem 1rem' }}>
                         <Typography use='headline6' tag='h2'>
-                          {label.label} -{' '}
-                          <FormattedNumber
-                            value={label.score * 100}
-                            minimumFractionDigits={2}
-                          />
-                          %
+                          {label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%
                         </Typography>
                         <Typography
                           use='subtitle2'
@@ -192,13 +176,7 @@ export class LabelPhrase extends Component {
                 </GridCell>
               ))}
 
-              <GridCell
-                span='3'
-                phone='4'
-                tablet='2'
-                desktop='4'
-                key={'searchbar'}
-              >
+              <GridCell span='3' phone='4' tablet='2' desktop='4' key={'searchbar'}>
                 <Card
                   style={{ minWidth: '300px' }}
                   onClick={() => {

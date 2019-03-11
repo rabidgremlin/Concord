@@ -46,12 +46,7 @@ export class Searchbar extends Component {
         let labels = this.state.labels;
         return (
           <div className='searchBar'>
-            <Select
-              className='labelSelector'
-              value={this.state.value}
-              onChange={this.handleChange}
-              options={labels}
-            />
+            <Select className='labelSelector' value={this.state.value} onChange={this.handleChange} options={labels} />
             <div className='description-box'>
               <p className='desc-sml'>{this.state.shortDescription}</p>
               {this.state.longDescription}
