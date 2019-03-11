@@ -4,10 +4,9 @@ import { Button, Card, Grid, GridCell, TextField, Typography } from 'rmwc';
 import { connect } from 'react-redux';
 import { createSession } from '../api';
 
-//import { callCreateSession } from './actions'
-
 export class Login extends Component {
   state = { email: '', password: '', invalidData: true };
+
   handleChange = (val) => (evt) => {
     this.setState({ ...this.state, [val]: evt.target.value });
   };
@@ -59,11 +58,10 @@ export class Login extends Component {
                 raised
                 style={{ margin: '1rem 1rem 1rem 1rem' }}
                 disabled={this.state.invalidData}
-                onClick={() => {
+                onClick={() =>
                   this.props.dispatch(
                     createSession(this.state.email, this.state.password)
-                  );
-                }}
+                  )}
               >
                 Login
               </Button>

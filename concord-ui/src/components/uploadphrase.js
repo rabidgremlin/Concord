@@ -6,11 +6,17 @@ import {postPhrases} from "../api";
 export class UploadPhrase extends Component {
   constructor(props) {
     super(props);
+    this.state = {textField: ''}
   }
 
   submitTextField = () => {
     console.log('submitting');
-    this.props.dispatch(postPhrases([{text: 'hi hi', possibleLabel: 'bye'}, {text: 'hello', possibleLabel: 'bye'}]));
+    console.log(this.state.textField);
+    // this.props.dispatch(postPhrases([{text: 'hi hi', possibleLabel: 'bye'}, {text: 'hello', possibleLabel: 'bye'}]));
+  };
+
+  handleChange = (val) => (evt) => {
+    this.setState({ ...this.state, [val]: evt.target.value });
   };
 
   render() {
@@ -18,13 +24,13 @@ export class UploadPhrase extends Component {
       <div>
         <Button raised onClick={this.submitTextField}>Submit</Button>
         <TextField
+          label='Enter phrases, each on a new line'
           textarea
           outlined
           fullwidth
-          label='Enter phrases, each on a new line'
-          helpText={{
-            children: 'The field is required'
-          }}
+          required
+          value={this.state.textField}
+          onChange={this.handleChange('textField')}
         />
       </div>
     );
