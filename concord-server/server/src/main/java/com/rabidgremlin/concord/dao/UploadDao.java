@@ -23,7 +23,7 @@ public interface UploadDao
   default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases)
   {
     List<UnlabelledPhrase> batchedPhrases = unlabelledPhrases.stream()
-        .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equals("text"))
+        .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equalsIgnoreCase("text"))
         .collect(Collectors.toList());
 
     List<String> phraseIds = batchedPhrases.stream()
@@ -33,15 +33,14 @@ public interface UploadDao
     // NOTE: Must delete votes before upsert, due to foreign key contraints
     votesDao().deleteAllVotesForPhrase(phraseIds);
 
-    phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream().map(UnlabelledPhrase::getText).collect(Collectors.toList()), false);
+    phrasesDao().upsertBatch(phraseIds, batchedPhrases.stream()
+        .map(UnlabelledPhrase::getText)
+        .collect(Collectors.toList()), false);
 
-    // If there was a possible label, cast one vote for that intent
-    for (UnlabelledPhrase phrase : batchedPhrases)
-    {
-      if (StringUtils.isNotEmpty(phrase.getPossibleLabel()))
-      {
-        votesDao().upsert(DigestUtils.md5Hex(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
-      }
-    }
+    // If there was a possible label, cast one vote for that phrase label
+    batchedPhrases.stream()
+        .filter(phrase -> StringUtils.isNotEmpty(phrase.getPossibleLabel()))
+        .forEach(phrase -> votesDao().upsert(DigestUtils.md5Hex(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD"));
   }
+
 }

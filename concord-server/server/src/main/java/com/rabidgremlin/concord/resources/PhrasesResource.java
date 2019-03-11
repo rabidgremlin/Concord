@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class PhrasesResource
 
   private final boolean completeOnTrash;
 
-  private final static String LABEL_TRASH = "TRASH";
+  private static final String LABEL_TRASH = "TRASH";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
     boolean completeOnTrash)
@@ -97,17 +98,16 @@ public class PhrasesResource
     try
     {
       List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(nextPhrase.getText());
-      ArrayList<PossibleLabel> possibleLabels = new ArrayList<>();
-
-      for (SuggestedLabel suggestedLabel : suggestedLabels)
-      {
-        PossibleLabel tempLabel = new PossibleLabel();
-        tempLabel.setLabel(suggestedLabel.getLabel());
-        tempLabel.setLongDescription(suggestedLabel.getLongDescription());
-        tempLabel.setScore(suggestedLabel.getScore());
-        tempLabel.setShortDescription(suggestedLabel.getShortDescription());
-        possibleLabels.add(tempLabel);
-      }
+      List<PossibleLabel> possibleLabels = suggestedLabels.stream()
+          .map(suggestedLabel -> {
+            PossibleLabel tempLabel = new PossibleLabel();
+            tempLabel.setLabel(suggestedLabel.getLabel());
+            tempLabel.setLongDescription(suggestedLabel.getLongDescription());
+            tempLabel.setScore(suggestedLabel.getScore());
+            tempLabel.setShortDescription(suggestedLabel.getShortDescription());
+            return tempLabel;
+          })
+          .collect(Collectors.toList());
 
       phraseToLabel.setPossibleLabels(possibleLabels);
 
@@ -118,6 +118,19 @@ public class PhrasesResource
       log.error("Failed to get suggestions", e);
       return Response.status(Status.SERVICE_UNAVAILABLE).build();
     }
+  }
+
+  @POST
+  @Path("bulk")
+  @Consumes("text/json")
+  @Timed
+  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases phrases)
+  {
+    log.info("{} adding phrases {}", caller, phrases);
+
+    uploadDao.uploadUnlabelledPhrases(phrases.getUnlabelledPhrases());
+
+    return Response.ok().build();
   }
 
   @POST
@@ -164,7 +177,7 @@ public class PhrasesResource
   @Timed
   public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("{} purging completed votes and phrases {}", caller);
+    log.info("{} purging completed votes and phrases", caller);
 
     List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
     int amount = phraseIdentifiers.size();

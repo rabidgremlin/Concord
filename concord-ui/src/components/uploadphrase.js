@@ -13,22 +13,17 @@ export default class UploadPhrase extends Component {
   render() {
     return (
       <div>
-        <p>Enter phrases, each on a new line</p>
+        <Button raised onClick={this.submitTextField}>Submit</Button>
         <TextField
           textarea
           outlined
           fullwidth
-          label='textarea...'
-          rows='8'
-          maxLength={20}
+          label='Enter phrases, each on a new line'
           characterCount
           helpText={{
-            persistent: true,
-            validationMsg: true,
             children: 'The field is required'
           }}
         />
-        <Button label='Submit' raised onClick={this.submitTextField} />
       </div>
     );
   }
