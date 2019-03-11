@@ -42,6 +42,10 @@ export class LabelPhrase extends Component {
     window.addEventListener('keyup', this.handleKeyPress);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.handleKeyPress);
+  }
+
   handleKeyPress = (event) => {
     let keyCode = event.code.replace('Numpad', '');
     let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0]

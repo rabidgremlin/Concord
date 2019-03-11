@@ -72,11 +72,11 @@ export class App extends Component {
                 }}
               />
               <Switch>
-                <Route exact path='/phrases/label' component={LabelPhrase} />
+                <Route exact path='/phrases/vote' component={LabelPhrase} />
                 <Route exact path='/phrases/upload' component={UploadPhrase} />
                 <Route exact path='/stats' component={Statstable} />
               </Switch>
-              <Redirect from='/' to='/phrases/label' />
+              <Redirect from='/' to='/phrases/vote' />
             </div>
           </Router>
         </ThemeProvider>

@@ -33,7 +33,7 @@ export default class Menu extends Component {
         </DrawerHeader>
         <DrawerContent>
           <List>
-            <Link to='/phrases/label' style={{ textDecoration: 'none' }}>
+            <Link to='/phrases/vote' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
                 <Icon icon='outlined_flag' /> Vote
               </MenuItem>

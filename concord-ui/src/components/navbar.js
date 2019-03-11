@@ -17,7 +17,7 @@ export default class Navbar extends Component {
             <ToolbarTitle style={{ fontSize: '30px' }}>Concord</ToolbarTitle>
           </ToolbarSection>
           <ToolbarSection alignEnd>
-            <ToolbarIcon icon='meeting_room' onClick={this.props.logout} />
+            <ToolbarIcon icon='exit_to_app' onClick={this.props.logout} />
           </ToolbarSection>
         </ToolbarRow>
       </Toolbar>
