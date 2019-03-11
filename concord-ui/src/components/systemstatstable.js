@@ -80,6 +80,7 @@ export class SystemStatsTable extends Component {
       this.sortByLabelVoteCount(-1);
       this.setState({ doneFirstSort: true });
     }
+    this.props.enableRefresh();
     return (
       <div>
         <DataTable style={{ width: '100%' }}>

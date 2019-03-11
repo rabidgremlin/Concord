@@ -98,6 +98,7 @@ export class UserStatsTable extends Component {
       this.sortByScore(-1);
       this.setState({ doneFirstSort: true });
     }
+    this.props.enableRefresh();
     return (
       <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
         <DataTableContent style={{ fontSize: '20px' }}>

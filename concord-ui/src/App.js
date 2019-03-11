@@ -20,30 +20,59 @@ import { NotFound } from './components/notfound';
 export class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { menuOpen: false, reloadApiData: false };
+    this.state = {
+      menuOpen: false,
+      reloadApiData: false,
+      refreshEnabled: false
+    };
   }
 
   logout = () => this.props.dispatch(killSession());
 
   toggleMenu = () => this.setState({ menuOpen: !this.state.menuOpen });
 
-  refreshChildComponent = () =>
-    this.setState({ reloadApiData: !this.state.reloadApiData });
+  enableRefresh = () => {
+    if (!this.state.refreshEnabled) {
+      this.setState({ refreshEnabled: true });
+    }
+  };
+
+  refreshChildComponent = () => {
+    if (this.state.refreshEnabled) {
+      this.setState({
+        refreshEnabled: false,
+        // trigger active child component to refresh
+        reloadApiData: !this.state.reloadApiData
+      });
+    }
+  };
 
   render() {
     const LabelPage = (props) => {
       return (
-        <LabelPhrase reloadApiData={this.state.reloadApiData} {...props} />
+        <LabelPhrase
+          reloadApiData={this.state.reloadApiData}
+          enableRefresh={this.enableRefresh}
+          {...props}
+        />
       );
     };
     const UserStatsPage = (props) => {
       return (
-        <UserStatsTable reloadApiData={this.state.reloadApiData} {...props} />
+        <UserStatsTable
+          reloadApiData={this.state.reloadApiData}
+          enableRefresh={this.enableRefresh}
+          {...props}
+        />
       );
     };
     const SystemStatsPage = (props) => {
       return (
-        <SystemStatsTable reloadApiData={this.state.reloadApiData} {...props} />
+        <SystemStatsTable
+          reloadApiData={this.state.reloadApiData}
+          enableRefresh={this.enableRefresh}
+          {...props}
+        />
       );
     };
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getNextPhrase, getSystemStats, voteForPhraseLabel } from '../api';
+import { getNextPhrase, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
 import {
@@ -101,6 +101,7 @@ export class LabelPhrase extends Component {
       );
     } else {
       if (this.props.phraseData) {
+        this.props.enableRefresh();
         return (
           <div>
             <div
