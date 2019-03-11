@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  Icon,
-  List,
-  MenuItem
-} from 'rmwc';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, Icon, List, MenuItem } from 'rmwc';
 import { Link } from 'react-router-dom';
 
 export default class Menu extends Component {

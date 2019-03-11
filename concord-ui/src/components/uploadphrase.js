@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Button, TextField} from 'rmwc';
-import {connect} from "react-redux";
+import React, { Component } from 'react';
+import { Button, TextField } from 'rmwc';
+import { connect } from 'react-redux';
 import {
   DataTable,
   DataTableBody,
@@ -10,61 +10,102 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from 'rmwc/DataTable';
-import {postPhrases} from "../api";
+import { getAllLabels, postPhrases } from '../api';
+import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
 
 export class UploadPhrase extends Component {
   constructor(props) {
     super(props);
-    this.state = {textField: '', invalidData: true, invalidDataTable: true, phrases: []}
+    this.state = { textField: '', invalidData: true, phrases: [], invalidLabels: new Set() };
+  }
+
+  componentDidMount() {
+    this.props.dispatch(getAllLabels());
+  }
+
+  componentDidUpdate(oldProps) {
+    const newProps = this.props;
+    if (oldProps.loadingLabels !== newProps.loadingLabels && newProps.labelData) {
+      this.setState({
+        labels: new Set(newProps.labelData.map((l) => l.label))
+      });
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    nextState.invalidData = !nextState.textField;
   }
 
   handleChange = (val) => (evt) => {
-    this.setState({...this.state, [val]: evt.target.value});
+    this.setState({ ...this.state, [val]: evt.target.value });
   };
 
-  componentWillUpdate(nextProps, nextState) {
-    nextState.invalidTextField = !nextState.textField;
-  }
-
-  processTextField = () => {
-    console.log('checking');
-    console.log(this.state.textField);
-    const phrases = this.state.textField.split('\n').map(v => {
-      const split = v.split(',');
-      return {text: split[0], possibleLabel: split[1] || ''};
-    });
-    this.setState({textField: '', invalidData: true, phrases: phrases});
+  checkTextField = () => {
+    let invalidLabels = new Set();
+    let phrases = this.state.textField
+      .split('\n')
+      .map((textPossibleLabel) => {
+        let [text, label] = textPossibleLabel.split(',');
+        return {
+          text: this.cleanText(text) || '',
+          possibleLabel: (label || '').trim()
+        };
+      })
+      .filter((phrase) => {
+        // filter out invalid labels and empty phrases
+        if (!(phrase.possibleLabel === '' || this.state.labels.has(phrase.possibleLabel))) {
+          invalidLabels.add(phrase.possibleLabel);
+          return false;
+        }
+        return phrase.text !== '';
+      });
+    this.setState({ textField: '', invalidData: true, phrases: phrases, invalidLabels: invalidLabels });
   };
+
+  cleanText = (s) => s.trim().toLowerCase();
 
   submitPhrases = () => {
-    console.log('submitting');
-    this.props.dispatch(postPhrases(this.state.phrases))
+    this.props.dispatch(postPhrases(this.state.phrases));
+    this.clearFields();
   };
 
   clearFields = () => {
-    console.log('clearing');
-    this.setState({textField: '', invalidData: true, invalidDataTable: true, phrases: []});
+    this.setState({ textField: '', invalidData: true, phrases: [], invalidLabels: new Set() });
   };
 
   render() {
-    if (!this.state.loading && this.state.phrases.length > 0) {
-      console.log(this.state.phrases);
+    if (this.props.loadingLabels || !this.state.labels) {
       return (
         <div>
-          <Button
-            raised
-            onClick={this.submitPhrases}
-          >
+          <p>loading.....</p>
+        </div>
+      );
+    }
+    const InvalidLabelWarning = () => {
+      return (
+        <Dialog open={this.state.invalidLabels.size > 0} onClose={() => this.setState({ invalidLabels: new Set() })}>
+          <DialogTitle>Warning: Invalid Labels Removed</DialogTitle>
+          <DialogContent>{[...this.state.invalidLabels].join(', ')}</DialogContent>
+          <DialogActions>
+            <DialogButton action='accept' isDefaultAction>
+              Ok
+            </DialogButton>
+          </DialogActions>
+        </Dialog>
+      );
+    };
+    if (this.state.phrases.length > 0) {
+      return (
+        <div>
+          <InvalidLabelWarning />
+          <Button raised onClick={this.submitPhrases}>
             Submit
           </Button>
-          <Button
-            raised
-            onClick={this.clearFields}
-          >
+          <Button raised onClick={this.clearFields}>
             Retry
           </Button>
-          <DataTable style={{minHeight: this.state.phrases.length * 20, width: '100%'}}>
-            <DataTableContent style={{fontSize: '12pt'}}>
+          <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
+            <DataTableContent style={{ fontSize: '12pt' }}>
               <DataTableHead>
                 <DataTableRow>
                   <DataTableHeadCell>Possible label</DataTableHeadCell>
@@ -74,30 +115,24 @@ export class UploadPhrase extends Component {
               <DataTableBody>
                 {[...Array(this.state.phrases.length)].map((v, i) => (
                   <DataTableRow key={i}>
-                    <DataTableCell>
-                      {this.state.phrases[i].possibleLabel}
-                    </DataTableCell>
-                    <DataTableCell>
-                      {this.state.phrases[i].text}
-                    </DataTableCell>
+                    <DataTableCell>{this.state.phrases[i].possibleLabel}</DataTableCell>
+                    <DataTableCell>{this.state.phrases[i].text}</DataTableCell>
                   </DataTableRow>
                 ))}
               </DataTableBody>
             </DataTableContent>
           </DataTable>
         </div>
-      )
+      );
     }
     return (
       <div>
-        <Button
-          raised
-          onClick={this.processTextField}
-          disabled={this.state.invalidTextField}
-        >
+        <InvalidLabelWarning />
+        <Button raised onClick={this.checkTextField} disabled={this.state.invalidData}>
           Check
         </Button>
-        <TextField style={{minHeight: window.innerHeight, width: '100%'}}
+        <TextField
+          style={{ minHeight: window.innerHeight, width: '100%' }}
           label='Enter phrases, each on a new line, in the format: text, possible label'
           textarea
           outlined
@@ -113,4 +148,6 @@ export class UploadPhrase extends Component {
 export default connect((state) => ({
   error: state.uploadPhrase.error,
   loading: state.uploadPhrase.loading,
+  loadingLabels: state.label.loading,
+  labelData: state.label.labelData
 }))(UploadPhrase);

@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Toolbar,
-  ToolbarIcon,
-  ToolbarRow,
-  ToolbarSection,
-  ToolbarTitle
-} from 'rmwc';
+import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from 'rmwc';
 
 export default class Navbar extends Component {
   render() {

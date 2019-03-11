@@ -102,14 +102,14 @@ export const callGetUserStatsSucceeded = (data) => ({
  */
 
 export const callPostPhrases = () => ({
-  type: 'CALL_POST_PHRASES',
+  type: 'CALL_POST_PHRASES'
 });
 
 export const callPostPhrasesFailed = (error) => ({
   type: 'CALL_POST_PHRASES_FAILED',
-  error,
+  error
 });
 
 export const callPostPhrasesSucceeded = () => ({
-  type: 'CALL_POST_PHRASES_SUCCEEDED',
+  type: 'CALL_POST_PHRASES_SUCCEEDED'
 });

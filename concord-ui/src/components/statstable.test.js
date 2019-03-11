@@ -43,26 +43,12 @@ describe('StatsTable', () => {
     const { statsTable, props } = setup();
     expect(statsTable.find(StatsTable));
     expect(statsTable.find(StatsTable).containsMatchingElement(DataTable));
-    expect(
-      statsTable.find(DataTable).containsMatchingElement(DataTableContent)
-    );
-    expect(
-      statsTable.find(DataTableContent).containsMatchingElement(DataTableHead)
-    );
-    expect(
-      statsTable.find(DataTableHead).containsMatchingElement(DataTableRow)
-    );
-    expect(
-      statsTable.find(DataTableRow).containsMatchingElement(DataTableHeadCell)
-    );
-    expect(
-      statsTable.find(DataTableContent).containsMatchingElement(DataTableBody)
-    );
-    expect(
-      statsTable.find(DataTableBody).containsMatchingElement(DataTableRow)
-    );
-    expect(
-      statsTable.find(DataTableRow).containsMatchingElement(DataTableCell)
-    );
+    expect(statsTable.find(DataTable).containsMatchingElement(DataTableContent));
+    expect(statsTable.find(DataTableContent).containsMatchingElement(DataTableHead));
+    expect(statsTable.find(DataTableHead).containsMatchingElement(DataTableRow));
+    expect(statsTable.find(DataTableRow).containsMatchingElement(DataTableHeadCell));
+    expect(statsTable.find(DataTableContent).containsMatchingElement(DataTableBody));
+    expect(statsTable.find(DataTableBody).containsMatchingElement(DataTableRow));
+    expect(statsTable.find(DataTableRow).containsMatchingElement(DataTableCell));
   });
 });

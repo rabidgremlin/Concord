@@ -15,7 +15,10 @@ import {
   callVoteForPhraseLabelSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
-  callGetUserStatsSucceeded, callPostPhrases, callPostPhrasesSucceeded, callPostPhrasesFailed
+  callGetUserStatsSucceeded,
+  callPostPhrases,
+  callPostPhrasesSucceeded,
+  callPostPhrasesFailed
 } from './actions';
 
 export function createSession(userId, password) {
@@ -36,18 +39,10 @@ export function getNextPhrase() {
     dispatch(callGetNextPhrase());
     request
       .get('/api/phrases/next')
-      //.send({ userId: userId, password: password })
       .set('Accept', 'application/json')
-      .then((res) => {
-        //console.log("res", JSON.stringify(res));
-        //TODO: dispatch(itemsIsLoading(false));
-        return JSON.parse(res.text);
-      })
+      .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetNextPhraseSucceeded(data)))
-      .catch((err) => {
-        //dispatch(itemsIsLoading(false));
-        dispatch(callGetNextPhraseFailed(err));
-      });
+      .catch((err) => dispatch(callGetNextPhraseFailed(err)));
   };
 }
 
@@ -88,14 +83,14 @@ export function getUserStats() {
   };
 }
 
-export function postPhrases(unlabelledPhrases){
+export function postPhrases(unlabelledPhrases) {
   return (dispatch) => {
     dispatch(callPostPhrases());
     request
       .post('/api/phrases/bulk')
-      .send({unlabelledPhrases: unlabelledPhrases})
+      .send({ unlabelledPhrases: unlabelledPhrases })
       .set('Accept', 'application/json')
       .then(() => dispatch(callPostPhrasesSucceeded()))
       .catch((err) => dispatch(callPostPhrasesFailed(err)));
-  }
+  };
 }
