@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   DataTable,
@@ -10,8 +10,8 @@ import {
   DataTableRow
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
-import { getUserStats } from '../api';
-import { connect } from 'react-redux';
+import {getUserStats} from '../api';
+import {connect} from 'react-redux';
 
 export class StatsTable extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ export class StatsTable extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
-      this.setState({ statsData: newProps.statsData });
+      this.setState({statsData: newProps.statsData});
     }
   }
 
@@ -83,11 +83,11 @@ export class StatsTable extends Component {
     }
     if (!this.state.doneFirstSort) {
       this.sortByScore(-1);
-      this.setState({ doneFirstSort: true });
+      this.setState({doneFirstSort: true});
     }
     return (
-      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '20px' }}>
+      <DataTable style={{minHeight: dataLength * 20, width: '100%'}}>
+        <DataTableContent style={{fontSize: '20px'}}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
@@ -132,43 +132,43 @@ export class StatsTable extends Component {
                 onSortChange={this.sortByAgreementRateNoTrash}
               >
                 Agreement Rating
-                <br />
+                <br/>
                 (ignoring trashed phrases)
               </DataTableHeadCell>
-              <DataTableHeadCell alignEnd />
+              <DataTableHeadCell alignEnd/>
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>
             {[...Array(dataLength)].map((v, i) => (
-              <DataTableRow key={i} style={{ width: '20%' }}>
+              <DataTableRow key={i} style={{width: '20%'}}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {this.computeScore(data[i]).toLocaleString()}
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {data[i].totalVotes.toLocaleString()}
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {data[i].completedVotes.toLocaleString()}
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {this.toPercentage(
                     data[i].completedVotes,
                     data[i].totalVotesWithConsensus
                   )}
                   %
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
                 </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
+                <DataTableCell alignEnd style={{width: '10%'}}>
                   {this.toPercentage(
                     data[i].completedVotesIgnoringTrash,
                     data[i].totalVotesWithConsensusIgnoringTrash
                   )}
                   %
                 </DataTableCell>
-                <DataTableCell alignEnd />
+                <DataTableCell alignEnd/>
               </DataTableRow>
             ))}
           </DataTableBody>
