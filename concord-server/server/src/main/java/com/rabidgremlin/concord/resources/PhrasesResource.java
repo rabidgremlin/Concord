@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
