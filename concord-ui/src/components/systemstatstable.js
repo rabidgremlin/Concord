@@ -15,7 +15,12 @@ import { connect } from 'react-redux';
 export class SystemStatsTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { statsData: {}, labelData: [], doneFirstSort: false };
+    this.state = {
+      statsData: {},
+      labelData: [],
+      doneFirstSort: false,
+      reloadApiData: false
+    };
   }
 
   componentDidMount() {
@@ -40,6 +45,19 @@ export class SystemStatsTable extends Component {
         },
         labelData: data.labelCountStats
       });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        statsData: {},
+        labelData: [],
+        doneFirstSort: false
+      });
+      // refresh the API data
+      this.props.dispatch(getSystemStats());
     }
   }
 

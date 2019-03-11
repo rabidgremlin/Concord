@@ -31,9 +31,19 @@ export class App extends Component {
     this.setState({ reloadApiData: !this.state.reloadApiData });
 
   render() {
+    const LabelPage = (props) => {
+      return (
+        <LabelPhrase reloadApiData={this.state.reloadApiData} {...props} />
+      );
+    };
     const UserStatsPage = (props) => {
       return (
         <UserStatsTable reloadApiData={this.state.reloadApiData} {...props} />
+      );
+    };
+    const SystemStatsPage = (props) => {
+      return (
+        <SystemStatsTable reloadApiData={this.state.reloadApiData} {...props} />
       );
     };
 
@@ -86,13 +96,9 @@ export class App extends Component {
                 }}
               />
               <Switch>
-                <Route exact path='/labels' component={LabelPhrase} />
+                <Route exact path='/labels' render={LabelPage} />
                 <Route exact path='/stats/user' render={UserStatsPage} />
-                <Route
-                  exact
-                  path='/stats/system'
-                  component={SystemStatsTable}
-                />
+                <Route exact path='/stats/system' render={SystemStatsPage} />
                 <Route component={NotFound} />
               </Switch>
               <Redirect from='/' to='/labels' />

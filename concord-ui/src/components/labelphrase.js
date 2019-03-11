@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getNextPhrase, voteForPhraseLabel } from '../api';
+import { getNextPhrase, getSystemStats, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
 import {
@@ -33,13 +33,25 @@ export class LabelPhrase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentLabel: null
+      currentLabel: null,
+      reloadApiData: false
     };
   }
 
   componentDidMount() {
     this.props.dispatch(getNextPhrase());
     window.addEventListener('keyup', this.handleKeyPress);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        currentLabel: null
+      });
+      // refresh the API data
+      this.props.dispatch(getNextPhrase());
+    }
   }
 
   handleKeyPress = (event) => {
