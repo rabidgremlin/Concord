@@ -26,6 +26,11 @@ export class App extends Component {
 
   toggleMenu = () => this.setState({ menuOpen: !this.state.menuOpen });
 
+  reloadComponent = () => {
+    console.log("refreshing");
+    this.setState(this.state)
+  };
+
   render() {
     if (!this.props.logged_in) {
       return (
@@ -61,7 +66,7 @@ export class App extends Component {
                 menuOpen={this.state.menuOpen}
                 toggleMenu={this.toggleMenu}
               />
-              <Navbar logout={this.logout} toggleMenu={this.toggleMenu} />
+              <Navbar logout={this.logout} toggleMenu={this.toggleMenu} reloadComponent={this.reloadComponent}/>
               <SimpleDialog
                 title='Error'
                 body={this.props.errorMsg}
