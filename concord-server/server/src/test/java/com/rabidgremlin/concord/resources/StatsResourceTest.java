@@ -139,7 +139,7 @@ public class StatsResourceTest
     when(systemStatsDao.getCountOfVotes()).thenReturn(1000);
     when(systemStatsDao.getCountOfLabels()).thenReturn(60);
     when(systemStatsDao.getCountOfUsers()).thenReturn(3);
-    when(systemStatsDao.getLabelNames()).thenReturn(Arrays.asList("TRASH", "SKIP", "WhereTaxi"));
+    when(systemStatsDao.getLabelNames()).thenReturn(Collections.singletonList("WhereTaxi"));
     when(systemStatsDao.getLabelVoteCounts()).thenReturn(Collections.singletonList(new LabelCount("TRASH", 10)));
     when(systemStatsDao.getCompletedPhraseLabelCounts()).thenReturn(Collections.singletonList(new LabelCount("TRASH", 10)));
 

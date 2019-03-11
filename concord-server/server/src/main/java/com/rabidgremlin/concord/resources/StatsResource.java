@@ -1,5 +1,6 @@
 package com.rabidgremlin.concord.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,11 +118,12 @@ public class StatsResource
     int totalLabels = systemStatsDao.getCountOfLabels();
     int userCount = systemStatsDao.getCountOfUsers();
 
-    List<String> labelNames = systemStatsDao.getLabelNames();
+    List<String> labelNames = new ArrayList<>(systemStatsDao.getLabelNames());
     labelNames.addAll(EXTRA_LABELS);
     List<LabelCount> labelVoteCounts = systemStatsDao.getLabelVoteCounts();
     List<LabelCount> labelCompletedPhraseCounts = systemStatsDao.getCompletedPhraseLabelCounts();
     List<LabelCountStats> labelCountStats = labelNames.stream()
+        .distinct()
         .map(label -> {
           int voteCount = getCountsForLabel(labelVoteCounts, label);
           int completedPhraseCount = getCountsForLabel(labelCompletedPhraseCounts, label);
