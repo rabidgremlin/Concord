@@ -142,7 +142,7 @@ public class PhrasesResource
   {
     log.info("{} uploading csv of phrases {}", caller, unlabelledPhrases);
 
-    uploadDao.uploadUnlabelledPhrases("", unlabelledPhrases);
+    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
 
     return Response.ok().build();
   }
