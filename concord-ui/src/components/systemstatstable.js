@@ -11,6 +11,7 @@ import {
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
+import { Card, Typography, CardPrimaryAction } from 'rmwc';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -112,9 +113,9 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
-        <p>Deadlocked phrases</p>
+        <p>Deadlocked Phrases</p>
         <DataTable style={{ width: '100%' }}>
-          <DataTableContent style={{ fontSize: '8pt' }}>
+          <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableHead>
               <DataTableRow>
                 <DataTableHeadCell>Top Label</DataTableHeadCell>
@@ -127,14 +128,32 @@ export class SystemStatsTable extends Component {
               {[...Array(this.state.statsData.deadLockedPhrases.length)].map((v, i) => (
                 <DataTableRow key={i}>
                   <DataTableCell style={{ width: '20%' }}>
-                    {this.state.statsData.deadLockedPhrases[i].topLabel.label} (
-                    {this.state.statsData.deadLockedPhrases[i].topLabel.count})
+                    <CardPrimaryAction
+                      onClick={() =>
+                        this.resolvePhrase(
+                          this.state.statsData.deadLockedPhrases[i].phrase,
+                          this.state.statsData.deadLockedPhrases[i].topLabel.label
+                        )
+                      }
+                    >
+                      {this.state.statsData.deadLockedPhrases[i].topLabel.label} (
+                      {this.state.statsData.deadLockedPhrases[i].topLabel.count})
+                    </CardPrimaryAction>
                   </DataTableCell>
                   <DataTableCell style={{ width: '20%' }}>
-                    {this.state.statsData.deadLockedPhrases[i].secondTopLabel.label} (
-                    {this.state.statsData.deadLockedPhrases[i].secondTopLabel.count})
+                    <CardPrimaryAction
+                      onClick={() =>
+                        this.resolvePhrase(
+                          this.state.statsData.deadLockedPhrases[i].phrase,
+                          this.state.statsData.deadLockedPhrases[i].secondTopLabel.label
+                        )
+                      }
+                    >
+                      {this.state.statsData.deadLockedPhrases[i].secondTopLabel.label} (
+                      {this.state.statsData.deadLockedPhrases[i].secondTopLabel.count})
+                    </CardPrimaryAction>
                   </DataTableCell>
-                  <DataTableCell style={{ width: '60%' }}>
+                  <DataTableCell style={{ width: '60%', wordWrap: 'break-word' }}>
                     {this.state.statsData.deadLockedPhrases[i].phrase}
                   </DataTableCell>
                 </DataTableRow>
@@ -144,6 +163,11 @@ export class SystemStatsTable extends Component {
         </DataTable>
       </div>
     );
+  }
+
+  resolvePhrase(phrase, label) {
+    console.log('resolving');
+    console.log(phrase, label);
   }
 }
 

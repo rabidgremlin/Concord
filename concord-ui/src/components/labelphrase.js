@@ -177,11 +177,7 @@ export class LabelPhrase extends Component {
                       </div>
                     </CardPrimaryAction>
                     <CardActions fullBleed>
-                      <CardAction
-                        onClick={() => {
-                          this.makeVote(label.label);
-                        }}
-                      >
+                      <CardAction onClick={() => this.makeVote(label.label)}>
                         Label phrase <Icon icon='arrow_forward' />
                       </CardAction>
                     </CardActions>
