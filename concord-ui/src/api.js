@@ -18,7 +18,10 @@ import {
   callGetUserStatsSucceeded,
   callGetSystemStats,
   callGetSystemStatsSucceeded,
-  callGetSystemStatsFailed
+  callGetSystemStatsFailed,
+  callResolveForPhraseLabel,
+  callResolveForPhraseLabelSucceeded,
+  callResolveForPhraseLabelFailed
 } from './actions';
 
 export function createSession(userId, password) {
@@ -73,6 +76,20 @@ export function voteForPhraseLabel(phraseId, label) {
       .then(() => dispatch(getNextPhrase()))
       .catch((err) => dispatch(callVoteForPhraseLabelFailed(err)));
   };
+}
+
+export function resolveForPhraseLabel(phraseId, label)
+{
+  return (dispatch) => {
+    dispatch(callResolveForPhraseLabel());
+    request
+      .post('/api/phrases/' + phraseId + '/resolve')
+      .send({label: label})
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
+      .then(() => dispatch(getSystemStats())) // refresh the deadlocked phrases
+      .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
+  }
 }
 
 export function getAllLabels() {

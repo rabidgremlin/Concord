@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getSystemStats } from '../api';
+import {getSystemStats, resolveForPhraseLabel} from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -12,6 +12,7 @@ import {
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
 import { Card, Typography, CardPrimaryAction } from 'rmwc';
+import nextPhrase from "../reducers/phrase";
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -131,7 +132,7 @@ export class SystemStatsTable extends Component {
                     <CardPrimaryAction
                       onClick={() =>
                         this.resolvePhrase(
-                          this.state.statsData.deadLockedPhrases[i].phrase,
+                          this.state.statsData.deadLockedPhrases[i].phraseId,
                           this.state.statsData.deadLockedPhrases[i].topLabel.label
                         )
                       }
@@ -144,7 +145,7 @@ export class SystemStatsTable extends Component {
                     <CardPrimaryAction
                       onClick={() =>
                         this.resolvePhrase(
-                          this.state.statsData.deadLockedPhrases[i].phrase,
+                          this.state.statsData.deadLockedPhrases[i].phraseId,
                           this.state.statsData.deadLockedPhrases[i].secondTopLabel.label
                         )
                       }
@@ -165,15 +166,18 @@ export class SystemStatsTable extends Component {
     );
   }
 
-  resolvePhrase(phrase, label) {
+  resolvePhrase(phraseId, label) {
     console.log(this.state);
     console.log('resolving');
-    console.log(phrase, label);
+    console.log(phraseId, label);
+    this.props.dispatch(resolveForPhraseLabel(phraseId, label))
   }
 }
 
 export default connect((state) => ({
   error: state.systemStats.error,
   loading: state.systemStats.loading,
-  statsData: state.systemStats.statsData
+  statsData: state.systemStats.statsData,
+  loadingResolvePhrase: state.nextPhrase.loading,
+  errorResolvePhrase: state.nextPhrase.error,
 }))(SystemStatsTable);

@@ -62,6 +62,23 @@ export const callVoteForPhraseLabelSucceeded = () => ({
 });
 
 /**
+ * HANDLE RESOLVING PHRASES
+ */
+
+export const callResolveForPhraseLabel = () => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL'
+});
+
+export const callResolveForPhraseLabelFailed = (error) => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL_FAILED',
+  error
+});
+
+export const callResolveForPhraseLabelSucceeded = () => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL_SUCCEEDED'
+});
+
+/**
  * HANDLE LABELS
  */
 
