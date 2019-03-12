@@ -1,14 +1,13 @@
 package com.rabidgremlin.concord.dao;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.codec.digest.DigestUtils;
+import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import com.rabidgremlin.concord.util.PhraseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface UploadDao
 {
@@ -27,7 +26,7 @@ public interface UploadDao
         .collect(Collectors.toList());
 
     List<String> phraseIds = batchedPhrases.stream()
-        .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
+        .map(unlabelledPhrase -> PhraseUtil.computePhraseId(unlabelledPhrase.getText()))
         .collect(Collectors.toList());
 
     // NOTE: Must delete votes before upsert, due to foreign key contraints
@@ -40,7 +39,7 @@ public interface UploadDao
     {
       if (StringUtils.isNotEmpty(phrase.getPossibleLabel()))
       {
-        votesDao().upsert(DigestUtils.md5Hex(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
+        votesDao().upsert(PhraseUtil.computePhraseId(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
       }
     }
   }

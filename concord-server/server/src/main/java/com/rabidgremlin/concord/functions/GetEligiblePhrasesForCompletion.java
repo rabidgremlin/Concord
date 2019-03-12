@@ -15,7 +15,7 @@ import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
  * level.
  */
 
-public class GetEligiblePhrasesForCompletion
+public final class GetEligiblePhrasesForCompletion
 {
 
   private final List<GroupedPhraseVote> phraseVotes;

@@ -20,7 +20,6 @@ public class Label
 
   public Label()
   {
-
   }
 
   public String getLabel()

@@ -62,7 +62,9 @@ public class PhrasesResource
 
   private final boolean completeOnTrash;
 
-  private final static String LABEL_TRASH = "TRASH";
+  private static final String LABEL_TRASH = "TRASH";
+
+  private static final String PHRASE_RESOLVER_USER_ID = "RESOLVER";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
     boolean completeOnTrash)
@@ -183,7 +185,7 @@ public class PhrasesResource
   // TODO: Create proper model class for incoming label
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
-    log.info("{} casting vote for {}", caller, phraseId);
+    log.info("{} casting vote for {} as {}", caller, phraseId, label.getLabel());
 
     votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
 
@@ -195,4 +197,18 @@ public class PhrasesResource
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }
+
+  @POST
+  @Timed
+  @Path("/{phraseId}/resolve")
+  public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, String label)
+  {
+    log.info("{} resolving {} as {}", caller, phraseId, label);
+
+    votesDao.upsert(phraseId, label, PHRASE_RESOLVER_USER_ID);
+    phrasesDao.markPhrasesComplete(Collections.singletonList(phraseId), Collections.singletonList(label));
+
+    return Response.created(uriInfo.getAbsolutePath()).build();
+  }
+
 }

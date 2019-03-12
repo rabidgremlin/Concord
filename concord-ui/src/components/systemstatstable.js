@@ -166,6 +166,7 @@ export class SystemStatsTable extends Component {
   }
 
   resolvePhrase(phrase, label) {
+    console.log(this.state);
     console.log('resolving');
     console.log(phrase, label);
   }
