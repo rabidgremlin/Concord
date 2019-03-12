@@ -35,8 +35,7 @@ public interface SystemStatsDao
       "WHERE completed = false")
   int getCountOfPhrasesWithConsensusThatAreNotCompleted(@Bind("consensusLevel") int consensusLevel);
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM (SELECT label FROM phrases WHERE label IS NOT NULL GROUP BY label) ALIAS")
+  @SqlQuery("SELECT COUNT(DISTINCT label) FROM phrases WHERE label IS NOT NULL")
   int getCountOfLabelsUsed();
 
   @SqlQuery("SELECT COUNT(*) " +
