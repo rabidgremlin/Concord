@@ -2,6 +2,7 @@ package com.rabidgremlin.concord.dao;
 
 import java.util.List;
 
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;

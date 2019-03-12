@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.concord.api.Phrase;
-import com.rabidgremlin.concord.dao.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 /**
  * function retrieves phrases that have label votes with a label vote count greater than the consensus level, and a

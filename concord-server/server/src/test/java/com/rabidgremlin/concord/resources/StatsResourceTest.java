@@ -24,7 +24,7 @@ import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UserStatsDao;
 import com.rabidgremlin.concord.dao.VotesDao;

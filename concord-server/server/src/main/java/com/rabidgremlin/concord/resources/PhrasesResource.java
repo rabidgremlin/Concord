@@ -28,7 +28,7 @@ import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;

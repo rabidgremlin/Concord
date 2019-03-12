@@ -1,4 +1,4 @@
-package com.rabidgremlin.concord.dao;
+package com.rabidgremlin.concord.dao.model;
 
 import io.github.binout.jaxrs.csv.CsvSchema;
 
