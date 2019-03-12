@@ -99,7 +99,7 @@ export class UserStatsTable extends Component {
     this.props.enableRefresh();
     return (
       <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '20px' }}>
+        <DataTableContent style={{ fontSize: '12pt' }}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>

@@ -23,11 +23,10 @@ public class SystemStats
 
   private final int userCount;
 
-  private final List<LabelCountStats> labelCountStats;
+  private final List<DeadLockedPhrase> deadLockedPhrases;
 
   public SystemStats(int totalPhrases, int completedPhrases, int phrasesWithConsensus, int phrasesWithConsensusNotCompleted, int labelsUsed, int totalVotes,
-    int totalLabels,
-    int userCount, List<LabelCountStats> labelCountStats)
+    int totalLabels, int userCount, List<DeadLockedPhrase> deadLockedPhrases)
   {
     this.totalPhrases = totalPhrases;
     this.completedPhrases = completedPhrases;
@@ -37,7 +36,7 @@ public class SystemStats
     this.totalVotes = totalVotes;
     this.totalLabels = totalLabels;
     this.userCount = userCount;
-    this.labelCountStats = labelCountStats;
+    this.deadLockedPhrases = deadLockedPhrases;
   }
 
   public int getTotalPhrases()
@@ -80,9 +79,9 @@ public class SystemStats
     return userCount;
   }
 
-  public List<LabelCountStats> getLabelCountStats()
+  public List<DeadLockedPhrase> getDeadLockedPhrases()
   {
-    return labelCountStats;
+    return deadLockedPhrases;
   }
 
   @Override
@@ -105,14 +104,14 @@ public class SystemStats
         totalVotes == that.totalVotes &&
         totalLabels == that.totalLabels &&
         userCount == that.userCount &&
-        Objects.equal(labelCountStats, that.labelCountStats);
+        Objects.equal(deadLockedPhrases, that.deadLockedPhrases);
   }
 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes, totalLabels,
-        userCount, labelCountStats);
+        userCount, deadLockedPhrases);
   }
 
   @Override
@@ -127,7 +126,7 @@ public class SystemStats
         ", totalVotes=" + totalVotes +
         ", totalLabels=" + totalLabels +
         ", userCount=" + userCount +
-        ", labelCountStats=" + labelCountStats +
+        ", deadLockedPhrases=" + deadLockedPhrases +
         '}';
   }
 

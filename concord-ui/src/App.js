@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
 import UserStatsTable from './components/userstatstable';
 import SystemStatsTable from './components/systemstatstable';
-import { NotFound } from './components/notfound';
 
 export class App extends Component {
   constructor(props) {
@@ -104,9 +103,8 @@ export class App extends Component {
                 <Route exact path='/labels' render={LabelPage} />
                 <Route exact path='/stats/user' render={UserStatsPage} />
                 <Route exact path='/stats/system' render={SystemStatsPage} />
-                <Route component={NotFound} />
               </Switch>
-              <Redirect from='/' to='/labels' />
+              <Redirect exact from='/' to='/labels' />
             </div>
           </Router>
         </ThemeProvider>

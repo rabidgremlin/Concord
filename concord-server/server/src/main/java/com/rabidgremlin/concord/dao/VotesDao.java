@@ -11,9 +11,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 public interface VotesDao
 {
 
-  @SqlUpdate("DELETE from votes where phraseId = :phraseId")
-  void deleteAllVotesForPhrase(@Bind("phraseId") String phraseId);
-
   @SqlBatch("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);
 
@@ -22,7 +19,7 @@ public interface VotesDao
 
   /**
    * This query returns incomplete phrases with the top 2 votes for each.
-   * <P>
+   * <p>
    * Note that there will be only one row for those only have one voted label.
    *
    * @param margin consensus level required for a phrase to be considered complete

@@ -1,5 +1,7 @@
 package com.rabidgremlin.concord.api;
 
+import com.google.common.base.Objects;
+
 public class LabelCount
 {
 
@@ -37,4 +39,34 @@ public class LabelCount
     this.count = count;
   }
 
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass())
+    {
+      return false;
+    }
+    LabelCount that = (LabelCount) o;
+    return count == that.count &&
+        Objects.equal(label, that.label);
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(label, count);
+  }
+
+  @Override
+  public String toString()
+  {
+    return "LabelCount{" +
+        "label='" + label + '\'' +
+        ", count=" + count +
+        '}';
+  }
 }

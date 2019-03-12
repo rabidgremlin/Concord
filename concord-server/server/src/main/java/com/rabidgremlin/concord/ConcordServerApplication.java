@@ -199,7 +199,8 @@ public class ConcordServerApplication
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
-    StatsResource statsResource = new StatsResource(jdbi.onDemand(UserStatsDao.class), jdbi.onDemand(SystemStatsDao.class), consensusLevel);
+    StatsResource statsResource = new StatsResource(jdbi.onDemand(UserStatsDao.class), jdbi.onDemand(SystemStatsDao.class), jdbi.onDemand(VotesDao.class),
+        consensusLevel);
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);

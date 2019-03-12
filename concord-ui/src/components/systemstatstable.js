@@ -17,8 +17,6 @@ export class SystemStatsTable extends Component {
     super(props);
     this.state = {
       statsData: {},
-      labelData: [],
-      doneFirstSort: false,
       reloadApiData: false
     };
   }
@@ -30,19 +28,8 @@ export class SystemStatsTable extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading && newProps.statsData) {
-      const data = newProps.statsData;
       this.setState({
-        statsData: {
-          totalPhrases: data.totalPhrases,
-          completedPhrases: data.completedPhrases,
-          phrasesWithConsensus: data.phrasesWithConsensus,
-          phrasesWithConsensusNotCompleted: data.phrasesWithConsensusNotCompleted,
-          totalLabels: data.totalLabels,
-          labelsUsed: data.labelsUsed,
-          totalVotes: data.totalVotes,
-          userCount: data.userCount
-        },
-        labelData: data.labelCountStats
+        statsData: newProps.statsData
       });
     }
   }
@@ -51,9 +38,7 @@ export class SystemStatsTable extends Component {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData,
-        statsData: {},
-        labelData: [],
-        doneFirstSort: false
+        statsData: {}
       });
       // refresh the API data
       this.props.dispatch(getSystemStats());
@@ -75,15 +60,12 @@ export class SystemStatsTable extends Component {
         </div>
       );
     }
-    if (!this.state.doneFirstSort) {
-      this.sortByLabelVoteCount(-1);
-      this.setState({ doneFirstSort: true });
-    }
     this.props.enableRefresh();
+    console.log(this.state);
     return (
       <div>
         <DataTable style={{ width: '100%' }}>
-          <DataTableContent style={{ fontSize: '20px' }}>
+          <DataTableContent style={{ fontSize: '12pt' }}>
             <DataTableHead>
               <DataTableRow>
                 <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
@@ -126,44 +108,35 @@ export class SystemStatsTable extends Component {
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.state.statsData.userCount.toLocaleString()}
                 </DataTableCell>
-                <DataTableCell />
               </DataTableRow>
             </DataTableBody>
           </DataTableContent>
         </DataTable>
+        <p>Deadlocked phrases</p>
         <DataTable style={{ width: '100%' }}>
-          <DataTableContent style={{ fontSize: '20px' }}>
+          <DataTableContent style={{ fontSize: '8pt' }}>
             <DataTableHead>
               <DataTableRow>
-                <DataTableHeadCell>Label</DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.voteCountSortDir || null}
-                  onSortChange={this.sortByLabelVoteCount}
-                >
-                  Votes
-                </DataTableHeadCell>
-                <DataTableHeadCell
-                  alignEnd
-                  sort={this.state.completedCountSortDir || null}
-                  onSortChange={this.sortByLabelCompletedCount}
-                >
-                  Completed
-                </DataTableHeadCell>
-                <DataTableHeadCell alignEnd />
+                <DataTableHeadCell>Top Label</DataTableHeadCell>
+                <DataTableHeadCell>Second Top Label</DataTableHeadCell>
+                <DataTableHeadCell>Phrase</DataTableHeadCell>
+                <DataTableHeadCell />
               </DataTableRow>
             </DataTableHead>
             <DataTableBody>
-              {[...Array(this.state.labelData.length)].map((v, i) => (
+              {[...Array(this.state.statsData.deadLockedPhrases.length)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '20%' }}>{this.state.labelData[i].label}</DataTableCell>
-                  <DataTableCell alignEnd style={{ width: '10%' }}>
-                    {this.state.labelData[i].voteCount.toLocaleString()}
+                  <DataTableCell style={{ width: '20%' }}>
+                    {this.state.statsData.deadLockedPhrases[i].topLabel.label} (
+                    {this.state.statsData.deadLockedPhrases[i].topLabel.count})
                   </DataTableCell>
-                  <DataTableCell alignEnd style={{ width: '10%' }}>
-                    {this.state.labelData[i].completedPhraseCount.toLocaleString()}
+                  <DataTableCell style={{ width: '20%' }}>
+                    {this.state.statsData.deadLockedPhrases[i].secondTopLabel.label} (
+                    {this.state.statsData.deadLockedPhrases[i].secondTopLabel.count})
                   </DataTableCell>
-                  <DataTableCell />
+                  <DataTableCell style={{ width: '60%' }}>
+                    {this.state.statsData.deadLockedPhrases[i].phrase}
+                  </DataTableCell>
                 </DataTableRow>
               ))}
             </DataTableBody>
@@ -172,26 +145,6 @@ export class SystemStatsTable extends Component {
       </div>
     );
   }
-
-  clearSorts = () => {
-    this.setState({
-      voteCountSortDir: null,
-      completedCountSortDir: null
-    });
-  };
-
-  sortRows = (property, sortDir, supplier) => {
-    this.clearSorts();
-    this.setState({
-      [property]: sortDir,
-      labelData: this.state.labelData.sort((a, b) => sortDir * (supplier(a) - supplier(b)))
-    });
-  };
-
-  sortByLabelVoteCount = (sortDir) => this.sortRows('voteCountSortDir', sortDir, (a) => a.voteCount);
-
-  sortByLabelCompletedCount = (sortDir) =>
-    this.sortRows('completedCountSortDir', sortDir, (a) => a.completedPhraseCount);
 }
 
 export default connect((state) => ({

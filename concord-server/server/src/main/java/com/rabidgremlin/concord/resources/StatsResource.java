@@ -1,8 +1,12 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.ArrayList;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
@@ -15,15 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.collect.ImmutableList;
+import com.rabidgremlin.concord.api.DeadLockedPhrase;
 import com.rabidgremlin.concord.api.LabelCount;
-import com.rabidgremlin.concord.api.LabelCountStats;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.auth.Caller;
+import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UserStatsDao;
+import com.rabidgremlin.concord.dao.VotesDao;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
@@ -38,26 +43,18 @@ public class StatsResource
 
   private final SystemStatsDao systemStatsDao;
 
+  private final VotesDao votesDao;
+
   private final int consensusLevel;
 
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
 
-  private static final List<String> EXTRA_LABELS = ImmutableList.of("TRASH", "SKIPPED");
-
-  public StatsResource(UserStatsDao userStatsDao, SystemStatsDao systemStatsDao, int consensusLevel)
+  public StatsResource(UserStatsDao userStatsDao, SystemStatsDao systemStatsDao, VotesDao votesDao, int consensusLevel)
   {
     this.userStatsDao = userStatsDao;
     this.systemStatsDao = systemStatsDao;
+    this.votesDao = votesDao;
     this.consensusLevel = consensusLevel;
-  }
-
-  private int getVotesForUser(List<UserVoteCount> list, String userId)
-  {
-    return list.stream()
-        .filter(userVoteCount -> userVoteCount.getUserId().equals(userId))
-        .findFirst()
-        .map(UserVoteCount::getVoteCount)
-        .orElse(0);
   }
 
   @GET
@@ -88,17 +85,17 @@ public class StatsResource
           int totalWithConsensusIgnoringTrash = getVotesForUser(totalVotesForPhrasesWithConsensusIgnoringTrash, userId);
           return new UserStats(userId, total, completed, trashed, totalWithConsensus, completedIgnoringTrash, totalWithConsensusIgnoringTrash);
         })
-        .collect(Collectors.toList());
+        .collect(toList());
 
     return Response.ok().entity(userStats).build();
   }
 
-  private int getCountsForLabel(List<LabelCount> labelCounts, String label)
+  private int getVotesForUser(List<UserVoteCount> list, String userId)
   {
-    return labelCounts.stream()
-        .filter(labelCount -> labelCount.getLabel().equals(label))
+    return list.stream()
+        .filter(userVoteCount -> userVoteCount.getUserId().equals(userId))
         .findFirst()
-        .map(LabelCount::getCount)
+        .map(UserVoteCount::getVoteCount)
         .orElse(0);
   }
 
@@ -118,22 +115,30 @@ public class StatsResource
     int totalLabels = systemStatsDao.getCountOfLabels();
     int userCount = systemStatsDao.getCountOfUsers();
 
-    List<String> labelNames = new ArrayList<>(systemStatsDao.getLabelNames());
-    labelNames.addAll(EXTRA_LABELS);
-    List<LabelCount> labelVoteCounts = systemStatsDao.getLabelVoteCounts();
-    List<LabelCount> labelCompletedPhraseCounts = systemStatsDao.getCompletedPhraseLabelCounts();
-    List<LabelCountStats> labelCountStats = labelNames.stream()
-        .distinct()
-        .map(label -> {
-          int voteCount = getCountsForLabel(labelVoteCounts, label);
-          int completedPhraseCount = getCountsForLabel(labelCompletedPhraseCounts, label);
-          return new LabelCountStats(label, voteCount, completedPhraseCount);
+    List<GroupedPhraseVote> uncompletedPhraseVotesWithConsensus = votesDao.getPhraseOverMarginWithTop2Votes(consensusLevel);
+    List<DeadLockedPhrase> deadLockedPhrases = uncompletedPhraseVotesWithConsensus.stream()
+        .collect(
+            groupingBy(GroupedPhraseVote::getText,
+                mapping(phrase -> new LabelCount(phrase.getLabel(), phrase.getVoteCount()), toList())))
+        .entrySet()
+        .stream()
+        // only care about phrases that have votes for multiple labels
+        .filter((e) -> e.getValue().size() >= 2)
+        .map((e) -> {
+          // sort by labels with most votes
+          List<LabelCount> labels = e.getValue().stream().sorted(comparingInt(LabelCount::getCount).reversed()).collect(toList());
+          LabelCount topLabel = labels.get(0);
+          LabelCount secondTopLabel = labels.get(1);
+          List<LabelCount> otherLabels = labels.size() >= 3 ? labels.subList(2, labels.size()) : Collections.emptyList();
+          return new DeadLockedPhrase(e.getKey(), topLabel, secondTopLabel, otherLabels);
         })
-        .filter(label -> label.getVoteCount() > 0 || label.getCompletedPhraseCount() > 0)
-        .collect(Collectors.toList());
+        .filter(phrase -> phrase.isDeadLocked(userCount, consensusLevel))
+        // sort by phrases with most votes
+        .sorted(comparingInt(DeadLockedPhrase::voteSum).reversed())
+        .collect(toList());
 
     SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,
-        totalLabels, userCount, labelCountStats);
+        totalLabels, userCount, deadLockedPhrases);
 
     return Response.ok().entity(systemStats).build();
   }
