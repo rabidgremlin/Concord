@@ -1,7 +1,7 @@
 package com.rabidgremlin.concord.dao;
 
+import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
-import com.rabidgremlin.concord.util.PhraseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
@@ -26,7 +26,7 @@ public interface UploadDao
         .collect(Collectors.toList());
 
     List<String> phraseIds = batchedPhrases.stream()
-        .map(unlabelledPhrase -> PhraseUtil.computePhraseId(unlabelledPhrase.getText()))
+        .map(unlabelledPhrase -> Phrase.computePhraseId(unlabelledPhrase.getText()))
         .collect(Collectors.toList());
 
     // NOTE: Must delete votes before upsert, due to foreign key contraints
@@ -39,7 +39,7 @@ public interface UploadDao
     {
       if (StringUtils.isNotEmpty(phrase.getPossibleLabel()))
       {
-        votesDao().upsert(PhraseUtil.computePhraseId(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
+        votesDao().upsert(Phrase.computePhraseId(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
       }
     }
   }

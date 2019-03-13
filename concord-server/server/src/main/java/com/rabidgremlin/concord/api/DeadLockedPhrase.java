@@ -3,14 +3,11 @@ package com.rabidgremlin.concord.api;
 import java.util.List;
 
 import com.google.common.base.Objects;
-import com.rabidgremlin.concord.util.PhraseUtil;
 
 public class DeadLockedPhrase
 {
 
-  private final String phrase;
-
-  private final String phraseId;
+  private final Phrase phrase;
 
   private final LabelCount topLabel;
 
@@ -18,23 +15,17 @@ public class DeadLockedPhrase
 
   private final List<LabelCount> otherLabels;
 
-  public DeadLockedPhrase(String phrase, LabelCount topLabel, LabelCount secondTopLabel, List<LabelCount> otherLabels)
+  public DeadLockedPhrase(Phrase phrase, LabelCount topLabel, LabelCount secondTopLabel, List<LabelCount> otherLabels)
   {
     this.phrase = phrase;
-    this.phraseId = PhraseUtil.computePhraseId(phrase);
     this.topLabel = topLabel;
     this.secondTopLabel = secondTopLabel;
     this.otherLabels = otherLabels;
   }
 
-  public String getPhrase()
+  public Phrase getPhrase()
   {
     return phrase;
-  }
-
-  public String getPhraseId()
-  {
-    return phraseId;
   }
 
   public LabelCount getTopLabel()

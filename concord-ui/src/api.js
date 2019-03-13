@@ -78,18 +78,17 @@ export function voteForPhraseLabel(phraseId, label) {
   };
 }
 
-export function resolveForPhraseLabel(phraseId, label)
-{
+export function resolveForPhraseLabel(phraseId, label) {
   return (dispatch) => {
     dispatch(callResolveForPhraseLabel());
     request
       .post('/api/phrases/' + phraseId + '/resolve')
-      .send({label: label})
+      .send({ label: label })
       .set('Accept', 'application/json')
       .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
       .then(() => dispatch(getSystemStats())) // refresh the deadlocked phrases
       .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
-  }
+  };
 }
 
 export function getAllLabels() {

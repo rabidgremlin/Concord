@@ -20,14 +20,15 @@ import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.DeadLockedPhrase;
 import com.rabidgremlin.concord.api.LabelCount;
+import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UserStatsDao;
 import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 public class StatsResourceTest
 {
@@ -156,7 +157,8 @@ public class StatsResourceTest
     assertThat(response.getStatusInfo().toString(), is("OK"));
     assertThat(response.getEntity(), instanceOf(SystemStats.class));
     assertThat(response.getEntity(), is(new SystemStats(100, 50, 50, 25, 30, 1000, 60, 3,
-        Collections.singletonList(new DeadLockedPhrase("trash phrase", new LabelCount("SKIPPED", 5), new LabelCount("TRASH", 3), Collections.emptyList())))));
+        Collections.singletonList(
+            new DeadLockedPhrase(new Phrase("trash phrase"), new LabelCount("SKIPPED", 5), new LabelCount("TRASH", 3), Collections.emptyList())))));
   }
 
 }

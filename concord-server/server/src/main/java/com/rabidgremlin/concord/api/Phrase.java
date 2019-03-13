@@ -1,5 +1,7 @@
 package com.rabidgremlin.concord.api;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class Phrase
 {
   private String phraseId;
@@ -9,6 +11,21 @@ public class Phrase
   private Boolean completed;
 
   private String label;
+
+  public static String computePhraseId(String phrase)
+  {
+    return DigestUtils.md5Hex(phrase);
+  }
+
+  public Phrase(String text)
+  {
+    this.text = text;
+    this.phraseId = computePhraseId(text);
+  }
+
+  public Phrase()
+  {
+  }
 
   public String getPhraseId()
   {

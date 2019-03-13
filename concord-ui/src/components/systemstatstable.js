@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {getSystemStats, resolveForPhraseLabel} from '../api';
+import { getSystemStats, resolveForPhraseLabel } from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -12,7 +12,7 @@ import {
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
 import { Card, Typography, CardPrimaryAction } from 'rmwc';
-import nextPhrase from "../reducers/phrase";
+import nextPhrase from '../reducers/phrase';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -64,6 +64,8 @@ export class SystemStatsTable extends Component {
     }
     this.props.enableRefresh();
     console.log(this.state);
+    const data = this.state.statsData;
+    const deadLockedPhrases = data.deadLockedPhrases;
     return (
       <div>
         <DataTable style={{ width: '100%' }}>
@@ -87,28 +89,28 @@ export class SystemStatsTable extends Component {
             <DataTableBody>
               <DataTableRow>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.totalPhrases.toLocaleString()}
+                  {data.totalPhrases.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.completedPhrases.toLocaleString()}
+                  {data.completedPhrases.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.phrasesWithConsensus.toLocaleString()}
+                  {data.phrasesWithConsensus.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.phrasesWithConsensusNotCompleted.toLocaleString()}
+                  {data.phrasesWithConsensusNotCompleted.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.totalLabels.toLocaleString()}
+                  {data.totalLabels.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.labelsUsed.toLocaleString()}
+                  {data.labelsUsed.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.totalVotes.toLocaleString()}
+                  {data.totalVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.state.statsData.userCount.toLocaleString()}
+                  {data.userCount.toLocaleString()}
                 </DataTableCell>
               </DataTableRow>
             </DataTableBody>
@@ -126,36 +128,31 @@ export class SystemStatsTable extends Component {
               </DataTableRow>
             </DataTableHead>
             <DataTableBody>
-              {[...Array(this.state.statsData.deadLockedPhrases.length)].map((v, i) => (
+              {[...Array(deadLockedPhrases.length)].map((v, i) => (
                 <DataTableRow key={i}>
                   <DataTableCell style={{ width: '20%' }}>
                     <CardPrimaryAction
                       onClick={() =>
-                        this.resolvePhrase(
-                          this.state.statsData.deadLockedPhrases[i].phraseId,
-                          this.state.statsData.deadLockedPhrases[i].topLabel.label
-                        )
+                        this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, deadLockedPhrases[i].topLabel.label)
                       }
                     >
-                      {this.state.statsData.deadLockedPhrases[i].topLabel.label} (
-                      {this.state.statsData.deadLockedPhrases[i].topLabel.count})
+                      {deadLockedPhrases[i].topLabel.label} ({deadLockedPhrases[i].topLabel.count})
                     </CardPrimaryAction>
                   </DataTableCell>
                   <DataTableCell style={{ width: '20%' }}>
                     <CardPrimaryAction
                       onClick={() =>
                         this.resolvePhrase(
-                          this.state.statsData.deadLockedPhrases[i].phraseId,
-                          this.state.statsData.deadLockedPhrases[i].secondTopLabel.label
+                          deadLockedPhrases[i].phrase.phraseId,
+                          deadLockedPhrases[i].secondTopLabel.label
                         )
                       }
                     >
-                      {this.state.statsData.deadLockedPhrases[i].secondTopLabel.label} (
-                      {this.state.statsData.deadLockedPhrases[i].secondTopLabel.count})
+                      {deadLockedPhrases[i].secondTopLabel.label} ({deadLockedPhrases[i].secondTopLabel.count})
                     </CardPrimaryAction>
                   </DataTableCell>
                   <DataTableCell style={{ width: '60%', wordWrap: 'break-word' }}>
-                    {this.state.statsData.deadLockedPhrases[i].phrase}
+                    {deadLockedPhrases[i].phrase.text}
                   </DataTableCell>
                 </DataTableRow>
               ))}
@@ -170,7 +167,7 @@ export class SystemStatsTable extends Component {
     console.log(this.state);
     console.log('resolving');
     console.log(phraseId, label);
-    this.props.dispatch(resolveForPhraseLabel(phraseId, label))
+    this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
 }
 
@@ -179,5 +176,5 @@ export default connect((state) => ({
   loading: state.systemStats.loading,
   statsData: state.systemStats.statsData,
   loadingResolvePhrase: state.nextPhrase.loading,
-  errorResolvePhrase: state.nextPhrase.error,
+  errorResolvePhrase: state.nextPhrase.error
 }))(SystemStatsTable);

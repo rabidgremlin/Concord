@@ -21,14 +21,15 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.DeadLockedPhrase;
 import com.rabidgremlin.concord.api.LabelCount;
+import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UserStatsDao;
 import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
@@ -125,12 +126,13 @@ public class StatsResource
         // only care about phrases that have votes for multiple labels
         .filter((e) -> e.getValue().size() >= 2)
         .map((e) -> {
+          Phrase phrase = new Phrase(e.getKey());
           // sort by labels with most votes
           List<LabelCount> labels = e.getValue().stream().sorted(comparingInt(LabelCount::getCount).reversed()).collect(toList());
           LabelCount topLabel = labels.get(0);
           LabelCount secondTopLabel = labels.get(1);
           List<LabelCount> otherLabels = labels.size() >= 3 ? labels.subList(2, labels.size()) : Collections.emptyList();
-          return new DeadLockedPhrase(e.getKey(), topLabel, secondTopLabel, otherLabels);
+          return new DeadLockedPhrase(phrase, topLabel, secondTopLabel, otherLabels);
         })
         .filter(phrase -> phrase.isDeadLocked(userCount, consensusLevel))
         // sort by phrases with most votes
