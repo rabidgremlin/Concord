@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Button, TextField } from 'rmwc';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Button, TextField} from 'rmwc';
+import {connect} from 'react-redux';
 import {
   DataTable,
   DataTableBody,
@@ -10,8 +10,9 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from 'rmwc/DataTable';
-import { getAllLabels, postPhrases } from '../api';
-import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
+import {Dialog, DialogActions, DialogButton, DialogContent, DialogTitle} from '@rmwc/dialog';
+import {getAllLabels, postPhrases} from '../api';
+import '@rmwc/data-table/data-table.css';
 
 export class UploadPhrase extends Component {
   constructor(props) {
@@ -40,8 +41,9 @@ export class UploadPhrase extends Component {
     this.setState({ ...this.state, [val]: evt.target.value });
   };
 
-  checkTextField = () => {
+  preprocessPhrases = () => {
     let invalidLabels = new Set();
+    let uniquePhrases = new Set();
     let phrases = this.state.textField
       .split('\n')
       .map((textPossibleLabel) => {
@@ -58,6 +60,13 @@ export class UploadPhrase extends Component {
           return false;
         }
         return phrase.text !== '';
+      })
+      .filter((phrase) => {
+        if (uniquePhrases.has(phrase.text)) {
+          return false;
+        }
+        uniquePhrases.add(phrase.text);
+        return true;
       });
     this.setState({ textField: '', invalidData: true, phrases: phrases, invalidLabels: invalidLabels });
   };
@@ -128,7 +137,7 @@ export class UploadPhrase extends Component {
     return (
       <div>
         <InvalidLabelWarning />
-        <Button raised onClick={this.checkTextField} disabled={this.state.invalidData}>
+        <Button raised onClick={this.preprocessPhrases} disabled={this.state.invalidData}>
           Check
         </Button>
         <TextField
