@@ -6,7 +6,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 public interface SystemStatsDao
 {
 
-  String USER_TO_IGNORE = "BULK_UPLOAD";
+  String FILTER_USERS = "WHERE userId != 'BULK_UPLOAD' AND userId != 'RESOLVER'";
 
   @SqlQuery("SELECT COUNT(*) " +
       "FROM phrases")
@@ -35,7 +35,7 @@ public interface SystemStatsDao
 
   @SqlQuery("SELECT COUNT(*) " +
       "FROM votes " +
-      "WHERE userId != '" + USER_TO_IGNORE + "'")
+      FILTER_USERS)
   int getCountOfVotes();
 
   @SqlQuery("SELECT COUNT(*) " +
@@ -43,7 +43,7 @@ public interface SystemStatsDao
   int getCountOfLabels();
 
   @SqlQuery("SELECT COUNT(*) " +
-      "FROM (SELECT userId FROM votes WHERE userId != '" + USER_TO_IGNORE + "' GROUP BY userId) ALIAS")
+      "FROM (SELECT userId FROM votes " + FILTER_USERS + " GROUP BY userId) ALIAS")
   int getCountOfUsers();
 
 }
