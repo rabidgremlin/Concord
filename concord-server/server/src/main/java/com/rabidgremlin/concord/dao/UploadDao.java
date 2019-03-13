@@ -1,13 +1,14 @@
 package com.rabidgremlin.concord.dao;
 
-import com.rabidgremlin.concord.api.Phrase;
-import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.rabidgremlin.concord.api.Phrase;
+import com.rabidgremlin.concord.api.UnlabelledPhrase;
 
 public interface UploadDao
 {
