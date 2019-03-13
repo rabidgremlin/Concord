@@ -1,11 +1,13 @@
 package com.rabidgremlin.concord.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Phrase
 {

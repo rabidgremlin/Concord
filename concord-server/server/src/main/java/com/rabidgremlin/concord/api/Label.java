@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import io.github.binout.jaxrs.csv.CsvSchema;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @CsvSchema(separator = ',', columns = { "label", "shortDescription", "longDescription" })
 public class Label

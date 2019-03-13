@@ -3,14 +3,10 @@ package com.rabidgremlin.concord.api;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 public class DeadLockedPhrase
 {
 
