@@ -20,8 +20,8 @@ public interface VotesDao
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
   /**
-   * This query returns incomplete phrases with the top 2 votes for each.
-   * Note that there will be only one row for those only have one voted label.
+   * This query returns incomplete phrases with the top 2 votes for each. Note that there will be only one row for those
+   * only have one voted label.
    *
    * @param margin consensus level required for a phrase to be considered complete
    */

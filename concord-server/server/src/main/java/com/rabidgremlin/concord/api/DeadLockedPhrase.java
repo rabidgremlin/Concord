@@ -2,8 +2,15 @@ package com.rabidgremlin.concord.api;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+@AllArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
 public class DeadLockedPhrase
 {
 
@@ -14,29 +21,6 @@ public class DeadLockedPhrase
   private final LabelCount secondTopLabel;
 
   private final List<LabelCount> otherLabels;
-
-  public DeadLockedPhrase(Phrase phrase, LabelCount topLabel, LabelCount secondTopLabel, List<LabelCount> otherLabels)
-  {
-    this.phrase = phrase;
-    this.topLabel = topLabel;
-    this.secondTopLabel = secondTopLabel;
-    this.otherLabels = otherLabels;
-  }
-
-  public Phrase getPhrase()
-  {
-    return phrase;
-  }
-
-  public LabelCount getTopLabel()
-  {
-    return topLabel;
-  }
-
-  public LabelCount getSecondTopLabel()
-  {
-    return secondTopLabel;
-  }
 
   public int voteSum()
   {
@@ -54,36 +38,4 @@ public class DeadLockedPhrase
     return voteDifference() > userCount - voteSum() - consensusLevel + 1;
   }
 
-  @Override
-  public boolean equals(Object o)
-  {
-    if (this == o)
-    {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass())
-    {
-      return false;
-    }
-    DeadLockedPhrase that = (DeadLockedPhrase) o;
-    return Objects.equal(phrase, that.phrase) &&
-        Objects.equal(topLabel, that.topLabel) &&
-        Objects.equal(secondTopLabel, that.secondTopLabel);
-  }
-
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(phrase, topLabel, secondTopLabel);
-  }
-
-  @Override
-  public String toString()
-  {
-    return "DeadLockedPhrase{" +
-        "phrase='" + phrase + '\'' +
-        ", topLabel=" + topLabel +
-        ", secondTopLabel=" + secondTopLabel +
-        '}';
-  }
 }
