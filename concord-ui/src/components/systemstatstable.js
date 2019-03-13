@@ -11,8 +11,7 @@ import {
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
-import { Card, Typography, CardPrimaryAction } from 'rmwc';
-import nextPhrase from '../reducers/phrase';
+import { CardPrimaryAction } from 'rmwc';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -68,6 +67,7 @@ export class SystemStatsTable extends Component {
     const deadLockedPhrases = data.deadLockedPhrases;
     return (
       <div>
+        <h2>System Stats</h2>
         <DataTable style={{ width: '100%' }}>
           <DataTableContent style={{ fontSize: '12pt' }}>
             <DataTableHead>
@@ -116,7 +116,7 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
-        <p>Deadlocked Phrases</p>
+        <h2>Deadlocked Phrases</h2>
         <DataTable style={{ width: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableHead>

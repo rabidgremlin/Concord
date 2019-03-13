@@ -50,6 +50,8 @@ public class StatsResource
 
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
 
+  private static final int DEADLOCKED_PHRASE_LIMIT = 50;
+
   public StatsResource(UserStatsDao userStatsDao, SystemStatsDao systemStatsDao, VotesDao votesDao, int consensusLevel)
   {
     this.userStatsDao = userStatsDao;
@@ -135,6 +137,7 @@ public class StatsResource
           return new DeadLockedPhrase(phrase, topLabel, secondTopLabel, otherLabels);
         })
         .filter(phrase -> phrase.isDeadLocked(userCount, consensusLevel))
+        .limit(DEADLOCKED_PHRASE_LIMIT)
         // sort by phrases with most votes
         .sorted(comparingInt(DeadLockedPhrase::voteSum).reversed())
         .collect(toList());

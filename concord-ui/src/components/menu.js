@@ -29,14 +29,14 @@ export default class Menu extends Component {
                 <Icon icon='outlined_flag' /> Labels
               </MenuItem>
             </Link>
-            <Link to='/stats/user' style={{ textDecoration: 'none' }}>
+            <Link to='/stats' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='supervisor_account' /> User Stats
+                <Icon icon='bar_chart' /> Stats
               </MenuItem>
             </Link>
-            <Link to='/stats/system' style={{ textDecoration: 'none' }}>
+            <Link to='/admin' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='bar_chart' /> System Stats
+                <Icon icon='supervisor_account' /> Admin
               </MenuItem>
             </Link>
           </List>

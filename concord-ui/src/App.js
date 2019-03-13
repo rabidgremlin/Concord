@@ -101,8 +101,8 @@ export class App extends Component {
               />
               <Switch>
                 <Route exact path='/labels' render={LabelPage} />
-                <Route exact path='/stats/user' render={UserStatsPage} />
-                <Route exact path='/stats/system' render={SystemStatsPage} />
+                <Route exact path='/stats' render={UserStatsPage} />
+                <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>
               <Redirect exact from='/' to='/labels' />
             </div>
