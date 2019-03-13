@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from 'rmwc';
+import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from '@rmwc/toolbar';
 
 export default class Navbar extends Component {
   render() {

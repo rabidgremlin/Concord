@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import { getNextPhrase, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
-import { Card, CardAction, CardActions, CardPrimaryAction, Fab, Grid, GridCell, Icon, Typography } from 'rmwc';
+import { Card, CardAction, CardActions, CardPrimaryAction } from '@rmwc/card';
+import { Fab } from '@rmwc/fab';
+import { Grid, GridCell } from '@rmwc/grid';
+import { Icon } from '@rmwc/icon';
+import { Typography } from '@rmwc/typography';
 import { FormattedNumber } from 'react-intl';
 
 const keyMappings = {

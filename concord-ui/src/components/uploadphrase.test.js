@@ -9,10 +9,11 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import { UploadPhrase } from './uploadphrase';
 import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
-import { Button, TextField } from 'rmwc';
+import { Button } from '@rmwc/button';
+import { TextField } from '@rmwc/textfield';
 
 Enzyme.configure({ adapter: new Adapter() });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './navbar';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from 'rmwc';
+import { Toolbar, ToolbarIcon, ToolbarRow, ToolbarSection, ToolbarTitle } from '@rmwc/toolbar';
 
 Enzyme.configure({ adapter: new Adapter() });
 

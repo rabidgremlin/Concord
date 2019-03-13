@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Card, Grid, GridCell, TextField, Typography } from 'rmwc';
+import { Button } from '@rmwc/button';
+import { Card } from '@rmwc/card';
+import { Grid, GridCell } from '@rmwc/grid';
+import { TextField } from '@rmwc/textfield';
+import { Typography } from '@rmwc/typography';
 
 import { connect } from 'react-redux';
 import { createSession } from '../api';

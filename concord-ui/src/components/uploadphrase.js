@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Button, TextField} from 'rmwc';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Button } from '@rmwc/button';
+import { TextField } from '@rmwc/textfield';
+import { connect } from 'react-redux';
 import {
   DataTable,
   DataTableBody,
@@ -9,9 +10,9 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
-import {Dialog, DialogActions, DialogButton, DialogContent, DialogTitle} from '@rmwc/dialog';
-import {getAllLabels, postPhrases} from '../api';
+} from '@rmwc/data-table';
+import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
+import { getAllLabels, postPhrases } from '../api';
 import '@rmwc/data-table/data-table.css';
 
 export class UploadPhrase extends Component {

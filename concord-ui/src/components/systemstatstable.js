@@ -8,10 +8,10 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
-import { CardPrimaryAction } from 'rmwc';
+import { CardPrimaryAction } from '@rmwc/card';
 
 export class SystemStatsTable extends Component {
   constructor(props) {

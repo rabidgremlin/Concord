@@ -4,7 +4,7 @@ import Navbar from './components/navbar';
 import Login from './components/login';
 import Menu from './components/menu';
 import LabelPhrase from './components/labelphrase';
-import { SimpleDialog } from 'rmwc';
+import { SimpleDialog } from '@rmwc/dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';

@@ -8,7 +8,7 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { getUserStats } from '../api';
 import { connect } from 'react-redux';
