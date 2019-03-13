@@ -2,12 +2,13 @@ package com.rabidgremlin.concord.dao;
 
 import java.util.List;
 
-import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 public interface VotesDao
 {
@@ -20,7 +21,6 @@ public interface VotesDao
 
   /**
    * This query returns incomplete phrases with the top 2 votes for each.
-   * <p>
    * Note that there will be only one row for those only have one voted label.
    *
    * @param margin consensus level required for a phrase to be considered complete
