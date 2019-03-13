@@ -1,5 +1,14 @@
 package com.rabidgremlin.concord.api;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Phrase
 {
   private String phraseId;
@@ -10,43 +19,15 @@ public class Phrase
 
   private String label;
 
-  public String getPhraseId()
+  public static String computePhraseId(String phrase)
   {
-    return phraseId;
+    return DigestUtils.md5Hex(phrase);
   }
 
-  public void setPhraseId(String phraseId)
-  {
-    this.phraseId = phraseId;
-  }
-
-  public String getText()
-  {
-    return text;
-  }
-
-  public void setText(String text)
+  public Phrase(String text)
   {
     this.text = text;
+    this.phraseId = computePhraseId(text);
   }
 
-  public Boolean getCompleted()
-  {
-    return completed;
-  }
-
-  public void setCompleted(Boolean completed)
-  {
-    this.completed = completed;
-  }
-
-  public String getLabel()
-  {
-    return label;
-  }
-
-  public void setLabel(String label)
-  {
-    this.label = label;
-  }
 }

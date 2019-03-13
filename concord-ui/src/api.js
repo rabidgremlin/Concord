@@ -1,5 +1,3 @@
-import request from 'superagent';
-
 import {
   callCreateSession,
   callCreateSessionFailed,
@@ -10,16 +8,23 @@ import {
   callGetNextPhrase,
   callGetNextPhraseFailed,
   callGetNextPhraseSucceeded,
-  callVoteForPhraseLabel,
-  callVoteForPhraseLabelFailed,
-  callVoteForPhraseLabelSucceeded,
+  callGetSystemStats,
+  callGetSystemStatsFailed,
+  callGetSystemStatsSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
   callGetUserStatsSucceeded,
   callPostPhrases,
+  callPostPhrasesFailed,
   callPostPhrasesSucceeded,
-  callPostPhrasesFailed
+  callResolveForPhraseLabel,
+  callResolveForPhraseLabelFailed,
+  callResolveForPhraseLabelSucceeded,
+  callVoteForPhraseLabel,
+  callVoteForPhraseLabelFailed,
+  callVoteForPhraseLabelSucceeded
 } from './actions';
+import request from 'superagent';
 
 export function createSession(userId, password) {
   return (dispatch) => {
@@ -59,6 +64,19 @@ export function voteForPhraseLabel(phraseId, label) {
   };
 }
 
+export function resolveForPhraseLabel(phraseId, label) {
+  return (dispatch) => {
+    dispatch(callResolveForPhraseLabel());
+    request
+      .post('/api/phrases/' + phraseId + '/resolve')
+      .send({ label: label })
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
+      .then(() => dispatch(getSystemStats())) // refresh the deadlocked phrases
+      .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
+  };
+}
+
 export function getAllLabels() {
   return (dispatch) => {
     dispatch(callGetAllLabels());
@@ -75,7 +93,7 @@ export function getUserStats() {
   return (dispatch) => {
     dispatch(callGetUserStats());
     request
-      .get('/api/stats')
+      .get('/api/stats/user')
       .set('Accept', 'application/json')
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetUserStatsSucceeded(data)))
@@ -92,5 +110,17 @@ export function postPhrases(unlabelledPhrases) {
       .set('Accept', 'application/json')
       .then(() => dispatch(callPostPhrasesSucceeded()))
       .catch((err) => dispatch(callPostPhrasesFailed(err)));
+  };
+}
+
+export function getSystemStats() {
+  return (dispatch) => {
+    dispatch(callGetSystemStats());
+    request
+      .get('/api/stats/system')
+      .set('Accept', 'application/json')
+      .then((res) => JSON.parse(res.text))
+      .then((data) => dispatch(callGetSystemStatsSucceeded(data)))
+      .catch((err) => dispatch(callGetSystemStatsFailed(err)));
   };
 }

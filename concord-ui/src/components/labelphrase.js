@@ -23,7 +23,8 @@ export class LabelPhrase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentLabel: null
+      currentLabel: null,
+      reloadApiData: false
     };
   }
 
@@ -34,6 +35,17 @@ export class LabelPhrase extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleKeyPress);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        currentLabel: null
+      });
+      // refresh the API data
+      this.props.dispatch(getNextPhrase());
+    }
   }
 
   handleKeyPress = (event) => {
@@ -82,6 +94,7 @@ export class LabelPhrase extends Component {
       );
     } else {
       if (this.props.phraseData) {
+        this.props.enableRefresh();
         return (
           <div>
             <div
@@ -168,11 +181,7 @@ export class LabelPhrase extends Component {
                       </div>
                     </CardPrimaryAction>
                     <CardActions fullBleed>
-                      <CardAction
-                        onClick={() => {
-                          this.makeVote(label.label);
-                        }}
-                      >
+                      <CardAction onClick={() => this.makeVote(label.label)}>
                         Label phrase <Icon icon='arrow_forward' />
                       </CardAction>
                     </CardActions>

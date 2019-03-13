@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
+import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 
 public interface UploadDao
@@ -32,7 +33,7 @@ public interface UploadDao
         .collect(Collectors.toList());
 
     List<String> phraseIds = batchedPhrases.stream()
-        .map(unlabelledPhrase -> DigestUtils.md5Hex(unlabelledPhrase.getText()))
+        .map(unlabelledPhrase -> Phrase.computePhraseId(unlabelledPhrase.getText()))
         .collect(Collectors.toList());
 
     // NOTE: Must delete votes before upsert, due to foreign key contraints

@@ -10,27 +10,15 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from 'rmwc/DataTable';
-import { StatsTable } from './statstable';
+import { SystemStatsTable } from './systemstatstable';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
   const props = {
-    dispatch: jest.fn(),
-    statsData: [
-      {
-        userId: 'bob',
-        totalVotes: 50,
-        completedVotes: 10,
-        trashVotes: 20,
-        totalVotesWithConsensus: 10,
-        completedVotesIgnoringTrash: 5,
-        completedVotesWithConsensusIgnoringTrash: 5,
-        totalVotesWithConsensusIgnoringTrash: 10
-      }
-    ]
+    dispatch: jest.fn()
   };
-  const statsTable = shallow(<StatsTable {...props} />);
+  const statsTable = shallow(<SystemStatsTable {...props} />);
   console.log(statsTable.debug());
   return {
     props,
@@ -38,11 +26,11 @@ function setup() {
   };
 }
 
-describe('StatsTable', () => {
+describe('SystemStatsTable', () => {
   it('renders without crashing', () => {
     const { statsTable, props } = setup();
-    expect(statsTable.find(StatsTable));
-    expect(statsTable.find(StatsTable).containsMatchingElement(DataTable));
+    expect(statsTable.find(SystemStatsTable));
+    expect(statsTable.find(SystemStatsTable).containsMatchingElement(DataTable));
     expect(statsTable.find(DataTable).containsMatchingElement(DataTableContent));
     expect(statsTable.find(DataTableContent).containsMatchingElement(DataTableHead));
     expect(statsTable.find(DataTableHead).containsMatchingElement(DataTableRow));

@@ -3,7 +3,8 @@ import session from './session';
 import nextPhrase from './phrase';
 import error from './error';
 import label from './label';
-import stats from './stat';
+import userStats from './userstat';
+import systemStats from './systemstat';
 import uploadPhrase from './uploadphrase';
 
 export default combineReducers({
@@ -11,6 +12,7 @@ export default combineReducers({
   nextPhrase,
   error,
   label,
-  stats,
-  uploadPhrase
+  uploadPhrase,
+  userStats,
+  systemStats
 });

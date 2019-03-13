@@ -1,6 +1,6 @@
 jwtTokenSecret: jkfhgkjfdhgur8943flkds3@#$^UYGJHKJHKK
 
-consensusLevel: 1
+consensusLevel: 3
 
 completeOnTrash: true
 
@@ -12,7 +12,6 @@ database:
 
 labelSuggester:
    class: com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester
-   
 
 credentialsValidator:
   class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator

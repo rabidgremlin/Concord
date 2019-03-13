@@ -38,6 +38,8 @@ public class SessionsResourceTest
 
     byte[] badToken = "peanutBrittle".getBytes();
     badSessionsResource = new SessionsResource(badToken, validatorMock);
+
+    System.out.println(new NewSessionRequest("user", "password"));
   }
 
   @Test

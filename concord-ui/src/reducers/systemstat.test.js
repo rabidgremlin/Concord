@@ -1,4 +1,4 @@
-import reducer from './stat';
+import reducer from './systemstat';
 
 describe('stat reducer', () => {
   it('should return the initial state', () => {
@@ -8,10 +8,10 @@ describe('stat reducer', () => {
     });
   });
 
-  it('should handle call to get user stats', () => {
+  it('should handle call to get system stats', () => {
     expect(
       reducer([], {
-        type: 'CALL_GET_USER_STATS'
+        type: 'CALL_GET_SYSTEM_STATS'
       })
     ).toEqual({
       loading: true,
@@ -19,14 +19,14 @@ describe('stat reducer', () => {
     });
   });
 
-  it('should handle successful call to get user stats', () => {
+  it('should handle successful call to get system stats', () => {
     const testLabelData = {
-      userId: 'Bob',
-      totalVotes: 123
+      phrases: 40000,
+      votes: 70000
     };
     expect(
       reducer([], {
-        type: 'CALL_GET_USER_STATS_SUCCEEDED',
+        type: 'CALL_GET_SYSTEM_STATS_SUCCEEDED',
         statsData: testLabelData
       })
     ).toEqual({
@@ -36,10 +36,10 @@ describe('stat reducer', () => {
     });
   });
 
-  it('should handle unsuccessful call to get user stats', () => {
+  it('should handle unsuccessful call to get system stats', () => {
     expect(
       reducer([], {
-        type: 'CALL_GET_USER_STATS_FAILED'
+        type: 'CALL_GET_SYSTEM_STATS_FAILED'
       })
     ).toEqual({
       loading: false,

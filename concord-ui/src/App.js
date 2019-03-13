@@ -8,20 +8,53 @@ import { SimpleDialog } from 'rmwc';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
-import Statstable from './components/statstable';
 import UploadPhrase from './components/uploadphrase';
+import UserStatsTable from './components/userstatstable';
+import SystemStatsTable from './components/systemstatstable';
 
 export class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { menuOpen: false };
+    this.state = {
+      menuOpen: false,
+      reloadApiData: false,
+      refreshEnabled: false
+    };
   }
 
   logout = () => this.props.dispatch(killSession());
 
   toggleMenu = () => this.setState({ menuOpen: !this.state.menuOpen });
 
+  enableRefresh = () => {
+    if (!this.state.refreshEnabled) {
+      this.setState({ refreshEnabled: true });
+    }
+  };
+
+  refreshChildComponent = () => {
+    if (this.state.refreshEnabled) {
+      this.setState({
+        refreshEnabled: false,
+        // trigger active child component to refresh
+        reloadApiData: !this.state.reloadApiData
+      });
+    }
+  };
+
   render() {
+    const LabelPage = (props) => {
+      return <LabelPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
+    };
+    const UserStatsPage = (props) => {
+      return <UserStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
+    };
+    const SystemStatsPage = (props) => {
+      return (
+        <SystemStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
+      );
+    };
+
     if (!this.props.logged_in) {
       return (
         <ThemeProvider
@@ -53,7 +86,11 @@ export class App extends Component {
           <Router basename={process.env.PUBLIC_URL}>
             <div>
               <Menu menuOpen={this.state.menuOpen} toggleMenu={this.toggleMenu} />
-              <Navbar logout={this.logout} toggleMenu={this.toggleMenu} />
+              <Navbar
+                logout={this.logout}
+                toggleMenu={this.toggleMenu}
+                refreshChildComponent={this.refreshChildComponent}
+              />
               <SimpleDialog
                 title='Error'
                 body={this.props.errorMsg}
@@ -64,11 +101,12 @@ export class App extends Component {
                 }}
               />
               <Switch>
-                <Route exact path='/phrases/vote' component={LabelPhrase} />
+                <Route exact path='/phrases/vote' render={LabelPage} />
                 <Route exact path='/phrases/upload' component={UploadPhrase} />
-                <Route exact path='/stats' component={Statstable} />
+                <Route exact path='/stats' render={UserStatsPage} />
+                <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>
-              <Redirect from='/' to='/phrases/vote' />
+              <Redirect exact from='/' to='/phrases/vote' />
             </div>
           </Router>
         </ThemeProvider>

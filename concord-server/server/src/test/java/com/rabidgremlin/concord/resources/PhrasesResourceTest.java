@@ -139,7 +139,7 @@ public class PhrasesResourceTest
     Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
 
     verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
-    verify(phrasesDaoMock, times(1)).markPhrasesComplete(Collections.singletonList(trashedPhraseId), Collections.singletonList("TRASH"));
+    verify(phrasesDaoMock, times(1)).markPhraseComplete(trashedPhraseId, "TRASH");
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());

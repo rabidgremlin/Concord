@@ -8,11 +8,10 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
+
 public interface VotesDao
 {
-
-  @SqlUpdate("DELETE from votes where phraseId = :phraseId")
-  void deleteAllVotesForPhrase(@Bind("phraseId") String phraseId);
 
   @SqlBatch("DELETE from votes where phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);
@@ -21,9 +20,8 @@ public interface VotesDao
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
   /**
-   * This query returns incomplete phrases with the top 2 votes for each.
-   * <P>
-   * Note that there will be only one row for those only have one voted label.
+   * This query returns incomplete phrases with the top 2 votes for each. Note that there will be only one row for those
+   * only have one voted label.
    *
    * @param margin consensus level required for a phrase to be considered complete
    */

@@ -1,7 +1,5 @@
 package com.rabidgremlin.concord.api;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UnlabelledPhrases
+public class LabelCount
 {
 
-  private List<UnlabelledPhrase> unlabelledPhrases;
+  private String label;
+
+  private int count;
 
 }

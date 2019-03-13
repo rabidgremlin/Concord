@@ -84,7 +84,7 @@ export class UploadPhrase extends Component {
     const InvalidLabelWarning = () => {
       return (
         <Dialog open={this.state.invalidLabels.size > 0} onClose={() => this.setState({ invalidLabels: new Set() })}>
-          <DialogTitle>Warning: Invalid Labels Removed</DialogTitle>
+          <DialogTitle>Warning: Invalid labels removed</DialogTitle>
           <DialogContent>{[...this.state.invalidLabels].join(', ')}</DialogContent>
           <DialogActions>
             <DialogButton action='accept' isDefaultAction>

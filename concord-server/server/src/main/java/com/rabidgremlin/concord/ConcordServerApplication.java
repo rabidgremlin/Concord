@@ -30,8 +30,9 @@ import com.rabidgremlin.concord.auth.ConcordServerAuthenticator;
 import com.rabidgremlin.concord.config.ConcordServerConfiguration;
 import com.rabidgremlin.concord.dao.LabelsDao;
 import com.rabidgremlin.concord.dao.PhrasesDao;
-import com.rabidgremlin.concord.dao.StatsDao;
+import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UploadDao;
+import com.rabidgremlin.concord.dao.UserStatsDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.plugin.CredentialsValidator;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
@@ -193,12 +194,13 @@ public class ConcordServerApplication
       log.error("Error loading label suggester", e);
     }
 
-    int consensusLevel = configuration.getConsensusLevel();
+    final int consensusLevel = configuration.getConsensusLevel();
 
     LabelsResource labelsResource = new LabelsResource(jdbi.onDemand(LabelsDao.class));
     PhrasesResource phrasesResource = new PhrasesResource(jdbi.onDemand(PhrasesDao.class), jdbi.onDemand(VotesDao.class),
         jdbi.onDemand(UploadDao.class), labelsSuggester, consensusLevel, configuration.isCompleteOnTrash());
-    StatsResource statsResource = new StatsResource(jdbi.onDemand(StatsDao.class));
+    StatsResource statsResource = new StatsResource(jdbi.onDemand(UserStatsDao.class), jdbi.onDemand(SystemStatsDao.class), jdbi.onDemand(VotesDao.class),
+        consensusLevel);
 
     environment.jersey().register(labelsResource);
     environment.jersey().register(phrasesResource);

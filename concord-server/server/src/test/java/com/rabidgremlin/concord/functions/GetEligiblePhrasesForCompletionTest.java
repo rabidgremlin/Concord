@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import com.rabidgremlin.concord.api.Phrase;
-import com.rabidgremlin.concord.dao.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 public class GetEligiblePhrasesForCompletionTest
 {

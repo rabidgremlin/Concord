@@ -1,6 +1,5 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +29,10 @@ import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
 import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import com.rabidgremlin.concord.auth.Caller;
-import com.rabidgremlin.concord.dao.GroupedPhraseVote;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
@@ -65,6 +64,8 @@ public class PhrasesResource
   private final boolean completeOnTrash;
 
   private static final String LABEL_TRASH = "TRASH";
+
+  private static final String PHRASE_RESOLVER_USER_ID = "RESOLVER";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
     boolean completeOnTrash)
@@ -197,16 +198,32 @@ public class PhrasesResource
   // TODO: Create proper model class for incoming label
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
-    log.info("{} casting vote for {}", caller, phraseId);
+    String labelText = label.getLabel();
+    log.info("{} casting vote for {} as {}", caller, phraseId, labelText);
 
-    votesDao.upsert(phraseId, label.getLabel(), caller.getToken());
+    votesDao.upsert(phraseId, labelText, caller.getToken());
 
     // are we marking trashed phrases as completed?
-    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label.getLabel()))
+    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, labelText))
     {
-      phrasesDao.markPhrasesComplete(Collections.singletonList(phraseId), Collections.singletonList(label.getLabel()));
+      phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
     }
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }
+
+  @POST
+  @Timed
+  @Path("/{phraseId}/resolve")
+  public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
+  {
+    String labelText = label.getLabel();
+    log.info("{} resolving {} as {}", caller, phraseId, labelText);
+
+    votesDao.upsert(phraseId, labelText, PHRASE_RESOLVER_USER_ID);
+    phrasesDao.markPhraseComplete(phraseId, labelText);
+
+    return Response.created(uriInfo.getAbsolutePath()).build();
+  }
+
 }

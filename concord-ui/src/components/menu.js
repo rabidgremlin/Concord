@@ -10,7 +10,6 @@ export default class Menu extends Component {
     };
   }
 
-  // updated from parent, allows another component to toggle the menu
   componentWillReceiveProps(nextProps) {
     if (nextProps.menuOpen !== this.state.menuOpen) {
       this.setState({ menuOpen: nextProps.menuOpen });
@@ -38,6 +37,11 @@ export default class Menu extends Component {
             <Link to='/stats' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
                 <Icon icon='bar_chart' /> Stats
+              </MenuItem>
+            </Link>
+            <Link to='/admin' style={{ textDecoration: 'none' }}>
+              <MenuItem style={{ paddingLeft: 13 }}>
+                <Icon icon='supervisor_account' /> Admin
               </MenuItem>
             </Link>
           </List>
