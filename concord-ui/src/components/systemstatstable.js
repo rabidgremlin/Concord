@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { getSystemStats, resolveForPhraseLabel } from '../api';
+import React, {Component} from 'react';
+import {getSystemStats, resolveForPhraseLabel} from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -10,8 +10,17 @@ import {
   DataTableRow
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
-import { connect } from 'react-redux';
-import { CardPrimaryAction } from 'rmwc';
+import {connect} from 'react-redux';
+import {
+  SimpleListItem,
+  CollapsibleList,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemPrimaryText,
+  ListItemSecondaryText
+} from '@rmwc/list';
+import '@rmwc/list/collapsible-list.css';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -116,43 +125,41 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
-        <h2>Deadlocked Phrases</h2>
-        <DataTable style={{ width: '100%' }}>
+        <h2>{deadLockedPhrases.length} Deadlocked Phrases [DO NOT USE TRUMP VOTE]</h2>
+        <DataTable style={{ minWidth: '100%', maxWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
-            <DataTableHead>
-              <DataTableRow>
-                <DataTableHeadCell>Top Label</DataTableHeadCell>
-                <DataTableHeadCell>Second Top Label</DataTableHeadCell>
-                <DataTableHeadCell>Phrase</DataTableHeadCell>
-                <DataTableHeadCell />
-              </DataTableRow>
-            </DataTableHead>
             <DataTableBody>
-              {[...Array(deadLockedPhrases.length)].map((v, i) => (
+              {[...Array(10)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '20%' }}>
-                    <CardPrimaryAction
-                      onClick={() =>
-                        this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, deadLockedPhrases[i].topLabel.label)
-                      }
-                    >
-                      {deadLockedPhrases[i].topLabel.label} ({deadLockedPhrases[i].topLabel.count})
-                    </CardPrimaryAction>
-                  </DataTableCell>
-                  <DataTableCell style={{ width: '20%' }}>
-                    <CardPrimaryAction
-                      onClick={() =>
-                        this.resolvePhrase(
-                          deadLockedPhrases[i].phrase.phraseId,
-                          deadLockedPhrases[i].secondTopLabel.label
-                        )
-                      }
-                    >
-                      {deadLockedPhrases[i].secondTopLabel.label} ({deadLockedPhrases[i].secondTopLabel.count})
-                    </CardPrimaryAction>
-                  </DataTableCell>
-                  <DataTableCell style={{ width: '60%', wordWrap: 'break-word' }}>
+                  <DataTableCell style={{ width: '40%', maxWidth: '40%' }}>
                     {deadLockedPhrases[i].phrase.text}
+                  </DataTableCell>
+                  <DataTableCell style={{ width: '40%', maxWidth: '40%' }}>
+                    <CollapsibleList
+                      twoLine
+                      handle={
+                        <SimpleListItem
+                          text="Resolve"
+                          graphic="whatshot"
+                          metaIcon="chevron_right"
+                        />
+                      }
+                    >
+                      {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
+                        <SimpleListItem>
+                          {deadLockedPhrases[i].labelsInVoteOrder[j].label} ({deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
+                        </SimpleListItem>
+                      ))}
+                    </CollapsibleList>
+                  </DataTableCell>
+                  <DataTableCell style={{ width: '10%', maxWidth: '10%' }}>
+                    <SimpleListItem
+                    graphic="replay"
+                  /></DataTableCell>
+                  <DataTableCell style={{ width: '10%', maxWidth: '10%' }}>
+                    <SimpleListItem
+                    graphic="delete"
+                  />
                   </DataTableCell>
                 </DataTableRow>
               ))}
@@ -164,11 +171,11 @@ export class SystemStatsTable extends Component {
   }
 
   resolvePhrase(phraseId, label) {
-    console.log(this.state);
     console.log('resolving');
     console.log(phraseId, label);
     this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
+
 }
 
 export default connect((state) => ({

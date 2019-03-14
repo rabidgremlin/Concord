@@ -205,10 +205,9 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} resolving {} as {}", caller, phraseId, labelText);
+    log.info("{} casting vote as {} for {} as {}", caller, PHRASE_RESOLVER_USER_ID, phraseId, labelText);
 
     votesDao.upsert(phraseId, labelText, PHRASE_RESOLVER_USER_ID);
-    phrasesDao.markPhraseComplete(phraseId, labelText);
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }
