@@ -32,7 +32,7 @@ import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.UploadDao;
 import com.rabidgremlin.concord.dao.VotesDao;
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
-import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletion;
+import com.rabidgremlin.concord.functions.GetEligiblePhrasesForCompletionFunction;
 import com.rabidgremlin.concord.plugin.LabelSuggester;
 import com.rabidgremlin.concord.plugin.SuggestedLabel;
 import com.rabidgremlin.concord.plugin.UnableToGetSuggestionsException;
@@ -144,10 +144,10 @@ public class PhrasesResource
     log.info("{} marking phrases and downloading csv of completedPhrases", caller);
 
     log.info("Searching for votes over margin {}...", consensusLevel);
-    List<GroupedPhraseVote> phraseVotes = votesDao.getPhraseOverMarginWithTop2Votes(consensusLevel);
+    List<GroupedPhraseVote> phraseVotes = votesDao.getTop2LabelsForUncompletedPhrasesOverMarginInVoteCountOrder(consensusLevel);
     log.info("Found {} votes over margin.", phraseVotes.size());
 
-    GetEligiblePhrasesForCompletion getPhrases = new GetEligiblePhrasesForCompletion(phraseVotes, consensusLevel);
+    GetEligiblePhrasesForCompletionFunction getPhrases = new GetEligiblePhrasesForCompletionFunction(phraseVotes, consensusLevel);
 
     log.info("Looking for completed phrases...");
     List<Phrase> completedPhrases = getPhrases.execute();

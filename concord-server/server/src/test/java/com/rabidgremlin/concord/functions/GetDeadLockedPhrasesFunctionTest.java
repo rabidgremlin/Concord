@@ -1,0 +1,174 @@
+package com.rabidgremlin.concord.functions;
+
+import static java.time.LocalDateTime.now;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import com.rabidgremlin.concord.api.DeadLockedPhrase;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTime;
+
+public class GetDeadLockedPhrasesFunctionTest
+{
+
+  private final Timestamp dummyTimeStamp = Timestamp.valueOf(LocalDateTime.of(1, 1, 1, 1, 1));
+
+  @Test
+  public void shouldGetDeadLockedPhraseWith2LabelsVotedOn()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 4, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 3, dummyTimeStamp));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(1));
+
+    assertThat(deadLockedPhrases.get(0).getPhrase().getText(), is("Woah, livin' on a prayer"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().size(), is(2));
+  }
+
+  @Test
+  public void shouldIgnorePhrasesWhichHaveSufficientRemainingVotes()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 3, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(0));
+  }
+
+  @Test
+  public void shouldConsiderAllLabelsVotedOn()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 3, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(1));
+
+    assertThat(deadLockedPhrases.get(0).getPhrase().getText(), is("Woah, livin' on a prayer"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().size(), is(4));
+  }
+
+  @Test
+  public void shouldIncludePhrasesWhoseHighestLabelIsLessThanConsensus()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(1));
+
+    assertThat(deadLockedPhrases.get(0).getPhrase().getText(), is("Woah, livin' on a prayer"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().size(), is(4));
+  }
+
+  @Test
+  public void shouldSortByPhrasesWhichWereMostRecentlyVotedOn()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+    Timestamp now = Timestamp.valueOf(now());
+    Timestamp oneDayAgo = Timestamp.valueOf(now().minusDays(1));
+    Timestamp twoDaysAgo = Timestamp.valueOf(now().minusDays(2));
+    Timestamp oneWeekAgo = Timestamp.valueOf(now().minusWeeks(1));
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("127", "TaylorSwift", "Last Christmas I gave your my heart", 4, now));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("127", "JustinBieber", "Last Christmas I gave your my heart", 3, now));
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Half way there", 4, oneWeekAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Half way there", 3, oneWeekAgo));
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("314", "TaylorSwift", "Woah, livin' on a prayer", 4, oneDayAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("314", "JustinBieber", "Woah, livin' on a prayer", 3, oneDayAgo));
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("456", "TaylorSwift", "I remember, I remember when I lost my mind", 4, twoDaysAgo));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(3));
+
+    assertThat(deadLockedPhrases.get(0).getPhrase().getText(), is("Last Christmas I gave your my heart"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().size(), is(2));
+
+    assertThat(deadLockedPhrases.get(1).getPhrase().getText(), is("Woah, livin' on a prayer"));
+    assertThat(deadLockedPhrases.get(1).getLabelsInVoteOrder().size(), is(2));
+
+    assertThat(deadLockedPhrases.get(2).getPhrase().getText(), is("Half way there"));
+    assertThat(deadLockedPhrases.get(2).getLabelsInVoteOrder().size(), is(2));
+  }
+
+  @Test
+  public void shouldSortPhraseLabelsByHighestVoteCount()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Bob", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Alice", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Eve", "Woah, livin' on a prayer", 3, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 5, dummyTimeStamp));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(12);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(1));
+
+    assertThat(deadLockedPhrases.get(0).getPhrase().getText(), is("Woah, livin' on a prayer"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().size(), is(5));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(0).getLabel(), is("Beyonce"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(0).getCount(), is(5));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(1).getLabel(), is("Eve"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(1).getCount(), is(3));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(2).getLabel(), is("BonJovi"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(2).getCount(), is(2));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(3).getLabel(), is("Bob"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(3).getCount(), is(1));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(4).getLabel(), is("Alice"));
+    assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(4).getCount(), is(1));
+  }
+
+}

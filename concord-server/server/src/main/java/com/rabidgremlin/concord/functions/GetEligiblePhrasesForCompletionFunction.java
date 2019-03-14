@@ -10,21 +10,19 @@ import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
 /**
- * function retrieves phrases that have label votes with a label vote count greater than the consensus level, and a
- * label vote count that is greater than the second highest label vote count for that phrase, by at least the consensus
- * level.
+ * Function determines phrases which are eligible for completion. I.e. they have a label with vote count greater than
+ * the consensus AND a difference between the top two label vote counts less than consensus.
  */
-
-public final class GetEligiblePhrasesForCompletion
+public final class GetEligiblePhrasesForCompletionFunction
 {
 
   private final List<GroupedPhraseVote> phraseVotes;
 
   private final int consensusLevel;
 
-  private final Logger log = LoggerFactory.getLogger(GetEligiblePhrasesForCompletion.class);
+  private final Logger log = LoggerFactory.getLogger(GetEligiblePhrasesForCompletionFunction.class);
 
-  public GetEligiblePhrasesForCompletion(List<GroupedPhraseVote> phraseVotes, int consensusLevel)
+  public GetEligiblePhrasesForCompletionFunction(List<GroupedPhraseVote> phraseVotes, int consensusLevel)
   {
     this.phraseVotes = phraseVotes;
     this.consensusLevel = consensusLevel;
@@ -60,7 +58,7 @@ public final class GetEligiblePhrasesForCompletion
         log.debug("Second highest: Label {} voted {} times for phrase[{}]", secondHighestVote.getLabel(),
             secondHighestVote.getVoteCount(),
             secondHighestVote.getText());
-        if (highestVote.getVoteCount() - secondHighestVote.getVoteCount() >= consensusLevel)
+        if (voteDifferenceIsEligibleForCompletion(highestVote.getVoteCount(), secondHighestVote.getVoteCount()))
         {
           addVoteToCompletedList(completedPhrases, highestVote);
         }
@@ -68,6 +66,11 @@ public final class GetEligiblePhrasesForCompletion
     }
 
     return completedPhrases;
+  }
+
+  private boolean voteDifferenceIsEligibleForCompletion(int highestLabelVoteCount, int secondHighestLabelVoteCount)
+  {
+    return highestLabelVoteCount - secondHighestLabelVoteCount >= consensusLevel;
   }
 
   private void addVoteToCompletedList(List<Phrase> list, GroupedPhraseVote vote)

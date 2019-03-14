@@ -1,11 +1,7 @@
 package com.rabidgremlin.concord.resources;
 
-import static java.util.Comparator.comparingInt;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -20,8 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.DeadLockedPhrase;
-import com.rabidgremlin.concord.api.LabelCount;
-import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.SystemStats;
 import com.rabidgremlin.concord.api.UserStats;
 import com.rabidgremlin.concord.api.UserVoteCount;
@@ -29,7 +23,8 @@ import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.SystemStatsDao;
 import com.rabidgremlin.concord.dao.UserStatsDao;
 import com.rabidgremlin.concord.dao.VotesDao;
-import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTime;
+import com.rabidgremlin.concord.functions.GetDeadLockedPhrasesFunction;
 
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.ApiParam;
@@ -49,8 +44,6 @@ public class StatsResource
   private final int consensusLevel;
 
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
-
-  private static final int DEADLOCKED_PHRASE_LIMIT = 50;
 
   public StatsResource(UserStatsDao userStatsDao, SystemStatsDao systemStatsDao, VotesDao votesDao, int consensusLevel)
   {
@@ -118,29 +111,9 @@ public class StatsResource
     int totalLabels = systemStatsDao.getCountOfLabels();
     int userCount = systemStatsDao.getCountOfUsers();
 
-    List<GroupedPhraseVote> uncompletedPhraseVotesWithConsensus = votesDao.getPhraseOverMarginWithTop2Votes(consensusLevel);
-    List<DeadLockedPhrase> deadLockedPhrases = uncompletedPhraseVotesWithConsensus.stream()
-        .collect(
-            groupingBy(GroupedPhraseVote::getText,
-                mapping(phrase -> new LabelCount(phrase.getLabel(), phrase.getVoteCount()), toList())))
-        .entrySet()
-        .stream()
-        // only care about phrases that have votes for multiple labels
-        .filter((e) -> e.getValue().size() >= 2)
-        .map((e) -> {
-          Phrase phrase = new Phrase(e.getKey());
-          // sort by labels with most votes
-          List<LabelCount> labels = e.getValue().stream().sorted(comparingInt(LabelCount::getCount).reversed()).collect(toList());
-          LabelCount topLabel = labels.get(0);
-          LabelCount secondTopLabel = labels.get(1);
-          List<LabelCount> otherLabels = labels.size() >= 3 ? labels.subList(2, labels.size()) : Collections.emptyList();
-          return new DeadLockedPhrase(phrase, topLabel, secondTopLabel, otherLabels);
-        })
-        .filter(phrase -> phrase.isDeadLocked(userCount, consensusLevel))
-        .limit(DEADLOCKED_PHRASE_LIMIT)
-        // sort by phrases with most votes
-        .sorted(comparingInt(DeadLockedPhrase::voteSum).reversed())
-        .collect(toList());
+    List<GroupedPhraseVoteWithMostRecentVoteTime> votedLabelsForUncompletedPhrases = votesDao.getLabelsForUncompletedPhrasesInVoteCountOrder();
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, consensusLevel);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
 
     SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,
         totalLabels, userCount, deadLockedPhrases);

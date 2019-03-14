@@ -1,37 +1,29 @@
 package com.rabidgremlin.concord.api;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
+import com.google.common.collect.ImmutableList;
+
 @Data
 public class DeadLockedPhrase
 {
 
   private final Phrase phrase;
 
-  private final LabelCount topLabel;
+  private final List<LabelCount> labelsInVoteOrder;
 
-  private final LabelCount secondTopLabel;
+  private final LocalDateTime mostRecentVoteTime;
 
-  private final List<LabelCount> otherLabels;
-
-  public int voteSum()
+  public DeadLockedPhrase(Phrase phrase, List<LabelCount> labelsInVoteOrder, LocalDateTime mostRecentVoteTime)
   {
-    return topLabel.getCount() + secondTopLabel.getCount() + otherLabels.stream().mapToInt(LabelCount::getCount).sum();
-  }
-
-  public int voteDifference()
-  {
-    return topLabel.getCount() - secondTopLabel.getCount();
-  }
-
-  public boolean isDeadLocked(int userCount, int consensusLevel)
-  {
-    // TODO, better to show more phrases? Could do something like active users this week
-    return voteDifference() > userCount - voteSum() - consensusLevel + 1;
+    this.phrase = phrase;
+    labelsInVoteOrder.sort(Comparator.comparingInt(LabelCount::getCount).reversed());
+    this.labelsInVoteOrder = ImmutableList.copyOf(labelsInVoteOrder);
+    this.mostRecentVoteTime = mostRecentVoteTime;
   }
 
 }

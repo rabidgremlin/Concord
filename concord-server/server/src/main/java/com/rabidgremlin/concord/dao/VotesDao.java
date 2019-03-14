@@ -9,6 +9,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
+import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTime;
 
 public interface VotesDao
 {
@@ -44,13 +45,39 @@ public interface VotesDao
       "    JOIN votes v ON p.phraseId = v.phraseId" +
       "    WHERE" +
       "        p.completed = FALSE" +
-      "    GROUP BY p.phraseId , p.text , v.label , v.label" +
+      "    GROUP BY p.phraseId , p.text , v.label" +
       "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
       "    ) r" +
       " WHERE" +
       "    r.voteRank < 3" +
       "    and r.maxVote >= :margin")
   @RegisterBeanMapper(GroupedPhraseVote.class)
-  List<GroupedPhraseVote> getPhraseOverMarginWithTop2Votes(@Bind("margin") int margin);
+  List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrasesOverMarginInVoteCountOrder(@Bind("margin") int margin);
+
+  @SqlQuery("SELECT" +
+      "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank, r.maxTime" +
+      "    FROM" +
+      "    (SELECT" +
+      "        t.phraseId," +
+      "            t.text," +
+      "            t.label," +
+      "            t.voteCount," +
+      "            t.latestVoteTime," +
+      "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
+      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount,@maxVote,t.voteCount), t.voteCount) AS maxVote," +
+      "            @maxTime:=IF(@current_phraseId = t.phraseId, IF(@maxTime >= t.latestVoteTime,@maxTime,t.latestVoteTime), t.latestVoteTime) AS maxTime," +
+      "            @current_phraseId:=t.phraseId" +
+      "    FROM" +
+      "        (SELECT" +
+      "        p.phraseId, p.text, v.label, COUNT(v.userId) AS voteCount, max(v.lastModifiedTimestamp) as latestVoteTime" +
+      "    FROM" +
+      "        phrases p" +
+      "    JOIN votes v ON p.phraseId = v.phraseId" +
+      "    WHERE" +
+      "        p.completed = FALSE" +
+      "    GROUP BY p.phraseId , p.text , v.label) AS t" +
+      "    ) r")
+  @RegisterBeanMapper(GroupedPhraseVoteWithMostRecentVoteTime.class)
+  List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesInVoteCountOrder();
 
 }
