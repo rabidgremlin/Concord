@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getSystemStats} from '../api';
+import {getSystemStats, resolveForPhraseLabel} from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -169,7 +169,7 @@ export class SystemStatsTable extends Component {
   resolvePhrase(phraseId, label) {
     console.log('resolving');
     console.log(phraseId, label);
-    // this.props.dispatch(resolveForPhraseLabel(phraseId, label));
+    this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
 
 }

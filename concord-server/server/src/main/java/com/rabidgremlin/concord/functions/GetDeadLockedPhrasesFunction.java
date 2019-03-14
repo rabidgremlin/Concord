@@ -19,31 +19,30 @@ import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTim
 
 /**
  * Function determines phrases which are deadlocked. i.e. they can never be considered complete based on the remaining
- * votes and condition in
- * {@link GetEligiblePhrasesForCompletionFunction#voteDifferenceIsEligibleForCompletion(int, int)}
+ * votes and condition in {@link GetEligiblePhrasesForCompletionFunction}
  */
 public final class GetDeadLockedPhrasesFunction
 {
 
   private final List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes;
 
-  private final Set<String> phraseIdsVotedOnByGodUser;
+  private final Set<String> phrasesVotedOnByResolver;
 
   private final int consensusLevel;
 
   private final Logger log = LoggerFactory.getLogger(GetDeadLockedPhrasesFunction.class);
 
-  public GetDeadLockedPhrasesFunction(List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes, Set<String> phraseIdsVotedOnByGodUser, int consensusLevel)
+  public GetDeadLockedPhrasesFunction(List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes, Set<String> phrasesVotedOnByResolver, int consensusLevel)
   {
     this.phraseVotes = phraseVotes;
-    this.phraseIdsVotedOnByGodUser = phraseIdsVotedOnByGodUser;
+    this.phrasesVotedOnByResolver = phrasesVotedOnByResolver;
     this.consensusLevel = consensusLevel;
   }
 
   public List<DeadLockedPhrase> execute(int userCount)
   {
     Map<String, List<LabelCount>> groupedPhraseVotes = phraseVotes.stream()
-        .filter(phrase -> !phraseIdsVotedOnByGodUser.contains(phrase.getPhraseId()))
+        .filter(phrase -> !phrasesVotedOnByResolver.contains(phrase.getPhraseId()))
         .collect(Collectors.groupingBy(GroupedPhraseVote::getText,
             Collectors.mapping(phraseVote -> new LabelCount(phraseVote.getLabel(), phraseVote.getVoteCount()), Collectors.toList())));
 

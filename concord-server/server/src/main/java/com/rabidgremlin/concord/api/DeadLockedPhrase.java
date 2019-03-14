@@ -1,12 +1,13 @@
 package com.rabidgremlin.concord.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableList;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+
+import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableList;
 
 @Data
 public class DeadLockedPhrase

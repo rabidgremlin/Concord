@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
+import com.rabidgremlin.concord.api.PhraseLabel;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
@@ -64,7 +65,7 @@ public class PhrasesResource
 
   private static final String LABEL_TRASH = "TRASH";
 
-  private static final String PHRASE_RESOLVER_USER_ID = "RESOLVER";
+  private static final String RESOLVER_USER_ID = "RESOLVER";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
     boolean completeOnTrash)
@@ -147,11 +148,12 @@ public class PhrasesResource
     List<GroupedPhraseVote> phraseVotes = votesDao.getTop2LabelsForUncompletedPhrasesOverMarginInVoteCountOrder(consensusLevel);
     log.info("Found {} votes over margin.", phraseVotes.size());
 
-    GetEligiblePhrasesForCompletionFunction getPhrases = new GetEligiblePhrasesForCompletionFunction(phraseVotes, consensusLevel);
+    Map<String, String> phrasesVotedOnByResolver = votesDao.getVotesMadeByUser(RESOLVER_USER_ID).stream()
+        .collect(Collectors.toMap(PhraseLabel::getPhraseId, PhraseLabel::getLabel));
+    GetEligiblePhrasesForCompletionFunction getPhrases = new GetEligiblePhrasesForCompletionFunction(phraseVotes, phrasesVotedOnByResolver, consensusLevel);
 
     log.info("Looking for completed phrases...");
     List<Phrase> completedPhrases = getPhrases.execute();
-    log.info("Found {} completed phrases.", completedPhrases.size());
 
     log.info("Marking phrases complete...");
     phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
@@ -188,15 +190,20 @@ public class PhrasesResource
     String labelText = label.getLabel();
     log.info("{} casting vote for {} as {}", caller, phraseId, labelText);
 
-    votesDao.upsert(phraseId, labelText, caller.getToken());
+    castVote(phraseId, labelText, caller.getToken());
+
+    return Response.created(uriInfo.getAbsolutePath()).build();
+  }
+
+  private void castVote(String phraseId, String label, String userId)
+  {
+    votesDao.upsert(phraseId, label, userId);
 
     // are we marking trashed phrases as completed?
-    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, labelText))
+    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label))
     {
       phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
     }
-
-    return Response.created(uriInfo.getAbsolutePath()).build();
   }
 
   @POST
@@ -205,9 +212,9 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} casting vote as {} for {} as {}", caller, PHRASE_RESOLVER_USER_ID, phraseId, labelText);
+    log.info("{} casting vote as {} for {} as {}", caller, RESOLVER_USER_ID, phraseId, labelText);
 
-    votesDao.upsert(phraseId, labelText, PHRASE_RESOLVER_USER_ID);
+    castVote(phraseId, labelText, RESOLVER_USER_ID);
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.rabidgremlin.concord.api.DeadLockedPhrase;
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTime;
 
