@@ -1,89 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-	<changeSet id="1" author="rabidgremlin">
-		<createTable tableName="labels">
-			<column name="label" type="varchar(64)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="shortDescription" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
-			<column name="longDescription" type="varchar(4096)">
-				<constraints nullable="true" />
-			</column>
-		</createTable>
-		<createTable tableName="phrases">
-			<column name="phraseId" type="varchar(32)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="text" type="varchar(4096)">
-				<constraints nullable="false" />
-			</column>
-			<column name="completed" type="boolean">
-				<constraints nullable="false" />
-			</column>
-			<column name="label" type="varchar(64)">
-				<constraints nullable="true" />
-			</column>
-		</createTable>
-	</changeSet>
-	<changeSet id="2" author="rabidgremlin">
-		<createTable tableName="votes">
-			<column name="phraseId" type="varchar(32)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="label" type="varchar(64)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="userId" type="varchar(64)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-		</createTable>
-	</changeSet>
-	<changeSet id="3" author="rabidgremlin">
-		<addForeignKeyConstraint baseColumnNames="phraseId"
-			baseTableName="votes" constraintName="fk_vote_phrase" onDelete="RESTRICT"
-			onUpdate="RESTRICT" referencedColumnNames="phraseId"
-			referencedTableName="phrases" />
-	</changeSet>
-	<changeSet id="4" author="wilmol">
+    <changeSet id="1" author="rabidgremlin">
+        <createTable tableName="labels">
+            <column name="label" type="varchar(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="shortDescription" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longDescription" type="varchar(4096)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="phrases">
+            <column name="phraseId" type="varchar(32)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="varchar(4096)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="varchar(64)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="rabidgremlin">
+        <createTable tableName="votes">
+            <column name="phraseId" type="varchar(32)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="label" type="varchar(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="userId" type="varchar(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="rabidgremlin">
+        <addForeignKeyConstraint baseColumnNames="phraseId"
+                                 baseTableName="votes" constraintName="fk_vote_phrase" onDelete="RESTRICT"
+                                 onUpdate="RESTRICT" referencedColumnNames="phraseId"
+                                 referencedTableName="phrases"/>
+    </changeSet>
+    <changeSet id="4" author="wilmol">
         <comment>Add timestamps to votes and phrases tables</comment>
-		<addColumn tableName="phrases">
-			<column name="completedTimestamp" type="datetime">
-				<constraints nullable="true" />
-			</column>
-		</addColumn>
-		<addColumn tableName="phrases">
-			<column name="lastModifiedTimestamp" type="datetime">
-				<constraints nullable="true" />
-			</column>
-		</addColumn>
-		<addColumn tableName="votes">
-			<column name="lastModifiedTimestamp" type="datetime">
-				<constraints nullable="true" />
-			</column>
-		</addColumn>
-		<sql dbms="mysql">
-			update phrases set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
-		</sql>
-		<sql dbms="mysql">
-			update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is NULL
-		</sql>
-		<sql dbms="mysql">
-			update votes set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
-		</sql>
-		<addNotNullConstraint tableName="phrases" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
-		<addNotNullConstraint tableName="votes" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
-	</changeSet>
-	<changeSet id="5" author="wilmol">
+        <addColumn tableName="phrases">
+            <column name="completedTimestamp" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="phrases">
+            <column name="lastModifiedTimestamp" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="votes">
+            <column name="lastModifiedTimestamp" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <sql dbms="mysql">
+            update phrases set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
+        </sql>
+        <sql dbms="mysql">
+            update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is
+            NULL
+        </sql>
+        <sql dbms="mysql">
+            update votes set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
+        </sql>
+        <addNotNullConstraint tableName="phrases" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
+        <addNotNullConstraint tableName="votes" columnName="lastModifiedTimestamp" columnDataType="dateTime"/>
+    </changeSet>
+    <changeSet id="5" author="wilmol">
         <comment>Mark trashed phrases as completed, required after the bugfix for completeOnTrash logic</comment>
-		<sql dbms="mysql">
-			update phrases set completed = true, completedTimestamp = CURRENT_TIMESTAMP where completed = false AND label = 'TRASH'
-		</sql>
-	</changeSet>
+        <sql dbms="mysql">
+            update phrases set completed = true, completedTimestamp = CURRENT_TIMESTAMP where completed = false AND
+            label = 'TRASH'
+        </sql>
+    </changeSet>
 </databaseChangeLog>

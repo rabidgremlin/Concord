@@ -15,9 +15,9 @@ public class GroupedPhraseVoteWithMostRecentVoteTime
     extends GroupedPhraseVote
 {
 
-  public GroupedPhraseVoteWithMostRecentVoteTime(String phraseId, String label, String text, int voteCount, Timestamp maxTime)
+  public GroupedPhraseVoteWithMostRecentVoteTime(String label, String text, int voteCount, Timestamp maxTime)
   {
-    super(phraseId, label, text, voteCount);
+    super(label, text, voteCount);
     this.maxTime = maxTime;
   }
 

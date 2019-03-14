@@ -102,7 +102,7 @@ public class ConcordServerApplication
 
   /**
    * Add recommended security headers to content.
-   * 
+   *
    * @param environment Environment to configure.
    */
   private void configureAssetsSecurityHeaders(Environment environment)
@@ -122,10 +122,10 @@ public class ConcordServerApplication
         .setRequireSubject() // the JWT must have a subject claim
         .setVerificationKey(new HmacKey(configuration.getJwtTokenSecret())) // verify the signature with the public key
         .setJwsAlgorithmConstraints(new AlgorithmConstraints(ConstraintType.WHITELIST, org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256)) // we
-                                                                                                                                         // only
-                                                                                                                                         // expect
-                                                                                                                                         // HMAC_SHA256
-                                                                                                                                         // alg
+        // only
+        // expect
+        // HMAC_SHA256
+        // alg
         .setRelaxVerificationKeyValidation() // relaxes key length requirement
         .build(); // create the JwtConsumer instance
 

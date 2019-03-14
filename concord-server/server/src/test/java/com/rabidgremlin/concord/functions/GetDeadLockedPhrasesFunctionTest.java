@@ -14,14 +14,15 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.rabidgremlin.concord.api.DeadLockedPhrase;
+import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTime;
 
 public class GetDeadLockedPhrasesFunctionTest
 {
 
-  private final Timestamp dummyTimeStamp = Timestamp.valueOf(LocalDateTime.of(1, 1, 1, 1, 1));
+  private static final Timestamp TIME_STAMP = Timestamp.valueOf(LocalDateTime.of(1, 1, 1, 1, 1));
 
-  private final Set<String> phraseIdsVotedOnByGodUser = ImmutableSet.of();
+  private static final Set<String> EMPTY_SET = ImmutableSet.of();
 
   @Test
   public void shouldGetDeadLockedPhraseWith2LabelsVotedOn()
@@ -29,11 +30,11 @@ public class GetDeadLockedPhrasesFunctionTest
     // Given
     List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 4, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 3, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 4, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 3, TIME_STAMP));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
 
     // Then
@@ -49,11 +50,11 @@ public class GetDeadLockedPhrasesFunctionTest
     // Given
     List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 3, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 3, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 2, TIME_STAMP));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
 
     // Then
@@ -66,13 +67,13 @@ public class GetDeadLockedPhrasesFunctionTest
     // Given
     List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 3, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Woah, livin' on a prayer", 1, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 3, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("JustinBieber", "Woah, livin' on a prayer", 1, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "Woah, livin' on a prayer", 1, TIME_STAMP));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
 
     // Then
@@ -88,13 +89,13 @@ public class GetDeadLockedPhrasesFunctionTest
     // Given
     List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 2, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 2, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Woah, livin' on a prayer", 2, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Woah, livin' on a prayer", 1, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("JustinBieber", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "Woah, livin' on a prayer", 1, TIME_STAMP));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
 
     // Then
@@ -114,19 +115,19 @@ public class GetDeadLockedPhrasesFunctionTest
     Timestamp twoDaysAgo = Timestamp.valueOf(now().minusDays(2));
     Timestamp oneWeekAgo = Timestamp.valueOf(now().minusWeeks(1));
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("127", "TaylorSwift", "Last Christmas I gave your my heart", 4, now));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("127", "JustinBieber", "Last Christmas I gave your my heart", 3, now));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "Last Christmas I gave your my heart", 4, now));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("JustinBieber", "Last Christmas I gave your my heart", 3, now));
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "TaylorSwift", "Half way there", 4, oneWeekAgo));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "JustinBieber", "Half way there", 3, oneWeekAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "Half way there", 4, oneWeekAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("JustinBieber", "Half way there", 3, oneWeekAgo));
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("314", "TaylorSwift", "Woah, livin' on a prayer", 4, oneDayAgo));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("314", "JustinBieber", "Woah, livin' on a prayer", 3, oneDayAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "Woah, livin' on a prayer", 4, oneDayAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("JustinBieber", "Woah, livin' on a prayer", 3, oneDayAgo));
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("456", "TaylorSwift", "I remember, I remember when I lost my mind", 4, twoDaysAgo));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("TaylorSwift", "I remember, I remember when I lost my mind", 4, twoDaysAgo));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
 
     // Then
@@ -148,14 +149,14 @@ public class GetDeadLockedPhrasesFunctionTest
     // Given
     List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
 
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "BonJovi", "Woah, livin' on a prayer", 2, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Bob", "Woah, livin' on a prayer", 1, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Alice", "Woah, livin' on a prayer", 1, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Eve", "Woah, livin' on a prayer", 3, dummyTimeStamp));
-    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("123", "Beyonce", "Woah, livin' on a prayer", 5, dummyTimeStamp));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Bob", "Woah, livin' on a prayer", 1, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Alice", "Woah, livin' on a prayer", 1, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Eve", "Woah, livin' on a prayer", 3, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 5, TIME_STAMP));
 
     // When
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, phraseIdsVotedOnByGodUser, 3);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(12);
 
     // Then
@@ -173,6 +174,41 @@ public class GetDeadLockedPhrasesFunctionTest
     assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(3).getCount(), is(1));
     assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(4).getLabel(), is("Alice"));
     assertThat(deadLockedPhrases.get(0).getLabelsInVoteOrder().get(4).getCount(), is(1));
+  }
+
+  @Test
+  public void shouldIgnoreResolvedPhrases()
+  {
+    // Given
+    Set<String> resolvedPhrases = ImmutableSet.of(Phrase.computePhraseId("Woah, livin' on a prayer"));
+
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 4, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 3, TIME_STAMP));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, resolvedPhrases, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(0));
+  }
+
+  @Test
+  public void shouldIgnorePhrasesWhichHaveOnlyOneLabelVotedOn()
+  {
+    // Given
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 7, TIME_STAMP));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, 3);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(7);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(0));
   }
 
 }
