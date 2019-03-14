@@ -1,6 +1,7 @@
 package com.rabidgremlin.concord.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -19,6 +20,9 @@ public interface VotesDao
 
   @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModifiedTimestamp) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
+
+  @SqlQuery("SELECT phraseId FROM votes WHERE userId = :user")
+  Set<String> getPhraseIdsForVotesMadeByUser(@Bind("user") String user);
 
   /**
    * This query returns incomplete phrases with the top 2 votes for each. Note that there will be only one row for those

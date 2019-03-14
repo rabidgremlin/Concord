@@ -3,6 +3,7 @@ package com.rabidgremlin.concord.resources;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
@@ -11,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.rabidgremlin.concord.api.Phrase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,8 @@ public class StatsResource
   private final VotesDao votesDao;
 
   private final int consensusLevel;
+
+  private static final String GOD_USER = "RESOLVER";
 
   private final Logger log = LoggerFactory.getLogger(StatsResource.class);
 
@@ -112,7 +116,8 @@ public class StatsResource
     int userCount = systemStatsDao.getCountOfUsers();
 
     List<GroupedPhraseVoteWithMostRecentVoteTime> votedLabelsForUncompletedPhrases = votesDao.getLabelsForUncompletedPhrasesInVoteCountOrder();
-    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, consensusLevel);
+    Set<String> phraseIdsVotedOnByGodUser = votesDao.getPhraseIdsForVotesMadeByUser(GOD_USER);
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, phraseIdsVotedOnByGodUser, consensusLevel);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
 
     SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -26,19 +27,23 @@ public final class GetDeadLockedPhrasesFunction
 
   private final List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes;
 
+  private final Set<String> phraseIdsVotedOnByGodUser;
+
   private final int consensusLevel;
 
   private final Logger log = LoggerFactory.getLogger(GetDeadLockedPhrasesFunction.class);
 
-  public GetDeadLockedPhrasesFunction(List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes, int consensusLevel)
+  public GetDeadLockedPhrasesFunction(List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes, Set<String> phraseIdsVotedOnByGodUser, int consensusLevel)
   {
     this.phraseVotes = phraseVotes;
+    this.phraseIdsVotedOnByGodUser = phraseIdsVotedOnByGodUser;
     this.consensusLevel = consensusLevel;
   }
 
   public List<DeadLockedPhrase> execute(int userCount)
   {
     Map<String, List<LabelCount>> groupedPhraseVotes = phraseVotes.stream()
+        .filter(phrase -> !phraseIdsVotedOnByGodUser.contains(phrase.getPhraseId()))
         .collect(Collectors.groupingBy(GroupedPhraseVote::getText,
             Collectors.mapping(phraseVote -> new LabelCount(phraseVote.getLabel(), phraseVote.getVoteCount()), Collectors.toList())));
 

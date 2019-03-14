@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getSystemStats, resolveForPhraseLabel} from '../api';
+import {getSystemStats} from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -11,16 +11,9 @@ import {
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 import {connect} from 'react-redux';
-import {
-  SimpleListItem,
-  CollapsibleList,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemPrimaryText,
-  ListItemSecondaryText
-} from '@rmwc/list';
+import {CollapsibleList, SimpleListItem} from '@rmwc/list';
 import '@rmwc/list/collapsible-list.css';
+import {CardPrimaryAction} from 'rmwc/Card';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -131,12 +124,11 @@ export class SystemStatsTable extends Component {
             <DataTableBody>
               {[...Array(10)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '40%', maxWidth: '40%' }}>
+                  <DataTableCell style={{width: '50%', maxWidth: '50%'}}>
                     {deadLockedPhrases[i].phrase.text}
                   </DataTableCell>
                   <DataTableCell style={{ width: '40%', maxWidth: '40%' }}>
                     <CollapsibleList
-                      twoLine
                       handle={
                         <SimpleListItem
                           text="Resolve"
@@ -147,16 +139,20 @@ export class SystemStatsTable extends Component {
                     >
                       {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
                         <SimpleListItem>
-                          {deadLockedPhrases[i].labelsInVoteOrder[j].label} ({deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
+                          <CardPrimaryAction onClick={() =>
+                            this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, deadLockedPhrases[i].labelsInVoteOrder[j].label)
+                          }>
+                            {deadLockedPhrases[i].labelsInVoteOrder[j].label} ({deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
+                          </CardPrimaryAction>
                         </SimpleListItem>
                       ))}
                     </CollapsibleList>
                   </DataTableCell>
-                  <DataTableCell style={{ width: '10%', maxWidth: '10%' }}>
+                  <DataTableCell style={{width: '5%', maxWidth: '5%'}}>
                     <SimpleListItem
                     graphic="replay"
                   /></DataTableCell>
-                  <DataTableCell style={{ width: '10%', maxWidth: '10%' }}>
+                  <DataTableCell style={{width: '5%', maxWidth: '5%'}}>
                     <SimpleListItem
                     graphic="delete"
                   />
@@ -173,7 +169,7 @@ export class SystemStatsTable extends Component {
   resolvePhrase(phraseId, label) {
     console.log('resolving');
     console.log(phraseId, label);
-    this.props.dispatch(resolveForPhraseLabel(phraseId, label));
+    // this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
 
 }
