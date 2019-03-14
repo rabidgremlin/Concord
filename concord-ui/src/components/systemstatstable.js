@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {getSystemStats, resolveForPhraseLabel} from '../api';
+import React, { Component } from 'react';
+import { getSystemStats, resolveForPhraseLabel } from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -10,10 +10,11 @@ import {
   DataTableRow
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
-import {connect} from 'react-redux';
-import {CollapsibleList, SimpleListItem} from '@rmwc/list';
+import { connect } from 'react-redux';
+import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import '@rmwc/list/collapsible-list.css';
-import {CardPrimaryAction} from 'rmwc/Card';
+import { CardPrimaryAction } from 'rmwc/Card';
+import { Typography } from 'rmwc/Typography';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -118,44 +119,39 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
-        <h2>{deadLockedPhrases.length} Deadlocked Phrases [DO NOT USE TRUMP VOTE]</h2>
-        <DataTable style={{ minWidth: '100%', maxWidth: '100%' }}>
+        <h2>{deadLockedPhrases.length} Deadlocked Phrases</h2>
+        <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableBody>
               {[...Array(10)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{width: '50%', maxWidth: '50%'}}>
-                    {deadLockedPhrases[i].phrase.text}
-                  </DataTableCell>
-                  <DataTableCell style={{ width: '40%', maxWidth: '40%' }}>
+                  <DataTableCell style={{ width: '50%' }}>{deadLockedPhrases[i].phrase.text}</DataTableCell>
+                  <DataTableCell style={{ width: '40%' }}>
                     <CollapsibleList
-                      handle={
-                        <SimpleListItem
-                          text="Resolve"
-                          graphic="whatshot"
-                          metaIcon="chevron_right"
-                        />
-                      }
+                      handle={<SimpleListItem text='Resolve' graphic='whatshot' metaIcon='chevron_right' />}
                     >
                       {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
                         <SimpleListItem>
-                          <CardPrimaryAction onClick={() =>
-                            this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, deadLockedPhrases[i].labelsInVoteOrder[j].label)
-                          }>
-                            {deadLockedPhrases[i].labelsInVoteOrder[j].label} ({deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
+                          <CardPrimaryAction
+                            onClick={() =>
+                              this.resolvePhrase(
+                                deadLockedPhrases[i].phrase.phraseId,
+                                deadLockedPhrases[i].labelsInVoteOrder[j].label
+                              )
+                            }
+                          >
+                            {deadLockedPhrases[i].labelsInVoteOrder[j].label} (
+                            {deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
                           </CardPrimaryAction>
                         </SimpleListItem>
                       ))}
                     </CollapsibleList>
                   </DataTableCell>
-                  <DataTableCell style={{width: '5%', maxWidth: '5%'}}>
-                    <SimpleListItem
-                    graphic="replay"
-                  /></DataTableCell>
-                  <DataTableCell style={{width: '5%', maxWidth: '5%'}}>
-                    <SimpleListItem
-                    graphic="delete"
-                  />
+                  <DataTableCell style={{ width: '5%' }}>
+                    <SimpleListItem graphic='replay' />
+                  </DataTableCell>
+                  <DataTableCell style={{ width: '5%' }}>
+                    <SimpleListItem graphic='delete' />
                   </DataTableCell>
                 </DataTableRow>
               ))}
@@ -169,9 +165,13 @@ export class SystemStatsTable extends Component {
   resolvePhrase(phraseId, label) {
     console.log('resolving');
     console.log(phraseId, label);
+    // remove the phrase from the deadlocked list here (to save an API call)
+    // if the user wants up to date information (e.g. multiple users are resolving phrases) they can press the refresh button
+    let statsData = this.state.statsData;
+    statsData.deadLockedPhrases = statsData.deadLockedPhrases.filter((p) => p.phrase.phraseId !== phraseId);
+    this.setState({ statsData: statsData });
     this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
-
 }
 
 export default connect((state) => ({

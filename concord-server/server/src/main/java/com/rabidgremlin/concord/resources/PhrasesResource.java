@@ -146,21 +146,21 @@ public class PhrasesResource
   {
     log.info("{} marking phrases and downloading csv of completedPhrases", caller);
 
-    log.info("Searching for votes over margin {}...", consensusLevel);
+    log.debug("Searching for votes over margin {}...", consensusLevel);
     List<GroupedPhraseVote> phraseVotes = votesDao.getTop2LabelsForUncompletedPhrasesOverMarginInVoteCountOrder(consensusLevel);
-    log.info("Found {} votes over margin.", phraseVotes.size());
+    log.debug("Found {} votes over margin.", phraseVotes.size());
 
     Map<String, String> phrasesVotedOnByResolver = votesDao.getVotesMadeByUser(RESOLVER_USER_ID).stream()
         .collect(Collectors.toMap(PhraseLabel::getPhraseId, PhraseLabel::getLabel));
     GetEligiblePhrasesForCompletionFunction getPhrases = new GetEligiblePhrasesForCompletionFunction(phraseVotes, phrasesVotedOnByResolver, consensusLevel);
 
-    log.info("Looking for completed phrases...");
+    log.debug("Looking for completed phrases...");
     List<Phrase> completedPhrases = getPhrases.execute();
 
-    log.info("Marking phrases complete...");
+    log.debug("Marking phrases complete...");
     phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
         completedPhrases.stream().map(Phrase::getLabel).collect(Collectors.toList()));
-    log.info("Marking phrases complete done.");
+    log.debug("Marking phrases complete done.");
 
     return Response.ok().entity(completedPhrases).build();
   }
@@ -190,7 +190,7 @@ public class PhrasesResource
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} casting vote for {} as {}", caller, phraseId, labelText);
+    log.info("{} casting vote for phrase[{}] as {}", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, caller.getToken());
 
@@ -214,7 +214,7 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} casting vote as {} for {} as {}", caller, RESOLVER_USER_ID, phraseId, labelText);
+    log.info("{} resolving phrase[{}] as {}", caller, RESOLVER_USER_ID, phraseId, labelText);
 
     castVote(phraseId, labelText, RESOLVER_USER_ID);
 

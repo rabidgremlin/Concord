@@ -86,7 +86,6 @@ export function resolveForPhraseLabel(phraseId, label) {
       .send({ label: label })
       .set('Accept', 'application/json')
       .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
-      .then(() => dispatch(getSystemStats())) // refresh the deadlocked phrases
       .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
   };
 }
