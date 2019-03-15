@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getSystemStats, resolveForPhraseLabel } from '../api';
+import { deleteVotesForPhrase, getSystemStats, resolveForPhraseLabel } from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -63,13 +63,12 @@ export class SystemStatsTable extends Component {
       );
     }
     this.props.enableRefresh();
-    console.log(this.state);
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
 
     this.element = document.createElement('canvas');
     this.context = this.element.getContext('2d');
-    this.context.font = '8pt Arial';
+    this.context.font = '10pt Arial';
 
     return (
       <div>
@@ -163,7 +162,7 @@ export class SystemStatsTable extends Component {
                           color: 'black',
                           marginBottom: '0.5rem'
                         }}
-                        onClick={() => this.clearVotes(deadLockedPhrases[i].phraseId)}
+                        onClick={() => this.clearVotes(deadLockedPhrases[i].phrase.phraseId)}
                       >
                         Clear Votes
                       </Button>
@@ -234,18 +233,21 @@ export class SystemStatsTable extends Component {
   flattenArray = (a) => [].concat.apply([], a);
 
   resolvePhrase(phraseId, label) {
-    console.log('resolving');
-    console.log(phraseId, label);
-    // remove the phrase from the deadlocked list here (to save an API call)
-    // if the user wants up to date information (e.g. multiple users are resolving phrases) they can press the refresh button
-    let statsData = this.state.statsData;
-    statsData.deadLockedPhrases = statsData.deadLockedPhrases.filter((p) => p.phrase.phraseId !== phraseId);
-    this.setState({ statsData: statsData });
+    // remove the phrase from the deadlocked list here (to save an expensive API call)
+    // for up to date information (e.g. if multiple users are resolving phrases) use the refresh button
+    this.removeDeadLockedPhrase(phraseId);
     this.props.dispatch(resolveForPhraseLabel(phraseId, label));
   }
 
+  removeDeadLockedPhrase(phraseId) {
+    let statsData = this.state.statsData;
+    statsData.deadLockedPhrases = statsData.deadLockedPhrases.filter((p) => p.phrase.phraseId !== phraseId);
+    this.setState({ statsData: statsData });
+  }
+
   clearVotes(phraseId) {
-    console.log('clearing votes for phrase[]');
+    this.removeDeadLockedPhrase(phraseId);
+    this.props.dispatch(deleteVotesForPhrase(phraseId));
   }
 }
 

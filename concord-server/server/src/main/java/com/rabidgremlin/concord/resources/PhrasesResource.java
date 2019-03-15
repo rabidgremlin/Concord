@@ -1,6 +1,7 @@
 package com.rabidgremlin.concord.resources;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -170,7 +171,7 @@ public class PhrasesResource
   @Timed
   public Response purgeCompletedPhrasesAndVotes(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("{} purging completed votes and phrases {}", caller);
+    log.info("{} purging completed votes and phrases", caller);
 
     List<String> phraseIdentifiers = phrasesDao.getCompletedPhraseIdentifiers();
     int amount = phraseIdentifiers.size();
@@ -214,11 +215,23 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} resolving phrase[{}] as {}", caller, RESOLVER_USER_ID, phraseId, labelText);
+    log.info("{} resolving phrase[{}] as {}", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, RESOLVER_USER_ID);
 
     return Response.created(uriInfo.getAbsolutePath()).build();
+  }
+
+  @DELETE
+  @Path("/{phraseId}/votes/delete")
+  @Timed
+  public Response purgeVotesForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId)
+  {
+    log.info("{} purging votes for phrase[{}]", caller, phraseId);
+
+    votesDao.deleteAllVotesForPhrase(Collections.singletonList(phraseId));
+
+    return Response.ok().build();
   }
 
 }

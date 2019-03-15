@@ -4,24 +4,27 @@ import {
   callCreateSession,
   callCreateSessionFailed,
   callCreateSessionSucceeded,
+  callDeleteVotesForPhrase,
+  callDeleteVotesForPhraseFailed,
+  callDeleteVotesForPhraseSucceeded,
   callGetAllLabels,
   callGetAllLabelsFailed,
   callGetAllLabelsSucceeded,
   callGetNextPhrase,
   callGetNextPhraseFailed,
   callGetNextPhraseSucceeded,
-  callVoteForPhraseLabel,
-  callVoteForPhraseLabelFailed,
-  callVoteForPhraseLabelSucceeded,
+  callGetSystemStats,
+  callGetSystemStatsFailed,
+  callGetSystemStatsSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
   callGetUserStatsSucceeded,
-  callGetSystemStats,
-  callGetSystemStatsSucceeded,
-  callGetSystemStatsFailed,
   callResolveForPhraseLabel,
+  callResolveForPhraseLabelFailed,
   callResolveForPhraseLabelSucceeded,
-  callResolveForPhraseLabelFailed
+  callVoteForPhraseLabel,
+  callVoteForPhraseLabelFailed,
+  callVoteForPhraseLabelSucceeded
 } from './actions';
 
 export function createSession(userId, password) {
@@ -123,5 +126,16 @@ export function getSystemStats() {
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetSystemStatsSucceeded(data)))
       .catch((err) => dispatch(callGetSystemStatsFailed(err)));
+  };
+}
+
+export function deleteVotesForPhrase(phraseId) {
+  return (dispatch) => {
+    dispatch(callDeleteVotesForPhrase());
+    request
+      .delete('/api/phrases/' + phraseId + '/votes/delete')
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callDeleteVotesForPhraseSucceeded()))
+      .catch((err) => dispatch(callDeleteVotesForPhraseFailed(err)));
   };
 }
