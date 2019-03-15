@@ -66,6 +66,11 @@ export class SystemStatsTable extends Component {
     console.log(this.state);
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
+
+    this.element = document.createElement('canvas');
+    this.context = this.element.getContext('2d');
+    this.context.font = '8pt Arial';
+
     return (
       <div>
         <h2>System Stats</h2>
@@ -122,41 +127,17 @@ export class SystemStatsTable extends Component {
         <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableBody>
-              {[...Array(10)].map((v, i) => (
+              {[...Array(20)].map((v, i) => (
                 <DataTableRow key={i}>
-                  {/*<DataTableCell style={{ width: '50%' }}>{deadLockedPhrases[i].phrase.text}</DataTableCell>*/}
                   <DataTableCell style={{ width: '50%' }}>
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
-                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
-                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
-                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
-                    PHRASE super long phrase SUPER LONG PHRASE super long phrase{' '}
+                    <div>
+                      {this.splitPhrase(deadLockedPhrases[i].phrase.text).map((line) => (
+                        <div>{line}</div>
+                      ))}
+                    </div>
                   </DataTableCell>
-                  <DataTableCell style={{ width: '45%' }}>
-                    {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
+                  <DataTableCell style={{ width: '20%' }}>
+                    {deadLockedPhrases[i].labelsInVoteOrder.map((label) => (
                       <div>
                         <Button
                           unelevated
@@ -166,20 +147,14 @@ export class SystemStatsTable extends Component {
                             marginBottom: '0.5rem',
                             textTransform: 'capitalize'
                           }}
-                          onClick={() =>
-                            this.resolvePhrase(
-                              deadLockedPhrases[i].phrase.phraseId,
-                              deadLockedPhrases[i].labelsInVoteOrder[j].label
-                            )
-                          }
+                          onClick={() => this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, label.label)}
                         >
-                          {deadLockedPhrases[i].labelsInVoteOrder[j].label} (
-                          {deadLockedPhrases[i].labelsInVoteOrder[j].count})
+                          {label.label} ({label.count})
                         </Button>
                       </div>
                     ))}
                   </DataTableCell>
-                  <DataTableCell style={{ width: '5%' }}>
+                  <DataTableCell style={{ width: '10%' }}>
                     <div>
                       <Button
                         unelevated
@@ -188,7 +163,7 @@ export class SystemStatsTable extends Component {
                           color: 'black',
                           marginBottom: '0.5rem'
                         }}
-                        onClick={() => console.log('CLEAR VOTES')}
+                        onClick={() => this.clearVotes(deadLockedPhrases[i].phraseId)}
                       >
                         Clear Votes
                       </Button>
@@ -201,7 +176,7 @@ export class SystemStatsTable extends Component {
                           color: 'black',
                           marginBottom: '0.5rem'
                         }}
-                        onClick={() => console.log('TRASH')}
+                        onClick={() => this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, 'TRASH')}
                       >
                         Trash
                       </Button>
@@ -217,6 +192,47 @@ export class SystemStatsTable extends Component {
     );
   }
 
+  // hack to put line breaks in DataTable (while trying not to break words)
+  splitPhrase(phrase) {
+    const textWidth = this.context.measureText(phrase).width;
+    const availableWidth = window.innerWidth / 3;
+    const widthRatio = textWidth / availableWidth;
+    const maxLineLength = Math.trunc(phrase.length / widthRatio) - 1;
+
+    let words = phrase.split(' ');
+    // break any long words up
+    let i = 0;
+    while (i < words.length) {
+      if (words[i].length >= maxLineLength) {
+        words.splice(i, 1, this.splitWord(words[i], maxLineLength));
+        words = this.flattenArray(words);
+      }
+      i++;
+    }
+
+    let lines = [];
+    i = 0;
+    while (i < words.length) {
+      let line = '';
+      while (i < words.length && line.length + words[i].length <= maxLineLength) {
+        line += ' ' + words[i];
+        i++;
+      }
+      lines.push(line);
+    }
+    return lines;
+  }
+
+  splitWord = (word, splitLength) => {
+    let chunks = [];
+    for (let i = 0, charsLength = word.length; i < charsLength; i += splitLength) {
+      chunks.push(word.substring(i, i + splitLength));
+    }
+    return chunks;
+  };
+
+  flattenArray = (a) => [].concat.apply([], a);
+
   resolvePhrase(phraseId, label) {
     console.log('resolving');
     console.log(phraseId, label);
@@ -226,6 +242,10 @@ export class SystemStatsTable extends Component {
     statsData.deadLockedPhrases = statsData.deadLockedPhrases.filter((p) => p.phrase.phraseId !== phraseId);
     this.setState({ statsData: statsData });
     this.props.dispatch(resolveForPhraseLabel(phraseId, label));
+  }
+
+  clearVotes(phraseId) {
+    console.log('clearing votes for phrase[]');
   }
 }
 
