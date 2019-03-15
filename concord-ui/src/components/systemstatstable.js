@@ -11,10 +11,8 @@ import {
 } from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
-import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import '@rmwc/list/collapsible-list.css';
-import { CardPrimaryAction } from 'rmwc/Card';
-import { Typography } from 'rmwc/Typography';
+import { Button } from 'rmwc';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -119,40 +117,97 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
+
         <h2>{deadLockedPhrases.length} Deadlocked Phrases</h2>
         <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableBody>
               {[...Array(10)].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '50%' }}>{deadLockedPhrases[i].phrase.text}</DataTableCell>
-                  <DataTableCell style={{ width: '40%' }}>
-                    <CollapsibleList
-                      handle={<SimpleListItem text='Resolve' graphic='whatshot' metaIcon='chevron_right' />}
-                    >
-                      {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
-                        <SimpleListItem>
-                          <CardPrimaryAction
-                            onClick={() =>
-                              this.resolvePhrase(
-                                deadLockedPhrases[i].phrase.phraseId,
-                                deadLockedPhrases[i].labelsInVoteOrder[j].label
-                              )
-                            }
-                          >
-                            {deadLockedPhrases[i].labelsInVoteOrder[j].label} (
-                            {deadLockedPhrases[i].labelsInVoteOrder[j].count} votes)
-                          </CardPrimaryAction>
-                        </SimpleListItem>
-                      ))}
-                    </CollapsibleList>
+                  {/*<DataTableCell style={{ width: '50%' }}>{deadLockedPhrases[i].phrase.text}</DataTableCell>*/}
+                  <DataTableCell style={{ width: '50%' }}>
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase
+                    SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long
+                    phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE
+                    super long phrase SUPER LONG PHRASE super long phrase SUPER LONG PHRASE super long phrase SUPER LONG
+                    PHRASE super long phrase SUPER LONG PHRASE super long phrase{' '}
+                  </DataTableCell>
+                  <DataTableCell style={{ width: '45%' }}>
+                    {[...Array(deadLockedPhrases[i].labelsInVoteOrder.length)].map((v2, j) => (
+                      <div>
+                        <Button
+                          unelevated
+                          style={{
+                            backgroundColor: '#E0E0E0',
+                            color: 'black',
+                            marginBottom: '0.5rem',
+                            textTransform: 'capitalize'
+                          }}
+                          onClick={() =>
+                            this.resolvePhrase(
+                              deadLockedPhrases[i].phrase.phraseId,
+                              deadLockedPhrases[i].labelsInVoteOrder[j].label
+                            )
+                          }
+                        >
+                          {deadLockedPhrases[i].labelsInVoteOrder[j].label} (
+                          {deadLockedPhrases[i].labelsInVoteOrder[j].count})
+                        </Button>
+                      </div>
+                    ))}
                   </DataTableCell>
                   <DataTableCell style={{ width: '5%' }}>
-                    <SimpleListItem graphic='replay' />
+                    <div>
+                      <Button
+                        unelevated
+                        style={{
+                          backgroundColor: '#E0E0E0',
+                          color: 'black',
+                          marginBottom: '0.5rem'
+                        }}
+                        onClick={() => console.log('CLEAR VOTES')}
+                      >
+                        Clear Votes
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        unelevated
+                        style={{
+                          backgroundColor: '#E0E0E0',
+                          color: 'black',
+                          marginBottom: '0.5rem'
+                        }}
+                        onClick={() => console.log('TRASH')}
+                      >
+                        Trash
+                      </Button>
+                    </div>
                   </DataTableCell>
-                  <DataTableCell style={{ width: '5%' }}>
-                    <SimpleListItem graphic='delete' />
-                  </DataTableCell>
+                  <DataTableCell />
                 </DataTableRow>
               ))}
             </DataTableBody>

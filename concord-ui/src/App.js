@@ -104,7 +104,7 @@ export class App extends Component {
                 <Route exact path='/stats' render={UserStatsPage} />
                 <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>
-              <Redirect exact from='/' to='/labels' />
+              <Redirect exact from='/' to='/admin' />
             </div>
           </Router>
         </ThemeProvider>
