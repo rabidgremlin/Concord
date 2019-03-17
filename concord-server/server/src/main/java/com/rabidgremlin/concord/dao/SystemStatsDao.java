@@ -7,29 +7,22 @@ public interface SystemStatsDao
 
   String FILTER_USERS = "WHERE userId != 'BULK_UPLOAD' AND userId != 'RESOLVER'";
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM phrases")
+  @SqlQuery("SELECT COUNT(*) FROM phrases")
   int getTotalCountOfPhrases();
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM phrases " +
-      "WHERE completed = true AND label != 'TRASH'")
+  @SqlQuery("SELECT COUNT(*) FROM phrases WHERE completed = true AND label != 'TRASH'")
   int getCountOfCompletedPhrases();
 
   @SqlQuery("SELECT COUNT(DISTINCT label) FROM phrases WHERE label IS NOT NULL")
   int getCountOfLabelsUsed();
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM votes " +
-      FILTER_USERS)
+  @SqlQuery("SELECT COUNT(*) FROM votes " + FILTER_USERS)
   int getCountOfVotes();
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM labels")
+  @SqlQuery("SELECT COUNT(*) FROM labels")
   int getCountOfLabels();
 
-  @SqlQuery("SELECT COUNT(*) " +
-      "FROM (SELECT userId FROM votes " + FILTER_USERS + " GROUP BY userId) ALIAS")
+  @SqlQuery("SELECT COUNT(DISTINCT userId) FROM votes " + FILTER_USERS)
   int getCountOfUsers();
 
 }
