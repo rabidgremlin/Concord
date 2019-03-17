@@ -126,7 +126,7 @@ export class SystemStatsTable extends Component {
         <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableBody>
-              {[...Array(20)].map((v, i) => (
+              {[...Array(Math.min(20, deadLockedPhrases.length))].map((v, i) => (
                 <DataTableRow key={i}>
                   <DataTableCell style={{ width: '50%' }}>
                     <div>
