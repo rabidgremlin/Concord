@@ -79,11 +79,6 @@ export class SystemStatsTable extends Component {
               <DataTableRow>
                 <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
-                <DataTableHeadCell>Phrases With Consensus</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>
-                  Phrases With Consensus
-                  <br /> (not completed)
-                </DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
@@ -98,12 +93,6 @@ export class SystemStatsTable extends Component {
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data.completedPhrases.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.phrasesWithConsensus.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.phrasesWithConsensusNotCompleted.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data.totalLabels.toLocaleString()}

@@ -109,8 +109,6 @@ public class StatsResource
 
     int totalPhrases = systemStatsDao.getTotalCountOfPhrases();
     int completedPhrases = systemStatsDao.getCountOfCompletedPhrases();
-    int phrasesWithConsensus = systemStatsDao.getCountOfPhrasesWithConsensus(consensusLevel);
-    int phrasesWithConsensusNotCompleted = systemStatsDao.getCountOfPhrasesWithConsensusThatAreNotCompleted(consensusLevel);
     int labelsUsed = systemStatsDao.getCountOfLabelsUsed();
     int totalVotes = systemStatsDao.getCountOfVotes();
     int totalLabels = systemStatsDao.getCountOfLabels();
@@ -121,8 +119,7 @@ public class StatsResource
     GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, phraseIdsVotedOnByGodUser, consensusLevel);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
 
-    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, phrasesWithConsensus, phrasesWithConsensusNotCompleted, labelsUsed, totalVotes,
-        totalLabels, userCount, deadLockedPhrases);
+    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, labelsUsed, totalVotes, totalLabels, userCount, deadLockedPhrases);
 
     return Response.ok().entity(systemStats).build();
   }

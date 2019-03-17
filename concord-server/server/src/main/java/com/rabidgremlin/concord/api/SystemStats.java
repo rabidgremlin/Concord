@@ -12,10 +12,6 @@ public class SystemStats
 
   private final int completedPhrases;
 
-  private final int phrasesWithConsensus;
-
-  private final int phrasesWithConsensusNotCompleted;
-
   private final int labelsUsed;
 
   private final int totalVotes;
