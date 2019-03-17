@@ -1,9 +1,7 @@
 package com.rabidgremlin.concord.api;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
 public class UserStats
 {

@@ -1,11 +1,9 @@
 package com.rabidgremlin.concord.api;
 
-import java.util.List;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
+import java.util.List;
+
 @Data
 public class SystemStats
 {

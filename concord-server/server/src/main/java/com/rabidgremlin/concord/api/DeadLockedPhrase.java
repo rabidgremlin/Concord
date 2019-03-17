@@ -1,13 +1,10 @@
 package com.rabidgremlin.concord.api;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableList;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class DeadLockedPhrase
@@ -19,13 +16,5 @@ public class DeadLockedPhrase
 
   @JsonIgnore
   private final LocalDateTime mostRecentVoteTime;
-
-  public DeadLockedPhrase(Phrase phrase, List<LabelCount> labelsInVoteOrder, LocalDateTime mostRecentVoteTime)
-  {
-    this.phrase = phrase;
-    labelsInVoteOrder.sort(Comparator.comparingInt(LabelCount::getCount).reversed());
-    this.labelsInVoteOrder = ImmutableList.copyOf(labelsInVoteOrder);
-    this.mostRecentVoteTime = mostRecentVoteTime;
-  }
 
 }

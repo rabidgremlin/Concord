@@ -72,8 +72,7 @@
             update phrases set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
         </sql>
         <sql dbms="mysql">
-            update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is
-            NULL
+            update phrases set completedTimestamp = CURRENT_TIMESTAMP where completed = true AND completedTimestamp is NULL
         </sql>
         <sql dbms="mysql">
             update votes set lastModifiedTimestamp = CURRENT_TIMESTAMP where lastModifiedTimestamp is NULL
