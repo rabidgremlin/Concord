@@ -1,11 +1,11 @@
 package com.rabidgremlin.concord.dao.model;
 
-import io.github.binout.jaxrs.csv.CsvSchema;
+import java.sql.Timestamp;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import io.github.binout.jaxrs.csv.CsvSchema;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

@@ -1,8 +1,8 @@
 package com.rabidgremlin.concord.api;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class SystemStats
