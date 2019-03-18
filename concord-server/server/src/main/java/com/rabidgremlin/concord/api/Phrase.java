@@ -33,4 +33,14 @@ public class Phrase
     this.phraseId = computePhraseId(text);
   }
 
+  public static Phrase incomplete(String phraseId, String text, String label)
+  {
+    return new Phrase(phraseId, text, false, label);
+  }
+
+  public static Phrase incomplete(String text, String label)
+  {
+    return Phrase.incomplete(computePhraseId(text), text, label);
+  }
+
 }

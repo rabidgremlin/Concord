@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
@@ -156,7 +157,7 @@ public class PhrasesResource
     GetEligiblePhrasesForCompletionFunction getPhrases = new GetEligiblePhrasesForCompletionFunction(phraseVotes, phrasesVotedOnByResolver, consensusLevel);
 
     log.debug("Looking for completed phrases...");
-    List<Phrase> completedPhrases = getPhrases.execute();
+    Set<Phrase> completedPhrases = getPhrases.execute();
 
     log.debug("Marking phrases complete...");
     phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),

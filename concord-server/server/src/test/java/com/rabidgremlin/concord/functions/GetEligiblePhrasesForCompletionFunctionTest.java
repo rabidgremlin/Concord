@@ -1,15 +1,19 @@
 package com.rabidgremlin.concord.functions;
 
 import static com.rabidgremlin.concord.api.Phrase.computePhraseId;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.dao.model.GroupedPhraseVote;
 
@@ -39,28 +43,25 @@ public class GetEligiblePhrasesForCompletionFunctionTest
 
     // When
     GetEligiblePhrasesForCompletionFunction functionUnderTest = new GetEligiblePhrasesForCompletionFunction(phraseVotes, EMPTY_MAP, 2);
-    List<Phrase> phrasesEligibleForCompletion = functionUnderTest.execute();
+    Set<Phrase> phrasesEligibleForCompletion = functionUnderTest.execute();
 
     // Then
-    assertEquals(3, phrasesEligibleForCompletion.size());
-
-    assertEquals(computePhraseId("Woah, livin' on a prayer"), phrasesEligibleForCompletion.get(0).getPhraseId());
-    assertEquals("BonJovi", phrasesEligibleForCompletion.get(0).getLabel());
-
-    assertEquals(computePhraseId("I remember, I remember when I lost my mind "), phrasesEligibleForCompletion.get(1).getPhraseId());
-    assertEquals("GnarlsBarkley", phrasesEligibleForCompletion.get(1).getLabel());
-
-    assertEquals(computePhraseId("Pretty eyed, pirate smile, you'll marry a music man"), phrasesEligibleForCompletion.get(2).getPhraseId());
-    assertEquals("EltonJohn", phrasesEligibleForCompletion.get(2).getLabel());
+    Set<Phrase> expected = ImmutableSet.of(
+        Phrase.incomplete("Woah, livin' on a prayer", "BonJovi"),
+        Phrase.incomplete("I remember, I remember when I lost my mind ", "GnarlsBarkley"),
+        Phrase.incomplete("Pretty eyed, pirate smile, you'll marry a music man", "EltonJohn"));
+    assertThat(phrasesEligibleForCompletion.size(), is(expected.size()));
+    assertThat(phrasesEligibleForCompletion, containsInAnyOrder(expected.toArray()));
   }
 
   @Test
-  public void shouldBypassResolvedPhrases()
+  public void shouldBypassResolvedPhrasesForPhrasesWithVotes()
   {
     // Given
     Map<String, String> resolvedPhrases = ImmutableMap.of(
-        computePhraseId("Woah, livin' on a prayer"), "Bonjovi",
-        computePhraseId("Pretty eyed, pirate smile, you'll marry a music man"), "EltonJohn");
+        computePhraseId("Woah, livin' on a prayer"), "RESOLVED_1",
+        computePhraseId("Pretty eyed, pirate smile, you'll marry a music man"), "RESOLVED_2",
+        computePhraseId("Never Gonna Give You Up"), "RESOLVED_NOT_VOTED_FOR");
 
     List<GroupedPhraseVote> phraseVotes = new ArrayList<>();
 
@@ -79,19 +80,15 @@ public class GetEligiblePhrasesForCompletionFunctionTest
 
     // When
     GetEligiblePhrasesForCompletionFunction functionUnderTest = new GetEligiblePhrasesForCompletionFunction(phraseVotes, resolvedPhrases, 2);
-    List<Phrase> phrasesEligibleForCompletion = functionUnderTest.execute();
+    Set<Phrase> phrasesEligibleForCompletion = functionUnderTest.execute();
 
     // Then
-    assertEquals(3, phrasesEligibleForCompletion.size());
-
-    assertEquals(computePhraseId("Woah, livin' on a prayer"), phrasesEligibleForCompletion.get(0).getPhraseId());
-    assertEquals("Bonjovi", phrasesEligibleForCompletion.get(0).getLabel());
-
-    assertEquals(computePhraseId("I remember, I remember when I lost my mind "), phrasesEligibleForCompletion.get(1).getPhraseId());
-    assertEquals("GnarlsBarkley", phrasesEligibleForCompletion.get(1).getLabel());
-
-    assertEquals(computePhraseId("Pretty eyed, pirate smile, you'll marry a music man"), phrasesEligibleForCompletion.get(2).getPhraseId());
-    assertEquals("EltonJohn", phrasesEligibleForCompletion.get(2).getLabel());
+    Set<Phrase> expected = ImmutableSet.of(
+        Phrase.incomplete("Woah, livin' on a prayer", "RESOLVED_1"),
+        Phrase.incomplete("I remember, I remember when I lost my mind ", "GnarlsBarkley"),
+        Phrase.incomplete("Pretty eyed, pirate smile, you'll marry a music man", "RESOLVED_2"));
+    assertThat(phrasesEligibleForCompletion.size(), is(expected.size()));
+    assertThat(phrasesEligibleForCompletion, containsInAnyOrder(expected.toArray()));
   }
 
 }
