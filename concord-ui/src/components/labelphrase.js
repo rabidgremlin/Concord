@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import { getNextPhrase, voteForPhraseLabel } from '../api';
 import Searchbar from './searchbar';
 
-import { Card, CardAction, CardActions, CardPrimaryAction, Fab, Grid, GridCell, Icon, Typography } from 'rmwc';
+import { Card, CardAction, CardActions, CardPrimaryAction } from '@rmwc/card';
+import { Fab } from '@rmwc/fab';
+import { Grid, GridCell } from '@rmwc/grid';
+import { Icon } from '@rmwc/icon';
+import { Typography } from '@rmwc/typography';
 import { FormattedNumber } from 'react-intl';
 
 const keyMappings = {
@@ -33,7 +37,11 @@ export class LabelPhrase extends Component {
     window.addEventListener('keyup', this.handleKeyPress);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.handleKeyPress);
+  }
+
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData,
@@ -49,13 +57,9 @@ export class LabelPhrase extends Component {
 
     if (keyCode === 'Subtract' || keyCode === 'Minus') {
       this.makeVote('TRASH');
-    }
-
-    else if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
+    } else if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
       this.makeVote('SKIPPED');
-    }
-
-    else {
+    } else {
       let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0].childNodes;
       labels.forEach(function(index) {
         index.style = 'border: none';
@@ -157,7 +161,7 @@ export class LabelPhrase extends Component {
                         <Typography
                           use='subtitle2'
                           tag='h3'
-                          theme='text-secondary-on-background'
+                          theme='textSecondaryOnBackground'
                           style={{ marginTop: '-1rem' }}
                         >
                           {label.shortDescription}
@@ -165,7 +169,7 @@ export class LabelPhrase extends Component {
                         <Typography
                           use='body1'
                           tag='div'
-                          theme='text-secondary-on-background'
+                          theme='textSecondaryOnBackground'
                           style={{
                             minHeight: '4.3em',
                             maxHeight: '4.3em',
@@ -189,12 +193,7 @@ export class LabelPhrase extends Component {
               ))}
 
               <GridCell span='3' phone='4' tablet='2' desktop='4' key={'searchbar'}>
-                <Card
-                  style={{ minWidth: '300px' }}
-                  onClick={() => {
-                    this.setState({ currentLabel: null });
-                  }}
-                >
+                <Card style={{ minWidth: '300px' }} onClick={() => this.setState({ currentLabel: null })}>
                   <Searchbar makeVote={(label) => this.makeVote(label)} />
                 </Card>
               </GridCell>

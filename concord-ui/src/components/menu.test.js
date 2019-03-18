@@ -1,6 +1,9 @@
 import React from 'react';
 import Menu from './menu';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, Icon, List, MenuItem } from 'rmwc';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@rmwc/drawer';
+import { Icon } from '@rmwc/icon';
+import { List } from '@rmwc/list';
+import { MenuItem } from '@rmwc/menu';
 import { Link } from 'react-router-dom';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';

@@ -1,6 +1,5 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +31,7 @@ import com.rabidgremlin.concord.api.PhraseLabel;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.PossibleLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.UploadDao;
@@ -104,17 +104,16 @@ public class PhrasesResource
     try
     {
       List<SuggestedLabel> suggestedLabels = labelSuggester.suggestLabels(nextPhrase.getText());
-      ArrayList<PossibleLabel> possibleLabels = new ArrayList<>();
-
-      for (SuggestedLabel suggestedLabel : suggestedLabels)
-      {
-        PossibleLabel tempLabel = new PossibleLabel();
-        tempLabel.setLabel(suggestedLabel.getLabel());
-        tempLabel.setLongDescription(suggestedLabel.getLongDescription());
-        tempLabel.setScore(suggestedLabel.getScore());
-        tempLabel.setShortDescription(suggestedLabel.getShortDescription());
-        possibleLabels.add(tempLabel);
-      }
+      List<PossibleLabel> possibleLabels = suggestedLabels.stream()
+          .map(suggestedLabel -> {
+            PossibleLabel tempLabel = new PossibleLabel();
+            tempLabel.setLabel(suggestedLabel.getLabel());
+            tempLabel.setLongDescription(suggestedLabel.getLongDescription());
+            tempLabel.setScore(suggestedLabel.getScore());
+            tempLabel.setShortDescription(suggestedLabel.getShortDescription());
+            return tempLabel;
+          })
+          .collect(Collectors.toList());
 
       phraseToLabel.setPossibleLabels(possibleLabels);
 
@@ -129,15 +128,30 @@ public class PhrasesResource
 
   @POST
   @Path("bulk")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Timed
+  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases unlabelledPhrases)
+  {
+    log.info("{} uploading {} phrases as json.", caller, unlabelledPhrases.getUnlabelledPhrases().size());
+    log.debug("{}", unlabelledPhrases);
+
+    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases.getUnlabelledPhrases());
+
+    return Response.created(uriInfo.getAbsolutePath()).build();
+  }
+
+  @POST
+  @Path("bulk")
   @Consumes("text/csv")
   @Timed
   public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
   {
-    log.info("{} uploading csv of phrases {}", caller, unlabelledPhrases);
+    log.info("{} uploading {} phrases as csv.", caller, unlabelledPhrases.size());
+    log.debug("{}", unlabelledPhrases);
 
     uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
 
-    return Response.ok().build();
+    return Response.created(uriInfo.getAbsolutePath()).build();
   }
 
   @GET
@@ -192,7 +206,7 @@ public class PhrasesResource
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} casting vote for phrase[{}] as {}", caller, phraseId, labelText);
+    log.info("{} casting vote for phrase[{}] as [{}]", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, caller.getToken());
 
@@ -216,7 +230,7 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} resolving phrase[{}] as {}", caller, phraseId, labelText);
+    log.info("{} resolving phrase[{}] as [{}]", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, RESOLVER_USER_ID);
 

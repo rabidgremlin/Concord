@@ -9,13 +9,15 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
+import '@rmwc/data-table/data-table.css';
 import { SystemStatsTable } from './systemstatstable';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
   const props = {
+    enableRefresh: () => {},
     dispatch: jest.fn()
   };
   const statsTable = shallow(<SystemStatsTable {...props} />);

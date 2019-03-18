@@ -59,7 +59,7 @@ public class LabelsResource
   @Timed
   public Response getLabels(@ApiParam(hidden = true) @Auth Caller caller)
   {
-    log.info("{} getting next phrase to label", caller);
+    log.info("{} getting all labels.", caller);
 
     List<Label> labels = labelsDao.getLabels();
 

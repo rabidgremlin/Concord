@@ -8,7 +8,7 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { getUserStats } from '../api';
 import { connect } from 'react-redux';
@@ -30,11 +30,13 @@ export class UserStatsTable extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
-      this.setState({ statsData: newProps.statsData });
+      this.setState({
+        statsData: newProps.statsData
+      });
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData,
@@ -94,7 +96,9 @@ export class UserStatsTable extends Component {
     }
     if (!this.state.doneFirstSort) {
       this.sortByScore(-1);
-      this.setState({ doneFirstSort: true });
+      this.setState({
+        doneFirstSort: true
+      });
     }
     this.props.enableRefresh();
     return (

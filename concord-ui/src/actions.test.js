@@ -161,3 +161,36 @@ describe('actions', () => {
     expect(actions.callGetAllLabelsSucceeded(labelData)).toEqual(expectedAction);
   });
 });
+
+/**
+ *  HANDLE POSTING PHRASES
+ */
+
+describe('actions', () => {
+  it('should create an action to post list of phrases', () => {
+    const expectedAction = {
+      type: 'CALL_POST_PHRASES'
+    };
+    expect(actions.callPostPhrases()).toEqual(expectedAction);
+  });
+});
+
+describe('actions', () => {
+  it('should create an action for failure to post list of phrases', () => {
+    const error = 'error';
+    const expectedAction = {
+      type: 'CALL_POST_PHRASES_FAILED',
+      error
+    };
+    expect(actions.callPostPhrasesFailed(error)).toEqual(expectedAction);
+  });
+});
+
+describe('actions', () => {
+  it('should create an action for successful posting of list of phrases', () => {
+    const expectedAction = {
+      type: 'CALL_POST_PHRASES_SUCCEEDED'
+    };
+    expect(actions.callPostPhrasesSucceeded()).toEqual(expectedAction);
+  });
+});

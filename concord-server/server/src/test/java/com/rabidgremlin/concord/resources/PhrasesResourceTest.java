@@ -1,6 +1,7 @@
 package com.rabidgremlin.concord.resources;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.anyString;
@@ -25,6 +26,7 @@ import com.rabidgremlin.concord.api.Label;
 import com.rabidgremlin.concord.api.Phrase;
 import com.rabidgremlin.concord.api.PhraseToLabel;
 import com.rabidgremlin.concord.api.UnlabelledPhrase;
+import com.rabidgremlin.concord.api.UnlabelledPhrases;
 import com.rabidgremlin.concord.auth.Caller;
 import com.rabidgremlin.concord.dao.PhrasesDao;
 import com.rabidgremlin.concord.dao.UploadDao;
@@ -57,12 +59,16 @@ public class PhrasesResourceTest
   @Mock
   private UploadDao uploadDaoMock;
 
+  @Mock
+  private UriInfo uriInfo;
+
   @Before
   public void setUp()
   {
     MockitoAnnotations.initMocks(this);
 
     resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, false);
+    resource.uriInfo = uriInfo;
 
     SuggestedLabel label1 = new SuggestedLabel("WhereTaxi", "Where Taxi", "Your taxi is ... minutes away.", 0.5);
     SuggestedLabel label2 = new SuggestedLabel("CancelTaxi", "Cancel Taxi", "Ok your Taxi has been ordered", 0.25);
@@ -118,15 +124,27 @@ public class PhrasesResourceTest
   }
 
   @Test
-  public void canUploadPhrases()
+  public void canUploadPhrasesAsCsv()
   {
     Response response = resource.uploadCsv(callerMock, unlabelledPhrases);
 
     verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases);
 
     assertThat(response, instanceOf(Response.class));
-    assertEquals(200, response.getStatus());
-    assertEquals("OK", response.getStatusInfo().toString());
+    assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
+  }
+
+  @Test
+  public void canUploadPhrasesAsJson()
+  {
+    Response response = resource.addPhrases(callerMock, new UnlabelledPhrases(unlabelledPhrases));
+
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases);
+
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
   }
 
   @Test
@@ -147,15 +165,13 @@ public class PhrasesResourceTest
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
   }
 
   @Test
   public void shouldNotMarkPhraseCompletedWhenTrashedAndCompleteOnTrashIsTrue()
   {
     when(callerMock.getToken()).thenReturn("Bob");
-
-    resource = new PhrasesResource(phrasesDaoMock, votesDaoMock, uploadDaoMock, labelSuggestMock, 1, false);
-    resource.uriInfo = mock(UriInfo.class);
 
     String trashedPhraseId = "abcdefg1234567";
     Label trashedLabel = new Label("TRASH", "", "");
@@ -164,9 +180,53 @@ public class PhrasesResourceTest
 
     verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
     verify(phrasesDaoMock, times(0)).markPhrasesComplete(Collections.singletonList(trashedPhraseId), Collections.singletonList("TRASH"));
+    verify(phrasesDaoMock, times(0)).markPhraseComplete(trashedPhraseId, "TRASH");
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
+  }
+
+  @Test
+  public void canVoteForPhrase()
+  {
+    when(callerMock.getToken()).thenReturn("caller");
+
+    Response response = resource.voteForPhrase(callerMock, "123", new Label("WhereTaxi", "", ""));
+
+    verify(votesDaoMock, times(1)).upsert("123", "WhereTaxi", "caller");
+    verify(phrasesDaoMock, times(0)).markPhrasesComplete(Collections.singletonList("123"), Collections.singletonList("WhereTaxi"));
+    verify(phrasesDaoMock, times(0)).markPhraseComplete("123", "WhereTaxi");
+
+    assertThat(response, instanceOf(Response.class));
+    assertThat(response.getStatus(), is(201));
+    assertThat(response.getStatusInfo().toString(), is("Created"));
+  }
+
+  @Test
+  public void canResolvePhrase()
+  {
+    Response response = resource.resolvePhrase(callerMock, "123", new Label("WhereTaxi", "", ""));
+
+    verify(votesDaoMock, times(1)).upsert("123", "WhereTaxi", "RESOLVER");
+    verify(phrasesDaoMock, times(0)).markPhrasesComplete(Collections.singletonList("123"), Collections.singletonList("WhereTaxi"));
+    verify(phrasesDaoMock, times(0)).markPhraseComplete("123", "WhereTaxi");
+
+    assertThat(response, instanceOf(Response.class));
+    assertThat(response.getStatus(), is(201));
+    assertThat(response.getStatusInfo().toString(), is("Created"));
+  }
+
+  @Test
+  public void canDeleteVotesForPhrase()
+  {
+    Response response = resource.purgeVotesForPhrase(callerMock, "123");
+
+    verify(votesDaoMock, times(1)).deleteAllVotesForPhrase(Collections.singletonList("123"));
+
+    assertThat(response, instanceOf(Response.class));
+    assertThat(response.getStatus(), is(200));
+    assertThat(response.getStatusInfo().toString(), is("OK"));
   }
 
 }

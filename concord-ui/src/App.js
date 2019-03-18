@@ -4,12 +4,13 @@ import Navbar from './components/navbar';
 import Login from './components/login';
 import Menu from './components/menu';
 import LabelPhrase from './components/labelphrase';
-import { SimpleDialog } from 'rmwc';
+import { SimpleDialog } from '@rmwc/dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
 import UserStatsTable from './components/userstatstable';
 import SystemStatsTable from './components/systemstatstable';
+import UploadPhrase from './components/uploadphrase';
 
 export class App extends Component {
   constructor(props) {
@@ -53,6 +54,9 @@ export class App extends Component {
         <SystemStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
       );
     };
+    const UploadPhrasesPage = (props) => {
+      return <UploadPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
+    };
 
     if (!this.props.logged_in) {
       return (
@@ -95,16 +99,15 @@ export class App extends Component {
                 body={this.props.errorMsg}
                 open={this.props.hasError}
                 cancelLabel={null}
-                onClose={(evt) => {
-                  this.props.dispatch(resetError());
-                }}
+                onClose={(evt) => this.props.dispatch(resetError())}
               />
               <Switch>
-                <Route exact path='/labels' render={LabelPage} />
-                <Route exact path='/stats' render={UserStatsPage} />
+                <Route exact path='/phrases/vote' render={LabelPage} />
+                <Route exact path='/phrases/upload' component={UploadPhrasesPage} />
+                <Route exact path='/scores' render={UserStatsPage} />
                 <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>
-              <Redirect exact from='/' to='/labels' />
+              <Redirect exact from ='/' to='/phrases/vote' />
             </div>
           </Router>
         </ThemeProvider>

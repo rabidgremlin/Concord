@@ -8,11 +8,12 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
 import '@rmwc/list/collapsible-list.css';
-import { Button } from 'rmwc';
+import { Button } from '@rmwc/button';
+import { Typography } from '@rmwc/typography';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ export class SystemStatsTable extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData,
@@ -66,13 +67,16 @@ export class SystemStatsTable extends Component {
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
 
+    // For the deadlocked phrases data table
     this.element = document.createElement('canvas');
     this.context = this.element.getContext('2d');
     this.context.font = '10pt Arial';
 
     return (
       <div>
-        <h2>System Stats</h2>
+        <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
+          System Stats
+        </Typography>
         <DataTable style={{ width: '100%' }}>
           <DataTableContent style={{ fontSize: '12pt' }}>
             <DataTableHead>
@@ -111,7 +115,9 @@ export class SystemStatsTable extends Component {
           </DataTableContent>
         </DataTable>
 
-        <h2>{deadLockedPhrases.length} Deadlocked Phrases</h2>
+        <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
+          {deadLockedPhrases.length} Deadlocked Phrases
+        </Typography>
         <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
             <DataTableBody>

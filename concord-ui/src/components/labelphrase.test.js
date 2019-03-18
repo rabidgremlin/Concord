@@ -2,12 +2,15 @@ import React from 'react';
 import { LabelPhrase } from './labelphrase';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Card, CardPrimaryAction, Fab, Grid, GridCell } from 'rmwc';
+import { Card, CardPrimaryAction } from '@rmwc/card';
+import { Grid, GridCell } from '@rmwc/grid';
+import { Fab } from '@rmwc/fab';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
   const props = {
+    enableRefresh: () => {},
     dispatch: jest.fn(),
     phraseData: {
       msg: 'Hello world',

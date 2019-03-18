@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Card, Grid, GridCell, TextField, Typography } from 'rmwc';
+import { Button } from '@rmwc/button';
+import { Card } from '@rmwc/card';
+import { Grid, GridCell } from '@rmwc/grid';
+import { TextField } from '@rmwc/textfield';
+import { Typography } from '@rmwc/typography';
 
 import { connect } from 'react-redux';
 import { createSession } from '../api';
 
-//import { callCreateSession } from './actions'
-
 export class Login extends Component {
   state = { email: '', password: '', invalidData: true };
+
   handleChange = (val) => (evt) => {
     this.setState({ ...this.state, [val]: evt.target.value });
   };
@@ -32,7 +35,7 @@ export class Login extends Component {
                 use='subtitle2'
                 tag='div'
                 style={{ padding: '0.5rem 1rem' }}
-                theme='text-secondary-on-background'
+                theme='textSecondaryOnBackground'
               >
                 Login
               </Typography>
@@ -59,9 +62,7 @@ export class Login extends Component {
                 raised
                 style={{ margin: '1rem 1rem 1rem 1rem' }}
                 disabled={this.state.invalidData}
-                onClick={() => {
-                  this.props.dispatch(createSession(this.state.email, this.state.password));
-                }}
+                onClick={() => this.props.dispatch(createSession(this.state.email, this.state.password))}
               >
                 Login
               </Button>

@@ -12,7 +12,6 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -98,25 +97,6 @@ public class StatsResourceTest
   @Test
   public void shouldGetEmptyListWhenNoVotesMade()
   {
-    // When
-    Response response = statsResource.getUserStats(caller);
-
-    // Then
-    assertThat(response, instanceOf(Response.class));
-    assertThat(response.getStatus(), is(200));
-    assertThat(response.getStatusInfo().toString(), is("OK"));
-    assertThat(response.getEntity(), instanceOf(List.class));
-    assertThat(((List) response.getEntity()).size(), is(0));
-  }
-
-  @Test
-  @Ignore("Decided to keep BULK_UPLOAD in the stats.")
-  public void shouldFilterOutBulkUploadUser()
-  {
-    // Given
-    List<UserVoteCount> dummyVotes = Collections.singletonList(new UserVoteCount("BULK_UPLOAD", 9999));
-    when(userStatsDao.getCountOfTotalVotesPerUser()).thenReturn(dummyVotes);
-
     // When
     Response response = statsResource.getUserStats(caller);
 

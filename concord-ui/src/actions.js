@@ -1,5 +1,3 @@
-//https://redux.js.org/basics/example-todo-list
-
 /**
  * HANDLE SESSION
  */
@@ -126,6 +124,23 @@ export const callGetSystemStatsFailed = (error) => ({
 export const callGetSystemStatsSucceeded = (data) => ({
   type: 'CALL_GET_SYSTEM_STATS_SUCCEEDED',
   statsData: data
+});
+
+/**
+ * HANDLE UPLOADING PHRASES
+ */
+
+export const callPostPhrases = () => ({
+  type: 'CALL_POST_PHRASES'
+});
+
+export const callPostPhrasesFailed = (error) => ({
+  type: 'CALL_POST_PHRASES_FAILED',
+  error
+});
+
+export const callPostPhrasesSucceeded = () => ({
+  type: 'CALL_POST_PHRASES_SUCCEEDED'
 });
 
 /**

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, Icon, List, MenuItem } from 'rmwc';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@rmwc/drawer';
+import { Icon } from '@rmwc/icon';
+import { List } from '@rmwc/list';
+import { MenuItem } from '@rmwc/menu';
 import { Link } from 'react-router-dom';
 
 export default class Menu extends Component {
@@ -24,14 +27,19 @@ export default class Menu extends Component {
         </DrawerHeader>
         <DrawerContent>
           <List>
-            <Link to='/labels' style={{ textDecoration: 'none' }}>
+            <Link to='/phrases/vote' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='outlined_flag' /> Labels
+                <Icon icon='outlined_flag' /> Vote
               </MenuItem>
             </Link>
-            <Link to='/stats' style={{ textDecoration: 'none' }}>
+            <Link to='/phrases/upload' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='bar_chart' /> Stats
+                <Icon icon='playlist_add' /> Upload
+              </MenuItem>
+            </Link>
+            <Link to='/scores' style={{ textDecoration: 'none' }}>
+              <MenuItem style={{ paddingLeft: 13 }}>
+                <Icon icon='bar_chart' /> Scores
               </MenuItem>
             </Link>
             <Link to='/admin' style={{ textDecoration: 'none' }}>
