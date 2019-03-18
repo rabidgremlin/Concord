@@ -1,4 +1,4 @@
-const statsReducer = (state = { loading: true, error: false }, action) => {
+const userStatsReducer = (state = { loading: true, error: false }, action) => {
   switch (action.type) {
     case 'CALL_GET_USER_STATS':
       return { loading: true, error: false };
@@ -11,4 +11,4 @@ const statsReducer = (state = { loading: true, error: false }, action) => {
   }
 };
 
-export default statsReducer;
+export default userStatsReducer;

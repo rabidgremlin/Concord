@@ -2,17 +2,16 @@ package com.rabidgremlin.concord.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PossibleLabel
-    extends Label
+public class PhraseLabel
 {
 
-  private Double score;
+  private String phraseId;
+
+  private String label;
 
 }

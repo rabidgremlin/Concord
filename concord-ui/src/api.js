@@ -4,18 +4,27 @@ import {
   callCreateSession,
   callCreateSessionFailed,
   callCreateSessionSucceeded,
+  callDeleteVotesForPhrase,
+  callDeleteVotesForPhraseFailed,
+  callDeleteVotesForPhraseSucceeded,
   callGetAllLabels,
   callGetAllLabelsFailed,
   callGetAllLabelsSucceeded,
   callGetNextPhrase,
   callGetNextPhraseFailed,
   callGetNextPhraseSucceeded,
-  callVoteForPhraseLabel,
-  callVoteForPhraseLabelFailed,
-  callVoteForPhraseLabelSucceeded,
+  callGetSystemStats,
+  callGetSystemStatsFailed,
+  callGetSystemStatsSucceeded,
   callGetUserStats,
   callGetUserStatsFailed,
-  callGetUserStatsSucceeded
+  callGetUserStatsSucceeded,
+  callResolveForPhraseLabel,
+  callResolveForPhraseLabelFailed,
+  callResolveForPhraseLabelSucceeded,
+  callVoteForPhraseLabel,
+  callVoteForPhraseLabelFailed,
+  callVoteForPhraseLabelSucceeded
 } from './actions';
 
 export function createSession(userId, password) {
@@ -72,6 +81,18 @@ export function voteForPhraseLabel(phraseId, label) {
   };
 }
 
+export function resolveForPhraseLabel(phraseId, label) {
+  return (dispatch) => {
+    dispatch(callResolveForPhraseLabel());
+    request
+      .post('/api/phrases/' + phraseId + '/resolve')
+      .send({ label: label })
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
+      .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
+  };
+}
+
 export function getAllLabels() {
   return (dispatch) => {
     dispatch(callGetAllLabels());
@@ -88,10 +109,33 @@ export function getUserStats() {
   return (dispatch) => {
     dispatch(callGetUserStats());
     request
-      .get('/api/stats')
+      .get('/api/stats/user')
       .set('Accept', 'application/json')
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetUserStatsSucceeded(data)))
       .catch((err) => dispatch(callGetUserStatsFailed(err)));
+  };
+}
+
+export function getSystemStats() {
+  return (dispatch) => {
+    dispatch(callGetSystemStats());
+    request
+      .get('/api/stats/system')
+      .set('Accept', 'application/json')
+      .then((res) => JSON.parse(res.text))
+      .then((data) => dispatch(callGetSystemStatsSucceeded(data)))
+      .catch((err) => dispatch(callGetSystemStatsFailed(err)));
+  };
+}
+
+export function deleteVotesForPhrase(phraseId) {
+  return (dispatch) => {
+    dispatch(callDeleteVotesForPhrase());
+    request
+      .delete('/api/phrases/' + phraseId + '/votes/delete')
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callDeleteVotesForPhraseSucceeded()))
+      .catch((err) => dispatch(callDeleteVotesForPhraseFailed(err)));
   };
 }

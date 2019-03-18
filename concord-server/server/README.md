@@ -39,12 +39,12 @@ curl -v -X POST http://127.0.0.1:9000/api/labels/bulk --header "Content-Type: te
 curl -v -X POST http://127.0.0.1:9000/api/phrases/082f2ce2d8fa15fcf60189796c126d55/votes --header "Content-Type: application/json" --header "Authorization: Bearer XXXXXX" --data '{"label":"WhereTaxi"}'
 ```
 
-#### Get all completed votes
+#### Get and mark all completed votes
 ```
 curl -v -X GET http://127.0.0.1:9000/api/phrases/completed --header "Authorization: Bearer XXXXXX"
 ```
 
 #### Get user stats
 ```
-curl -v -X GET http://127.0.0.1:9000/api/stats --header "Authorization: Bearer XXXXXX"
+curl -v -X GET http://127.0.0.1:9000/api/stats/user --header "Authorization: Bearer XXXXXX"
 ```

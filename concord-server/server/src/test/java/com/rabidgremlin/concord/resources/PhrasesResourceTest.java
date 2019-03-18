@@ -3,7 +3,11 @@ package com.rabidgremlin.concord.resources;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,7 +143,7 @@ public class PhrasesResourceTest
     Response response = resource.voteForPhrase(callerMock, trashedPhraseId, trashedLabel);
 
     verify(votesDaoMock, times(1)).upsert(trashedPhraseId, "TRASH", "Bob");
-    verify(phrasesDaoMock, times(1)).markPhrasesComplete(Collections.singletonList(trashedPhraseId), Collections.singletonList("TRASH"));
+    verify(phrasesDaoMock, times(1)).markPhraseComplete(trashedPhraseId, "TRASH");
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());

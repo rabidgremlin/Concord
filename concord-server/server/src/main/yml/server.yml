@@ -1,18 +1,17 @@
 jwtTokenSecret: jkfhgkjfdhgur8943flkds3@#$^UYGJHKJHKK
 
-consensusLevel: 1
+consensusLevel: 3
 
 completeOnTrash: true
 
-database:  
-  driverClass: com.mysql.jdbc.Driver 
+database:
+  driverClass: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost:3306/concorddb?nullNamePatternMatchesAll=true
   user: concorduser
   password: concordpwd
 
 labelSuggester:
-   class: com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester
-   
+  class: com.rabidgremlin.concord.plugin.labelsuggesters.RasaNluSuggester
 
 credentialsValidator:
   class: com.rabidgremlin.concord.plugin.credentialvalidators.ConfigCredentialsValidator
@@ -28,8 +27,8 @@ credentialsValidator:
 
 server:
   applicationConnectors:
-  - type: http 
-    port: 9000
+    - type: http
+      port: 9000
   adminConnectors:
-  - type: http
-    port: 9001    
+    - type: http
+      port: 9001

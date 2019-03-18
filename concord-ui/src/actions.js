@@ -62,6 +62,23 @@ export const callVoteForPhraseLabelSucceeded = () => ({
 });
 
 /**
+ * HANDLE RESOLVING PHRASES
+ */
+
+export const callResolveForPhraseLabel = () => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL'
+});
+
+export const callResolveForPhraseLabelFailed = (error) => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL_FAILED',
+  error
+});
+
+export const callResolveForPhraseLabelSucceeded = () => ({
+  type: 'CALL_RESOLVE_FOR_PHRASE_LABEL_SUCCEEDED'
+});
+
+/**
  * HANDLE LABELS
  */
 
@@ -95,4 +112,34 @@ export const callGetUserStatsFailed = (error) => ({
 export const callGetUserStatsSucceeded = (data) => ({
   type: 'CALL_GET_USER_STATS_SUCCEEDED',
   statsData: data
+});
+
+export const callGetSystemStats = () => ({
+  type: 'CALL_GET_SYSTEM_STATS'
+});
+
+export const callGetSystemStatsFailed = (error) => ({
+  type: 'CALL_GET_SYSTEM_STATS_FAILED',
+  error
+});
+
+export const callGetSystemStatsSucceeded = (data) => ({
+  type: 'CALL_GET_SYSTEM_STATS_SUCCEEDED',
+  statsData: data
+});
+
+/**
+ *  HANDLE DELETING VOTES
+ */
+export const callDeleteVotesForPhrase = () => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE'
+});
+
+export const callDeleteVotesForPhraseFailed = (error) => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE_FAILED',
+  error
+});
+
+export const callDeleteVotesForPhraseSucceeded = () => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE_SUCCEEDED'
 });

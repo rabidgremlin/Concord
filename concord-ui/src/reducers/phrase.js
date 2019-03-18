@@ -8,7 +8,21 @@ const nextPhraseReducer = (state = { loading: true, error: false }, action) => {
       return { loading: false, error: true };
     case 'CALL_VOTE_FOR_PHRASE_LABEL':
       return { loading: true, error: false };
+    case 'CALL_VOTE_FOR_PHRASE_LABEL_SUCCEEDED':
+      return { loading: false, error: false };
     case 'CALL_VOTE_FOR_PHRASE_LABEL_FAILED':
+      return { loading: false, error: true };
+    case 'CALL_RESOLVE_FOR_PHRASE_LABEL':
+      return { loading: true, error: false };
+    case 'CALL_RESOLVE_FOR_PHRASE_LABEL_SUCCEEDED':
+      return { loading: false, error: false };
+    case 'CALL_RESOLVE_FOR_PHRASE_LABEL_FAILED':
+      return { loading: false, error: true };
+    case 'CALL_DELETE_VOTES_FOR_PHRASE':
+      return { loading: true, error: false };
+    case 'CALL_DELETE_VOTES_FOR_PHRASE_SUCCEEDED':
+      return { loading: false, error: false };
+    case 'CALL_DELETE_VOTES_FOR_PHRASE_FAILED':
       return { loading: false, error: true };
     default:
       return state;

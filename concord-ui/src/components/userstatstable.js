@@ -13,12 +13,13 @@ import '@rmwc/data-table/data-table.css';
 import { getUserStats } from '../api';
 import { connect } from 'react-redux';
 
-export class StatsTable extends Component {
+export class UserStatsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       statsData: [],
-      doneFirstSort: false
+      doneFirstSort: false,
+      reloadApiData: false
     };
   }
 
@@ -30,6 +31,18 @@ export class StatsTable extends Component {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
       this.setState({ statsData: newProps.statsData });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        statsData: [],
+        doneFirstSort: false
+      });
+      // refresh the API data
+      this.props.dispatch(getUserStats());
     }
   }
 
@@ -83,9 +96,10 @@ export class StatsTable extends Component {
       this.sortByScore(-1);
       this.setState({ doneFirstSort: true });
     }
+    this.props.enableRefresh();
     return (
       <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '20px' }}>
+        <DataTableContent style={{ fontSize: '12pt' }}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
@@ -130,7 +144,7 @@ export class StatsTable extends Component {
           </DataTableHead>
           <DataTableBody>
             {[...Array(dataLength)].map((v, i) => (
-              <DataTableRow key={i} style={{ width: '20%' }}>
+              <DataTableRow key={i}>
                 <DataTableCell>{data[i].userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {this.computeScore(data[i]).toLocaleString()}
@@ -205,7 +219,7 @@ export class StatsTable extends Component {
 }
 
 export default connect((state) => ({
-  error: state.stats.error,
-  loading: state.stats.loading,
-  statsData: state.stats.statsData
-}))(StatsTable);
+  error: state.userStats.error,
+  loading: state.userStats.loading,
+  statsData: state.userStats.statsData
+}))(UserStatsTable);
