@@ -46,32 +46,35 @@ export class LabelPhrase extends Component {
 
   handleKeyPress = (event) => {
     let keyCode = event.code.replace('Numpad', '');
-    let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0].childNodes;
-    labels.forEach(function(index) {
-      index.style = 'border: none';
-    });
-
-    let labelIndex = keyMappings[keyCode];
-    if (typeof labelIndex !== 'undefined') {
-      if (labels.length - 1 > labelIndex) {
-        labels[labelIndex].style = 'border: 2px solid darkgray';
-        this.setState({
-          currentLabel: this.props.phraseData.possibleLabels[labelIndex].label
-        });
-      }
-    }
 
     if (keyCode === 'Subtract' || keyCode === 'Minus') {
       this.makeVote('TRASH');
     }
 
-    if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
+    else if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
       this.makeVote('SKIPPED');
     }
 
-    if (keyCode === 'Enter') {
-      if (this.state.currentLabel !== null) {
-        this.makeVote(this.state.currentLabel);
+    else {
+      let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0].childNodes;
+      labels.forEach(function(index) {
+        index.style = 'border: none';
+      });
+
+      let labelIndex = keyMappings[keyCode];
+      if (typeof labelIndex !== 'undefined') {
+        if (labels.length - 1 > labelIndex) {
+          labels[labelIndex].style = 'border: 2px solid darkgray';
+          this.setState({
+            currentLabel: this.props.phraseData.possibleLabels[labelIndex].label
+          });
+        }
+      }
+
+      if (keyCode === 'Enter') {
+        if (this.state.currentLabel !== null) {
+          this.makeVote(this.state.currentLabel);
+        }
       }
     }
   };
