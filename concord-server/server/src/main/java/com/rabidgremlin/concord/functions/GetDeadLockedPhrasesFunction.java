@@ -51,13 +51,8 @@ public final class GetDeadLockedPhrasesFunction
         .collect(Collectors.toMap(GroupedPhraseVote::getText, GroupedPhraseVoteWithMostRecentVoteTime::getMaxTime, (a, b) -> a));
 
     List<DeadLockedPhrase> deadLockedPhrases = groupedPhraseVotes.entrySet().stream()
-        .filter((e) -> isDeadLocked(e.getValue(), consensusLevel, userCount))
-        .map((e) -> {
-          Phrase phrase = new Phrase(e.getKey());
-          LocalDateTime dateTime = mostRecentVoteTimeForPhrases.get(e.getKey()).toLocalDateTime();
-          List<LabelCount> labels = e.getValue();
-          return new DeadLockedPhrase(phrase, labels, dateTime);
-        })
+        .filter(e -> isDeadLocked(e.getValue(), consensusLevel, userCount))
+        .map(e -> extractDeadLockedPhrase(e.getKey(), e.getValue(), mostRecentVoteTimeForPhrases))
         .sorted(Comparator.comparing(DeadLockedPhrase::getMostRecentVoteTime).reversed())
         .collect(Collectors.toList());
 
@@ -82,4 +77,12 @@ public final class GetDeadLockedPhrasesFunction
 
     return possibleRemainingVotes + voteDifferenceBetweenTop2Labels < consensusLevel;
   }
+
+  private DeadLockedPhrase extractDeadLockedPhrase(String phraseText, List<LabelCount> voteLabels, Map<String, Timestamp> voteTimes)
+  {
+    Phrase phrase = new Phrase(phraseText);
+    LocalDateTime dateTime = voteTimes.get(phraseText).toLocalDateTime();
+    return new DeadLockedPhrase(phrase, voteLabels, dateTime);
+  }
+
 }

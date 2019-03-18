@@ -59,7 +59,7 @@ public final class GetEligiblePhrasesForCompletionFunction
 
     if (phrasesVotedOnByResolver.containsKey(highestVote.getPhraseId()))
     {
-      // Resolver votes bypass consensus check
+      // Resolver votes bypasses consensus check
       String resolvedLabel = phrasesVotedOnByResolver.get(highestVote.getPhraseId());
       highestVote.setLabel(resolvedLabel);
       log.debug("Deadlocked phrase[{}] was marked as resolved with label {}.", highestVote.getText(), highestVote.getLabel());
