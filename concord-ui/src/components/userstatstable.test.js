@@ -10,6 +10,7 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from '@rmwc/data-table';
+import '@rmwc/data-table/data-table.css';
 import { UserStatsTable } from './userstatstable';
 
 Enzyme.configure({ adapter: new Adapter() });

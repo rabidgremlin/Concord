@@ -10,6 +10,7 @@ import {
   DataTableHeadCell,
   DataTableRow
 } from '@rmwc/data-table';
+import '@rmwc/data-table/data-table.css';
 import { UploadPhrase } from './uploadphrase';
 import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
 import { Button } from '@rmwc/button';

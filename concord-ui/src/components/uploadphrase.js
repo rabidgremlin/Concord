@@ -63,17 +63,17 @@ export class UploadPhrase extends Component {
     if (this.state.phrases.length > 0) {
       return (
         <div>
-          <Button style={{ margin: '1rem 1rem 1rem 0rem' }} raised onClick={this.submitPhrases}>
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.submitPhrases}>
             Submit
           </Button>
-          <Button style={{ margin: '1rem 1rem 1rem 0rem' }} raised onClick={this.clearFields}>
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearFields}>
             Retry
           </Button>
           <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
             <DataTableContent style={{ fontSize: '10pt' }}>
               <DataTableHead>
                 <DataTableRow>
-                  <DataTableHeadCell>Text</DataTableHeadCell>
+                  <DataTableHeadCell>Phrase</DataTableHeadCell>
                 </DataTableRow>
               </DataTableHead>
               <DataTableBody>
@@ -91,7 +91,7 @@ export class UploadPhrase extends Component {
     return (
       <div>
         <Button
-          style={{ margin: '1rem 1rem 1rem 0rem' }}
+          style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }}
           raised
           onClick={this.checkPhrases}
           disabled={this.state.invalidData}

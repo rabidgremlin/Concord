@@ -130,13 +130,14 @@ public class PhrasesResource
   @Path("bulk")
   @Consumes(MediaType.APPLICATION_JSON)
   @Timed
-  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases phrases)
+  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases unlabelledPhrases)
   {
-    log.info("{} uploading json of phrases {}", caller, phrases);
+    log.info("{} uploading {} phrases as json.", caller, unlabelledPhrases.getUnlabelledPhrases().size());
+    log.debug("{}", unlabelledPhrases);
 
-    uploadDao.uploadUnlabelledPhrases(phrases.getUnlabelledPhrases());
+    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases.getUnlabelledPhrases());
 
-    return Response.ok().build();
+    return Response.created(uriInfo.getAbsolutePath()).build();
   }
 
   @POST
@@ -145,11 +146,12 @@ public class PhrasesResource
   @Timed
   public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
   {
-    log.info("{} uploading csv of phrases {}", caller, unlabelledPhrases);
+    log.info("{} uploading {} phrases as csv.", caller, unlabelledPhrases.size());
+    log.debug("{}", unlabelledPhrases);
 
     uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
 
-    return Response.ok().build();
+    return Response.created(uriInfo.getAbsolutePath()).build();
   }
 
   @GET
@@ -204,7 +206,7 @@ public class PhrasesResource
   public Response voteForPhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} casting vote for phrase[{}] as {}", caller, phraseId, labelText);
+    log.info("{} casting vote for phrase[{}] as [{}]", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, caller.getToken());
 
@@ -228,7 +230,7 @@ public class PhrasesResource
   public Response resolvePhrase(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId, Label label)
   {
     String labelText = label.getLabel();
-    log.info("{} resolving phrase[{}] as {}", caller, phraseId, labelText);
+    log.info("{} resolving phrase[{}] as [{}]", caller, phraseId, labelText);
 
     castVote(phraseId, labelText, RESOLVER_USER_ID);
 

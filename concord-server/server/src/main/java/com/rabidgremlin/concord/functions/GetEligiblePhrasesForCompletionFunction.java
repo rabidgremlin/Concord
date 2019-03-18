@@ -86,7 +86,7 @@ public final class GetEligiblePhrasesForCompletionFunction
   private Phrase extractHighestVotedLabel(List<GroupedPhraseVote> phraseVotes)
   {
     GroupedPhraseVote highestVote = phraseVotes.get(0);
-    log.debug("Found completed phrase [{}] with id {}", highestVote.getText(), highestVote.getPhraseId());
+    log.debug("Found completed phrase [{}] with label [{}] and id [{}]", highestVote.getText(), highestVote.getLabel(), highestVote.getPhraseId());
     return Phrase.incomplete(highestVote.getPhraseId(), highestVote.getText(), highestVote.getLabel());
   }
 
