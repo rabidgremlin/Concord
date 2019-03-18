@@ -37,9 +37,9 @@ export default class Menu extends Component {
                 <Icon icon='playlist_add' /> Upload
               </MenuItem>
             </Link>
-            <Link to='/stats' style={{ textDecoration: 'none' }}>
+            <Link to='/scores' style={{ textDecoration: 'none' }}>
               <MenuItem style={{ paddingLeft: 13 }}>
-                <Icon icon='bar_chart' /> Stats
+                <Icon icon='bar_chart' /> Scores
               </MenuItem>
             </Link>
             <Link to='/admin' style={{ textDecoration: 'none' }}>

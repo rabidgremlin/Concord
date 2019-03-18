@@ -74,7 +74,7 @@ export class SystemStatsTable extends Component {
 
     return (
       <div>
-        <Typography use='headline4' tag='h4'>
+        <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
           System Stats
         </Typography>
         <DataTable style={{ width: '100%' }}>
@@ -115,7 +115,7 @@ export class SystemStatsTable extends Component {
           </DataTableContent>
         </DataTable>
 
-        <Typography use='headline4' tag='h4'>
+        <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
           {deadLockedPhrases.length} Deadlocked Phrases
         </Typography>
         <DataTable style={{ minWidth: '100%' }}>

@@ -15,6 +15,7 @@ import '@rmwc/data-table/data-table.css';
 import { postUnlabelledPhrases } from '../api';
 
 export class UploadPhrase extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -92,7 +93,7 @@ export class UploadPhrase extends Component {
               </DataTableHead>
               <DataTableBody>
                 {this.state.phrases.map((phrase) => (
-                  <DataTableRow>
+                  <DataTableRow key={phrase}>
                     <DataTableCell>{phrase}</DataTableCell>
                   </DataTableRow>
                 ))}
@@ -119,13 +120,13 @@ export class UploadPhrase extends Component {
           outlined
           fullwidth
           value={this.state.textField}
-          onChange={this.handleChange('textField')}
+          onChange={this.handleChange}
         />
       </div>
     );
   }
 
-  handleChange = (val) => (evt) => this.setState({ ...this.state, [val]: evt.target.value });
+  handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 }
 
 export default connect((state) => ({

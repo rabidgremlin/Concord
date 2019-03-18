@@ -99,17 +99,15 @@ export class App extends Component {
                 body={this.props.errorMsg}
                 open={this.props.hasError}
                 cancelLabel={null}
-                onClose={(evt) => {
-                  this.props.dispatch(resetError());
-                }}
+                onClose={(evt) => this.props.dispatch(resetError())}
               />
               <Switch>
                 <Route exact path='/phrases/vote' render={LabelPage} />
                 <Route exact path='/phrases/upload' component={UploadPhrasesPage} />
-                <Route exact path='/stats' render={UserStatsPage} />
+                <Route exact path='/scores' render={UserStatsPage} />
                 <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>
-              <Redirect exact from='/' to='/phrases/vote' />
+              <Redirect exact from ='/' to='/phrases/vote' />
             </div>
           </Router>
         </ThemeProvider>

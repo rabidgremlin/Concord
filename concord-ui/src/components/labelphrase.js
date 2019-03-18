@@ -161,7 +161,7 @@ export class LabelPhrase extends Component {
                         <Typography
                           use='subtitle2'
                           tag='h3'
-                          theme='text-secondary-on-background'
+                          theme='textSecondaryOnBackground'
                           style={{ marginTop: '-1rem' }}
                         >
                           {label.shortDescription}
@@ -169,7 +169,7 @@ export class LabelPhrase extends Component {
                         <Typography
                           use='body1'
                           tag='div'
-                          theme='text-secondary-on-background'
+                          theme='textSecondaryOnBackground'
                           style={{
                             minHeight: '4.3em',
                             maxHeight: '4.3em',

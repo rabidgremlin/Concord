@@ -35,7 +35,7 @@ export class Login extends Component {
                 use='subtitle2'
                 tag='div'
                 style={{ padding: '0.5rem 1rem' }}
-                theme='text-secondary-on-background'
+                theme='textSecondaryOnBackground'
               >
                 Login
               </Typography>
