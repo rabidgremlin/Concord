@@ -17,7 +17,12 @@ import { postUnlabelledPhrases } from '../api';
 export class UploadPhrase extends Component {
   constructor(props) {
     super(props);
-    this.state = { reloadApiData: false, textField: '', invalidData: true, phrases: [] };
+    this.state = {
+      reloadApiData: false,
+      textField: '',
+      invalidData: true,
+      phrases: []
+    };
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -51,12 +56,20 @@ export class UploadPhrase extends Component {
   cleanText = (s) => s.trim().toLowerCase();
 
   submitPhrases = () => {
-    const unlabelledPhrases = this.state.phrases.map((phrase) => ({ text: phrase, possibleLabel: '' }));
+    const unlabelledPhrases = this.state.phrases.map((phrase) => ({
+      text: phrase,
+      possibleLabel: ''
+    }));
     this.props.dispatch(postUnlabelledPhrases(unlabelledPhrases));
     this.clearFields();
   };
 
-  clearFields = () => this.setState({ textField: '', invalidData: true, phrases: [] });
+  clearFields = () =>
+    this.setState({
+      textField: '',
+      invalidData: true,
+      phrases: []
+    });
 
   render() {
     this.props.enableRefresh();

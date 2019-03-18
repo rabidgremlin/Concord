@@ -30,7 +30,9 @@ export class UserStatsTable extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.loading !== newProps.loading) {
-      this.setState({ statsData: newProps.statsData });
+      this.setState({
+        statsData: newProps.statsData
+      });
     }
   }
 
@@ -94,7 +96,9 @@ export class UserStatsTable extends Component {
     }
     if (!this.state.doneFirstSort) {
       this.sortByScore(-1);
-      this.setState({ doneFirstSort: true });
+      this.setState({
+        doneFirstSort: true
+      });
     }
     this.props.enableRefresh();
     return (
