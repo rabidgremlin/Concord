@@ -20,6 +20,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
   const props = {
+    enableRefresh: () => {},
     dispatch: jest.fn()
   };
   const uploadPhrase = shallow(<UploadPhrase {...props} />);

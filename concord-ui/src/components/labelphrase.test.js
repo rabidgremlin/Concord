@@ -10,6 +10,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
   const props = {
+    enableRefresh: () => {},
     dispatch: jest.fn(),
     phraseData: {
       msg: 'Hello world',
