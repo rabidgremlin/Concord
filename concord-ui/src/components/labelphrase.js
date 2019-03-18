@@ -41,7 +41,7 @@ export class LabelPhrase extends Component {
     window.removeEventListener('keyup', this.handleKeyPress);
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData,

@@ -29,11 +29,12 @@ export class UploadPhrase extends Component {
     nextState.invalidData = !nextState.textField;
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.reloadApiData !== this.state.reloadApiData) {
       this.setState({
         reloadApiData: nextProps.reloadApiData
       });
+      // refresh the page
       this.clearFields();
     }
   }
