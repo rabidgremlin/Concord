@@ -19,13 +19,8 @@ public interface UploadDao
   @CreateSqlObject
   PhrasesDao phrasesDao();
 
-  default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases)
-  {
-    uploadUnlabelledPhrases("", unlabelledPhrases);
-  }
-
   @Transaction
-  default void uploadUnlabelledPhrases(String userId, List<UnlabelledPhrase> unlabelledPhrases)
+  default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases)
   {
     List<UnlabelledPhrase> batchedPhrases = unlabelledPhrases.stream()
         .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equalsIgnoreCase("text"))

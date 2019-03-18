@@ -1,6 +1,5 @@
 package com.rabidgremlin.concord.resources;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +134,7 @@ public class PhrasesResource
   {
     log.info("{} uploading json of phrases {}", caller, phrases);
 
-    uploadDao.uploadUnlabelledPhrases(caller.getName(), phrases.getUnlabelledPhrases());
+    uploadDao.uploadUnlabelledPhrases(phrases.getUnlabelledPhrases());
 
     return Response.ok().build();
   }

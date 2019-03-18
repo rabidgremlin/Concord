@@ -103,7 +103,7 @@ export function getUserStats() {
   };
 }
 
-export function postPhrases(unlabelledPhrases) {
+export function postUnlabelledPhrases(unlabelledPhrases) {
   return (dispatch) => {
     dispatch(callPostPhrases());
     request
