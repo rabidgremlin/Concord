@@ -12,7 +12,7 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
-import { getAllLabels, postPhrases } from '../api';
+import { getAllLabels, getSystemStats, postPhrases } from '../api';
 import '@rmwc/data-table/data-table.css';
 
 export class UploadPhrase extends Component {
@@ -36,6 +36,16 @@ export class UploadPhrase extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     nextState.invalidData = !nextState.textField;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadApiData !== this.state.reloadApiData) {
+      this.setState({
+        reloadApiData: nextProps.reloadApiData,
+        statsData: {}
+      });
+      this.clearFields();
+    }
   }
 
   handleChange = (val) => (evt) => {

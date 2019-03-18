@@ -14,8 +14,7 @@
     "redux-thunk": "2.3.0",
     "rmwc": "5.2.0",
     "superagent": "4.0.0",
-    "webfontloader": "1.6.28",
-    "@rmwc/list": "latest"
+    "webfontloader": "1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -8,11 +8,11 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from 'rmwc/DataTable';
+} from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
 import '@rmwc/list/collapsible-list.css';
-import { Button } from 'rmwc';
+import { Button } from '@rmwc/button';
 
 export class SystemStatsTable extends Component {
   constructor(props) {

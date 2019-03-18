@@ -57,13 +57,9 @@ export class LabelPhrase extends Component {
 
     if (keyCode === 'Subtract' || keyCode === 'Minus') {
       this.makeVote('TRASH');
-    }
-
-    else if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
+    } else if (keyCode === 'ArrowRight' || keyCode === 'Plus') {
       this.makeVote('SKIPPED');
-    }
-
-    else {
+    } else {
       let labels = document.getElementsByClassName('mdc-layout-grid__inner')[0].childNodes;
       labels.forEach(function(index) {
         index.style = 'border: none';
@@ -197,10 +193,7 @@ export class LabelPhrase extends Component {
               ))}
 
               <GridCell span='3' phone='4' tablet='2' desktop='4' key={'searchbar'}>
-                <Card
-                  style={{ minWidth: '300px' }}
-                  onClick={() => this.setState({currentLabel: null})}
-                >
+                <Card style={{ minWidth: '300px' }} onClick={() => this.setState({ currentLabel: null })}>
                   <Searchbar makeVote={(label) => this.makeVote(label)} />
                 </Card>
               </GridCell>

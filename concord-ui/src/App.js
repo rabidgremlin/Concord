@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
 import UserStatsTable from './components/userstatstable';
 import SystemStatsTable from './components/systemstatstable';
-import UploadPhrase from "./components/uploadphrase";
+import UploadPhrase from './components/uploadphrase';
 
 export class App extends Component {
   constructor(props) {
@@ -55,9 +55,7 @@ export class App extends Component {
       );
     };
     const UploadPhrasesPage = (props) => {
-      return (
-        <UploadPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
-      );
+      return <UploadPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />;
     };
 
     if (!this.props.logged_in) {
