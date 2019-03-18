@@ -3,7 +3,6 @@ package com.rabidgremlin.concord.dao;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
@@ -43,11 +42,14 @@ public interface UploadDao
         .map(UnlabelledPhrase::getText)
         .collect(Collectors.toList()), false);
 
-    // If there was a possible label, cast one vote for that phrase label
-    batchedPhrases.stream()
-        .filter(phrase -> StringUtils.isNotEmpty(phrase.getPossibleLabel()))
-        .forEach(phrase -> votesDao().upsert(DigestUtils.md5Hex(phrase.getText()),
-            phrase.getPossibleLabel(), StringUtils.isNotEmpty(userId) ? userId : "BULK_UPLOAD"));
+    // If there was a possible label, cast one vote for that intent
+    for (UnlabelledPhrase phrase : batchedPhrases)
+    {
+      if (StringUtils.isNotEmpty(phrase.getPossibleLabel()))
+      {
+        votesDao().upsert(Phrase.computePhraseId(phrase.getText()), phrase.getPossibleLabel(), "BULK_UPLOAD");
+      }
+    }
   }
 
 }

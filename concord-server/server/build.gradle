@@ -1,13 +1,13 @@
-buildscript {    
-    dependencies {        
-        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.3.2'        
+buildscript {
+    dependencies {
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.3.2'
     }
 }
 
 plugins {
-  id 'java'
-  id 'application'
-  id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 apply plugin: 'com.diffplug.gradle.spotless'
 
@@ -29,7 +29,7 @@ spotless {
 }
 
 shadowJar {
-  mergeServiceFiles()
+    mergeServiceFiles()
 }
 
 run {
@@ -38,15 +38,15 @@ run {
 }
 
 task createDatabase(type: JavaExec) {
-  classpath sourceSets.main.runtimeClasspath
-  args = ["db", "migrate", "src/main/yml/server.yml"]
-  main = 'com.rabidgremlin.concord.ConcordServerApplication'
+    classpath sourceSets.main.runtimeClasspath
+    args = ["db", "migrate", "src/main/yml/server.yml"]
+    main = 'com.rabidgremlin.concord.ConcordServerApplication'
 }
 
 task dropDatabase(type: JavaExec) {
-  classpath sourceSets.main.runtimeClasspath  
-  args = ["db", "drop-all", "--confirm-delete-everything", "src/main/yml/server.yml"]
-  main = 'com.rabidgremlin.concord.ConcordServerApplication'
+    classpath sourceSets.main.runtimeClasspath
+    args = ["db", "drop-all", "--confirm-delete-everything", "src/main/yml/server.yml"]
+    main = 'com.rabidgremlin.concord.ConcordServerApplication'
 }
 
 tasks.withType(Test) {
@@ -56,7 +56,7 @@ tasks.withType(Test) {
     }
 }
 
-repositories {        
+repositories {
     mavenCentral()
 }
 
@@ -67,10 +67,10 @@ dependencies {
     compile "io.dropwizard:dropwizard-assets:1.3.0"
     compile "io.dropwizard:dropwizard-auth:1.3.0"
     compile "io.dropwizard:dropwizard-db:1.3.0"
-    compile "io.dropwizard:dropwizard-migrations:1.3.0"  
-    compile "io.dropwizard:dropwizard-jdbi3:1.3.0"    
+    compile "io.dropwizard:dropwizard-migrations:1.3.0"
+    compile "io.dropwizard:dropwizard-jdbi3:1.3.0"
     compile('io.swagger:swagger-jersey2-jaxrs:1.5.13') {
-      exclude group: 'com.sun.jersey'
+        exclude group: 'com.sun.jersey'
     }
     compile 'com.amazonaws:aws-java-sdk-logs:1.11.119'
     compile 'com.github.toastshaman:dropwizard-auth-jwt:1.1.0-0'
@@ -85,6 +85,7 @@ dependencies {
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:2.23.4'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '2.1'
 }
 
 build.dependsOn shadowJar

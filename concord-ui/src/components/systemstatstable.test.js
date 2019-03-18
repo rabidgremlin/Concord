@@ -9,7 +9,7 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from '@rmwc/data-table';
+} from 'rmwc/DataTable';
 import { SystemStatsTable } from './systemstatstable';
 
 Enzyme.configure({ adapter: new Adapter() });

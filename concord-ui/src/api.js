@@ -2,6 +2,9 @@ import {
   callCreateSession,
   callCreateSessionFailed,
   callCreateSessionSucceeded,
+  callDeleteVotesForPhrase,
+  callDeleteVotesForPhraseFailed,
+  callDeleteVotesForPhraseSucceeded,
   callGetAllLabels,
   callGetAllLabelsFailed,
   callGetAllLabelsSucceeded,
@@ -72,7 +75,6 @@ export function resolveForPhraseLabel(phraseId, label) {
       .send({ label: label })
       .set('Accept', 'application/json')
       .then(() => dispatch(callResolveForPhraseLabelSucceeded()))
-      .then(() => dispatch(getSystemStats())) // refresh the deadlocked phrases
       .catch((err) => dispatch(callResolveForPhraseLabelFailed(err)));
   };
 }
@@ -122,5 +124,16 @@ export function getSystemStats() {
       .then((res) => JSON.parse(res.text))
       .then((data) => dispatch(callGetSystemStatsSucceeded(data)))
       .catch((err) => dispatch(callGetSystemStatsFailed(err)));
+  };
+}
+
+export function deleteVotesForPhrase(phraseId) {
+  return (dispatch) => {
+    dispatch(callDeleteVotesForPhrase());
+    request
+      .delete('/api/phrases/' + phraseId + '/votes/delete')
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callDeleteVotesForPhraseSucceeded()))
+      .catch((err) => dispatch(callDeleteVotesForPhraseFailed(err)));
   };
 }

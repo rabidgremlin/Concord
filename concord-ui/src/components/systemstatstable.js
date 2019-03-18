@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getSystemStats, resolveForPhraseLabel } from '../api';
+import { deleteVotesForPhrase, getSystemStats, resolveForPhraseLabel } from '../api';
 import {
   DataTable,
   DataTableBody,
@@ -8,10 +8,11 @@ import {
   DataTableHead,
   DataTableHeadCell,
   DataTableRow
-} from '@rmwc/data-table';
+} from 'rmwc/DataTable';
 import '@rmwc/data-table/data-table.css';
 import { connect } from 'react-redux';
-import { CardPrimaryAction } from '@rmwc/card';
+import '@rmwc/list/collapsible-list.css';
+import { Button } from 'rmwc';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -62,9 +63,13 @@ export class SystemStatsTable extends Component {
       );
     }
     this.props.enableRefresh();
-    console.log(this.state);
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
+
+    this.element = document.createElement('canvas');
+    this.context = this.element.getContext('2d');
+    this.context.font = '10pt Arial';
+
     return (
       <div>
         <h2>System Stats</h2>
@@ -74,11 +79,6 @@ export class SystemStatsTable extends Component {
               <DataTableRow>
                 <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
-                <DataTableHeadCell>Phrases With Consensus</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>
-                  Phrases With Consensus
-                  <br /> (not completed)
-                </DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
@@ -93,12 +93,6 @@ export class SystemStatsTable extends Component {
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data.completedPhrases.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.phrasesWithConsensus.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.phrasesWithConsensusNotCompleted.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data.totalLabels.toLocaleString()}
@@ -116,44 +110,67 @@ export class SystemStatsTable extends Component {
             </DataTableBody>
           </DataTableContent>
         </DataTable>
-        <h2>Deadlocked Phrases</h2>
-        <DataTable style={{ width: '100%' }}>
+
+        <h2>{deadLockedPhrases.length} Deadlocked Phrases</h2>
+        <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '10pt' }}>
-            <DataTableHead>
-              <DataTableRow>
-                <DataTableHeadCell>Top Label</DataTableHeadCell>
-                <DataTableHeadCell>Second Top Label</DataTableHeadCell>
-                <DataTableHeadCell>Phrase</DataTableHeadCell>
-                <DataTableHeadCell />
-              </DataTableRow>
-            </DataTableHead>
             <DataTableBody>
-              {[...Array(deadLockedPhrases.length)].map((v, i) => (
+              {[...Array(Math.min(20, deadLockedPhrases.length))].map((v, i) => (
                 <DataTableRow key={i}>
-                  <DataTableCell style={{ width: '20%' }}>
-                    <CardPrimaryAction
-                      onClick={() =>
-                        this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, deadLockedPhrases[i].topLabel.label)
-                      }
-                    >
-                      {deadLockedPhrases[i].topLabel.label} ({deadLockedPhrases[i].topLabel.count})
-                    </CardPrimaryAction>
+                  <DataTableCell style={{ width: '50%' }}>
+                    <div>
+                      {this.splitPhrase(deadLockedPhrases[i].phrase.text).map((line) => (
+                        <div>{line}</div>
+                      ))}
+                    </div>
                   </DataTableCell>
                   <DataTableCell style={{ width: '20%' }}>
-                    <CardPrimaryAction
-                      onClick={() =>
-                        this.resolvePhrase(
-                          deadLockedPhrases[i].phrase.phraseId,
-                          deadLockedPhrases[i].secondTopLabel.label
-                        )
-                      }
-                    >
-                      {deadLockedPhrases[i].secondTopLabel.label} ({deadLockedPhrases[i].secondTopLabel.count})
-                    </CardPrimaryAction>
+                    {deadLockedPhrases[i].labelsInVoteOrder.map((label) => (
+                      <div>
+                        <Button
+                          unelevated
+                          style={{
+                            backgroundColor: '#E0E0E0',
+                            color: 'black',
+                            marginBottom: '0.5rem',
+                            textTransform: 'capitalize'
+                          }}
+                          onClick={() => this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, label.label)}
+                        >
+                          {label.label} ({label.count})
+                        </Button>
+                      </div>
+                    ))}
                   </DataTableCell>
-                  <DataTableCell style={{ width: '60%', wordWrap: 'break-word' }}>
-                    {deadLockedPhrases[i].phrase.text}
+                  <DataTableCell style={{ width: '10%' }}>
+                    <div>
+                      <Button
+                        unelevated
+                        style={{
+                          backgroundColor: '#E0E0E0',
+                          color: 'black',
+                          marginBottom: '0.5rem'
+                        }}
+                        onClick={() => this.clearVotes(deadLockedPhrases[i].phrase.phraseId)}
+                      >
+                        Clear Votes
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        unelevated
+                        style={{
+                          backgroundColor: '#E0E0E0',
+                          color: 'black',
+                          marginBottom: '0.5rem'
+                        }}
+                        onClick={() => this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, 'TRASH')}
+                      >
+                        Trash
+                      </Button>
+                    </div>
                   </DataTableCell>
+                  <DataTableCell />
                 </DataTableRow>
               ))}
             </DataTableBody>
@@ -163,11 +180,63 @@ export class SystemStatsTable extends Component {
     );
   }
 
+  // hack to put line breaks in DataTable (while trying not to break words)
+  splitPhrase(phrase) {
+    const textWidth = this.context.measureText(phrase).width;
+    const availableWidth = window.innerWidth / 3;
+    const widthRatio = textWidth / availableWidth;
+    const maxLineLength = Math.trunc(phrase.length / widthRatio) - 1;
+
+    let words = phrase.split(' ');
+    // break any long words up
+    let i = 0;
+    while (i < words.length) {
+      if (words[i].length >= maxLineLength) {
+        words.splice(i, 1, this.splitWord(words[i], maxLineLength));
+        words = this.flattenArray(words);
+      }
+      i++;
+    }
+
+    let lines = [];
+    i = 0;
+    while (i < words.length) {
+      let line = '';
+      while (i < words.length && line.length + words[i].length <= maxLineLength) {
+        line += ' ' + words[i];
+        i++;
+      }
+      lines.push(line);
+    }
+    return lines;
+  }
+
+  splitWord = (word, splitLength) => {
+    let chunks = [];
+    for (let i = 0, charsLength = word.length; i < charsLength; i += splitLength) {
+      chunks.push(word.substring(i, i + splitLength));
+    }
+    return chunks;
+  };
+
+  flattenArray = (a) => [].concat.apply([], a);
+
   resolvePhrase(phraseId, label) {
-    console.log(this.state);
-    console.log('resolving');
-    console.log(phraseId, label);
+    // remove the phrase from the deadlocked list here (to save an expensive API call)
+    // for up to date information (e.g. if multiple users are resolving phrases) use the refresh button
+    this.removeDeadLockedPhrase(phraseId);
     this.props.dispatch(resolveForPhraseLabel(phraseId, label));
+  }
+
+  removeDeadLockedPhrase(phraseId) {
+    let statsData = this.state.statsData;
+    statsData.deadLockedPhrases = statsData.deadLockedPhrases.filter((p) => p.phrase.phraseId !== phraseId);
+    this.setState({ statsData: statsData });
+  }
+
+  clearVotes(phraseId) {
+    this.removeDeadLockedPhrase(phraseId);
+    this.props.dispatch(deleteVotesForPhrase(phraseId));
   }
 }
 

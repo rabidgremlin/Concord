@@ -8,9 +8,9 @@ import { SimpleDialog } from '@rmwc/dialog';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { killSession, resetError } from './actions';
-import UploadPhrase from './components/uploadphrase';
 import UserStatsTable from './components/userstatstable';
 import SystemStatsTable from './components/systemstatstable';
+import UploadPhrase from "./components/uploadphrase";
 
 export class App extends Component {
   constructor(props) {
@@ -52,6 +52,11 @@ export class App extends Component {
     const SystemStatsPage = (props) => {
       return (
         <SystemStatsTable reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
+      );
+    };
+    const UploadPhrasesPage = (props) => {
+      return (
+        <UploadPhrase reloadApiData={this.state.reloadApiData} enableRefresh={this.enableRefresh} {...props} />
       );
     };
 
@@ -102,7 +107,7 @@ export class App extends Component {
               />
               <Switch>
                 <Route exact path='/phrases/vote' render={LabelPage} />
-                <Route exact path='/phrases/upload' component={UploadPhrase} />
+                <Route exact path='/phrases/upload' component={UploadPhrasesPage} />
                 <Route exact path='/stats' render={UserStatsPage} />
                 <Route exact path='/admin' render={SystemStatsPage} />
               </Switch>

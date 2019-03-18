@@ -142,3 +142,19 @@ export const callPostPhrasesFailed = (error) => ({
 export const callPostPhrasesSucceeded = () => ({
   type: 'CALL_POST_PHRASES_SUCCEEDED'
 });
+
+/**
+ *  HANDLE DELETING VOTES
+ */
+export const callDeleteVotesForPhrase = () => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE'
+});
+
+export const callDeleteVotesForPhraseFailed = (error) => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE_FAILED',
+  error
+});
+
+export const callDeleteVotesForPhraseSucceeded = () => ({
+  type: 'CALL_DELETE_VOTES_FOR_PHRASE_SUCCEEDED'
+});
