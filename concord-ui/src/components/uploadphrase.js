@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Button } from '@rmwc/button';
-import { TextField } from '@rmwc/textfield';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Button} from '@rmwc/button';
+import {TextField} from '@rmwc/textfield';
+import {connect} from 'react-redux';
 import {
   DataTable,
   DataTableBody,
@@ -12,8 +12,8 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
-import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
-import { postUnlabelledPhrases } from '../api';
+import {Dialog, DialogActions, DialogContent, DialogTitle} from '@rmwc/dialog';
+import {postUnlabelledPhrases} from '../api';
 
 export class UploadPhrase extends Component {
   constructor(props) {
@@ -56,7 +56,7 @@ export class UploadPhrase extends Component {
     this.setState({ textField: '', invalidData: true, phrases: phrases });
   };
 
-  cleanText = (s) => s.trim().toLowerCase();
+  cleanText = (s) => s.trim();
 
   submitPhrases() {
     const unlabelledPhrases = this.state.phrases.map((phrase) => ({
@@ -64,54 +64,47 @@ export class UploadPhrase extends Component {
       possibleLabel: ''
     }));
     this.props.dispatch(postUnlabelledPhrases(unlabelledPhrases));
-    this.setState({ submissionDialogOpen: true });
   }
 
   clearFields = () =>
     this.setState({
+      submissionDialogOpen: false,
       textField: '',
       invalidData: true,
       phrases: []
     });
 
+
   handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 
-  closeDialog = () => {
-    this.setState({ submissionDialogOpen: false });
-    this.clearFields();
-  };
-
   render() {
-    const SubmissionDialog = () => {
+    let dialogTitle;
+    let dialogContent;
+    if (this.state.submissionDialogOpen && !this.props.loading) {
+      const phraseCountFormatted = `${this.state.phrases.length} phrase${this.state.phrases.length !== 1 ? 's' : ''}.`;
       if (!this.props.error) {
-        return (
-          <div>
-            <Dialog open={this.state.submissionDialogOpen} onClose={() => this.closeDialog()}>
-              <DialogTitle>Upload Successful</DialogTitle>
-              <DialogContent>Uploaded {this.state.phrases.length} phrases.</DialogContent>
-              <DialogActions>
-                <DialogButton action='close' isDefaultAction>
-                  OK
-                </DialogButton>
-              </DialogActions>
-            </Dialog>
-          </div>
-        );
+        dialogTitle = 'Upload Successful';
+        dialogContent = `Successfully uploaded ${phraseCountFormatted}`;
       } else {
+        dialogTitle = 'Upload Failed';
+        dialogContent = `Failed to upload ${phraseCountFormatted}`;
+      }
+    }
+
+    const SubmissionDialog = () => {
         return (
           <div>
-            <Dialog open={this.state.submissionDialogOpen} onClose={() => this.closeDialog()}>
-              <DialogTitle>Upload Failure</DialogTitle>
-              <DialogContent>Failed to upload {this.state.phrases.length} phrases.</DialogContent>
+            <Dialog open={this.state.submissionDialogOpen && !this.props.loading}>
+              <DialogTitle>{dialogTitle || ''}</DialogTitle>
+              <DialogContent>{dialogContent || ''}</DialogContent>
               <DialogActions>
-                <DialogButton action='close' isDefaultAction>
+                <Button onClick={() => this.clearFields()}>
                   OK
-                </DialogButton>
+                </Button>
               </DialogActions>
             </Dialog>
           </div>
         );
-      }
     };
     this.props.enableRefresh();
 
@@ -119,7 +112,10 @@ export class UploadPhrase extends Component {
       return (
         <div>
           <SubmissionDialog />
-          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.submitPhrases}>
+          <Button style={{margin: '0.5rem 0.5rem 0.5rem 0rem'}} raised onClick={evt => {
+            this.submitPhrases();
+            this.setState({submissionDialogOpen: true});
+          }}>
             Submit
           </Button>
           <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearFields}>
