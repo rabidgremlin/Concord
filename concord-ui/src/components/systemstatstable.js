@@ -87,6 +87,7 @@ export class SystemStatsTable extends Component {
                 <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
                 <DataTableHeadCell alignEnd>Users</DataTableHeadCell>
+                <DataTableHeadCell alignEnd>Consensus Level</DataTableHeadCell>
                 <DataTableHeadCell />
               </DataTableRow>
             </DataTableHead>
@@ -109,6 +110,9 @@ export class SystemStatsTable extends Component {
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
                   {data.userCount.toLocaleString()}
+                </DataTableCell>
+                <DataTableCell alignEnd style={{ width: '10%' }}>
+                  {data.consensusLevel.toLocaleString()}
                 </DataTableCell>
               </DataTableRow>
             </DataTableBody>

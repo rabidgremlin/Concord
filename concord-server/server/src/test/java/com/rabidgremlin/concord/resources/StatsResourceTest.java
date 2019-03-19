@@ -127,7 +127,7 @@ public class StatsResourceTest
     assertThat(response.getStatus(), is(200));
     assertThat(response.getStatusInfo().toString(), is("OK"));
     assertThat(response.getEntity(), instanceOf(SystemStats.class));
-    assertThat(response.getEntity(), is(new SystemStats(100, 50, 30, 1000, 60, 7, Collections.emptyList())));
+    assertThat(response.getEntity(), is(new SystemStats(100, 50, 30, 1000, 60, 7, 3, Collections.emptyList())));
   }
 
 }

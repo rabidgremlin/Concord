@@ -20,6 +20,8 @@ public class SystemStats
 
   private final int userCount;
 
+  private final int consensusLevel;
+
   private final List<DeadLockedPhrase> deadLockedPhrases;
 
 }

@@ -120,7 +120,8 @@ public class StatsResource
     GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, phraseIdsVotedOnByResolver, consensusLevel);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
 
-    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, labelsUsed, totalVotes, totalLabels, userCount, deadLockedPhrases);
+    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, labelsUsed, totalVotes, totalLabels, userCount, consensusLevel,
+        deadLockedPhrases);
 
     return Response.ok().entity(systemStats).build();
   }

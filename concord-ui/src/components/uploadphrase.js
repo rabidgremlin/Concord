@@ -12,17 +12,18 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
+import { Dialog, DialogActions, DialogButton, DialogContent, DialogTitle } from '@rmwc/dialog';
 import { postUnlabelledPhrases } from '../api';
 
 export class UploadPhrase extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       reloadApiData: false,
       textField: '',
       invalidData: true,
-      phrases: []
+      phrases: [],
+      submissionDialogOpen: false
     };
   }
 
@@ -57,14 +58,14 @@ export class UploadPhrase extends Component {
 
   cleanText = (s) => s.trim().toLowerCase();
 
-  submitPhrases = () => {
+  submitPhrases() {
     const unlabelledPhrases = this.state.phrases.map((phrase) => ({
       text: phrase,
       possibleLabel: ''
     }));
     this.props.dispatch(postUnlabelledPhrases(unlabelledPhrases));
-    this.clearFields();
-  };
+    this.setState({ submissionDialogOpen: true });
+  }
 
   clearFields = () =>
     this.setState({
@@ -73,11 +74,51 @@ export class UploadPhrase extends Component {
       phrases: []
     });
 
+  handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
+
+  closeDialog = () => {
+    this.setState({ submissionDialogOpen: false });
+    this.clearFields();
+  };
+
   render() {
+    const SubmissionDialog = () => {
+      if (!this.props.error) {
+        return (
+          <div>
+            <Dialog open={this.state.submissionDialogOpen} onClose={() => this.closeDialog()}>
+              <DialogTitle>Upload Successful</DialogTitle>
+              <DialogContent>Uploaded {this.state.phrases.length} phrases.</DialogContent>
+              <DialogActions>
+                <DialogButton action='close' isDefaultAction>
+                  OK
+                </DialogButton>
+              </DialogActions>
+            </Dialog>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <Dialog open={this.state.submissionDialogOpen} onClose={() => this.closeDialog()}>
+              <DialogTitle>Upload Failure</DialogTitle>
+              <DialogContent>Failed to upload {this.state.phrases.length} phrases.</DialogContent>
+              <DialogActions>
+                <DialogButton action='close' isDefaultAction>
+                  OK
+                </DialogButton>
+              </DialogActions>
+            </Dialog>
+          </div>
+        );
+      }
+    };
     this.props.enableRefresh();
+
     if (this.state.phrases.length > 0) {
       return (
         <div>
+          <SubmissionDialog />
           <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.submitPhrases}>
             Submit
           </Button>
@@ -105,6 +146,7 @@ export class UploadPhrase extends Component {
     }
     return (
       <div>
+        <SubmissionDialog />
         <Button
           style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }}
           raised
@@ -125,8 +167,6 @@ export class UploadPhrase extends Component {
       </div>
     );
   }
-
-  handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 }
 
 export default connect((state) => ({
