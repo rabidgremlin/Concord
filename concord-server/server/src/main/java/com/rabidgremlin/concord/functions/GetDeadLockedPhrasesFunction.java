@@ -73,7 +73,8 @@ public final class GetDeadLockedPhrasesFunction
     int totalVotes = labelCounts.stream().mapToInt(LabelCount::getCount).sum();
 
     int voteDifferenceBetweenTop2Labels = highestLabelVoteCount - secondHighestLabelVoteCount;
-    int possibleRemainingVotes = userCount - totalVotes;
+    // reduce minimum to 0 for the case where bulk upload voted, in that case the remaining votes could be negative
+    int possibleRemainingVotes = Math.max(userCount - totalVotes, 0);
 
     return possibleRemainingVotes + voteDifferenceBetweenTop2Labels < consensusLevel;
   }

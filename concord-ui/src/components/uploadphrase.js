@@ -90,7 +90,6 @@ export class UploadPhrase extends Component {
         dialogContent = `Failed to upload ${phraseCountFormatted}`;
       }
     }
-
     const SubmissionDialog = () => {
         return (
           <div>
@@ -106,6 +105,7 @@ export class UploadPhrase extends Component {
           </div>
         );
     };
+
     this.props.enableRefresh();
 
     if (this.state.phrases.length > 0) {
