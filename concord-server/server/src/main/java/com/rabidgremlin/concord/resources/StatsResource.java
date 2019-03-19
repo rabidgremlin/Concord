@@ -114,7 +114,8 @@ public class StatsResource
     int totalLabels = systemStatsDao.getCountOfLabels();
     int userCount = systemStatsDao.getCountOfUsers();
 
-    List<GroupedPhraseVoteWithMostRecentVoteTime> votedLabelsForUncompletedPhrases = votesDao.getLabelsForUncompletedPhrasesInVoteCountOrderWithMostRecentVoteTime();
+    List<GroupedPhraseVoteWithMostRecentVoteTime> votedLabelsForUncompletedPhrases = votesDao
+        .getLabelsForUncompletedPhrasesInVoteCountOrderWithMostRecentVoteTime();
     Set<String> phraseIdsVotedOnByResolver = votesDao.getVotesMadeByUser(RESOLVER_USER_ID).stream().map(PhraseLabel::getPhraseId).collect(Collectors.toSet());
     GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, phraseIdsVotedOnByResolver, consensusLevel);
     List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
