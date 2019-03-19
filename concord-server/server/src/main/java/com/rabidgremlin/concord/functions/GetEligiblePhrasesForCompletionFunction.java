@@ -36,6 +36,8 @@ public final class GetEligiblePhrasesForCompletionFunction
 
   public Set<Phrase> execute()
   {
+    log.debug("{} phrases voted on by resolver: {}", phrasesVotedOnByResolver.size(), phrasesVotedOnByResolver);
+
     Set<Phrase> completedPhrases = phrasesVotes.stream()
         .collect(Collectors.groupingBy(GroupedPhraseVote::getPhraseId))
         .values().stream()
@@ -86,7 +88,7 @@ public final class GetEligiblePhrasesForCompletionFunction
   private Phrase extractHighestVotedLabel(List<GroupedPhraseVote> phraseVotes)
   {
     GroupedPhraseVote highestVote = phraseVotes.get(0);
-    log.debug("Found completed phrase [{}] with label [{}] and id [{}]", highestVote.getText(), highestVote.getLabel(), highestVote.getPhraseId());
+    log.debug("Found completed phrase[{}] with label [{}] and id [{}]", highestVote.getText(), highestVote.getLabel(), highestVote.getPhraseId());
     return Phrase.incomplete(highestVote.getPhraseId(), highestVote.getText(), highestVote.getLabel());
   }
 

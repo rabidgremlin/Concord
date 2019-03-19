@@ -28,8 +28,6 @@ public interface VotesDao
   /**
    * This query returns incomplete phrases with the top 2 votes for each. Note that there will be only one row for those
    * only have one voted label.
-   *
-   * @param margin consensus level required for a phrase to be considered complete
    */
   @SqlQuery("SELECT " +
       "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +
@@ -54,10 +52,9 @@ public interface VotesDao
       "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
       "    ) r" +
       " WHERE" +
-      "    r.voteRank < 3" +
-      "    and r.maxVote >= :margin")
+      "    r.voteRank <= 2")
   @RegisterBeanMapper(GroupedPhraseVote.class)
-  List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrasesOverMarginInVoteCountOrder(@Bind("margin") int margin);
+  List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrasesInVoteCountOrder();
 
   @SqlQuery("SELECT" +
       "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank, r.maxTime" +
@@ -83,6 +80,6 @@ public interface VotesDao
       "    GROUP BY p.phraseId , p.text , v.label) AS t" +
       "    ) r")
   @RegisterBeanMapper(GroupedPhraseVoteWithMostRecentVoteTime.class)
-  List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesInVoteCountOrder();
+  List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesInVoteCountOrderWithMostRecentVoteTime();
 
 }
