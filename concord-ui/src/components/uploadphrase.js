@@ -7,38 +7,28 @@ import {
   DataTableBody,
   DataTableCell,
   DataTableContent,
-  DataTableHead,
   DataTableHeadCell,
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@rmwc/dialog';
 import { postUnlabelledPhrases } from '../api';
+import { PhraseSplitter } from '../util/phraseSplitter';
 
 export class UploadPhrase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      reloadApiData: false,
       textField: '',
       invalidData: true,
       phrases: [],
       submissionDialogOpen: false
     };
+    this.phraseSplitter = new PhraseSplitter('14pt Arial', 0.85);
   }
 
   componentWillUpdate(nextProps, nextState) {
     nextState.invalidData = !nextState.textField;
-  }
-
-  async componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadApiData !== this.state.reloadApiData) {
-      this.setState({
-        reloadApiData: nextProps.reloadApiData
-      });
-      // refresh the page
-      this.clearAllState();
-    }
   }
 
   checkPhrases = () => {
@@ -115,8 +105,6 @@ export class UploadPhrase extends Component {
       );
     };
 
-    this.props.enableRefresh();
-
     if (this.state.phrases.length > 0) {
       return (
         <div>
@@ -139,15 +127,17 @@ export class UploadPhrase extends Component {
           </Button>
           <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
             <DataTableContent style={{ fontSize: '14pt' }}>
-              <DataTableHead>
-                <DataTableRow>
-                  <DataTableHeadCell>Phrase</DataTableHeadCell>
-                </DataTableRow>
-              </DataTableHead>
               <DataTableBody>
-                {this.state.phrases.map((phrase) => (
-                  <DataTableRow key={phrase}>
-                    <DataTableCell>{phrase}</DataTableCell>
+                {this.state.phrases.map((phrase, i) => (
+                  <DataTableRow key={i}>
+                    <DataTableHeadCell style={{ padding: '', margin: '' }}>{i + 1}</DataTableHeadCell>
+                    <DataTableCell style={{ width: '100%' }}>
+                      <div>
+                        {this.phraseSplitter.splitPhrase(phrase).map((line, j) => (
+                          <div key={`${i}.${j}`}>{line}</div>
+                        ))}
+                      </div>
+                    </DataTableCell>
                   </DataTableRow>
                 ))}
               </DataTableBody>

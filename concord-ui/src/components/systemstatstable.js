@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import '@rmwc/list/collapsible-list.css';
 import { Button } from '@rmwc/button';
 import { Typography } from '@rmwc/typography';
+import { PhraseSplitter } from '../util/phraseSplitter';
 
 export class SystemStatsTable extends Component {
   constructor(props) {
@@ -22,6 +23,8 @@ export class SystemStatsTable extends Component {
       statsData: {},
       reloadApiData: false
     };
+    // for formatting the data table
+    this.phraseSplitter = new PhraseSplitter('14pt Arial', 0.4);
   }
 
   componentDidMount() {
@@ -69,11 +72,6 @@ export class SystemStatsTable extends Component {
 
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
-
-    // For the deadlocked phrases data table
-    this.element = document.createElement('canvas');
-    this.context = this.element.getContext('2d');
-    this.context.font = '14pt Arial';
 
     const SystemStatsTable = () => {
       return (
@@ -149,7 +147,7 @@ export class SystemStatsTable extends Component {
                 <DataTableRow key={i}>
                   <DataTableCell style={{ width: '50%' }}>
                     <div>
-                      {this.splitPhrase(deadLockedPhrases[i].phrase.text).map((line, j) => (
+                      {this.phraseSplitter.splitPhrase(deadLockedPhrases[i].phrase.text).map((line, j) => (
                         <div key={`${i}.${j}`}>{line}</div>
                       ))}
                     </div>
@@ -209,47 +207,6 @@ export class SystemStatsTable extends Component {
       </div>
     );
   }
-
-  // hack to put line breaks in DataTable (while trying not to break words)
-  splitPhrase(phrase) {
-    const textWidth = this.context.measureText(phrase).width;
-    const availableWidth = window.innerWidth / 3;
-    const widthRatio = textWidth / availableWidth;
-    const maxLineLength = Math.trunc(phrase.length / widthRatio) - 1;
-
-    let words = phrase.split(' ');
-    // break any long words up
-    let i = 0;
-    while (i < words.length) {
-      if (words[i].length >= maxLineLength) {
-        words.splice(i, 1, this.splitWord(words[i], maxLineLength));
-        words = this.flattenArray(words);
-      }
-      i++;
-    }
-
-    let lines = [];
-    i = 0;
-    while (i < words.length) {
-      let line = '';
-      while (i < words.length && line.length + words[i].length <= maxLineLength) {
-        line += ' ' + words[i];
-        i++;
-      }
-      lines.push(line);
-    }
-    return lines;
-  }
-
-  splitWord = (word, splitLength) => {
-    let chunks = [];
-    for (let i = 0, charsLength = word.length; i < charsLength; i += splitLength) {
-      chunks.push(word.substring(i, i + splitLength));
-    }
-    return chunks;
-  };
-
-  flattenArray = (a) => [].concat.apply([], a);
 
   resolvePhrase(phraseId, label) {
     // remove the phrase from the deadlocked list here (to save an expensive API call)
