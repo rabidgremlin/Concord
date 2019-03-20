@@ -130,7 +130,7 @@ export class UploadPhrase extends Component {
             Retry
           </Button>
           <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
-            <DataTableContent style={{ fontSize: '10pt' }}>
+            <DataTableContent style={{ fontSize: '12pt' }}>
               <DataTableHead>
                 <DataTableRow>
                   <DataTableHeadCell>Phrase</DataTableHeadCell>

@@ -147,26 +147,29 @@ export class UserStatsTable extends Component {
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>
-            {[...Array(dataLength)].map((v, i) => (
+            {data.map((userData, i) => (
               <DataTableRow key={i}>
-                <DataTableCell>{data[i].userId}</DataTableCell>
+                <DataTableCell>{userData.userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.computeScore(data[i]).toLocaleString()}
+                  {this.computeScore(userData).toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data[i].totalVotes.toLocaleString()}
+                  {userData.totalVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data[i].completedVotes.toLocaleString()}
+                  {userData.completedVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
+                  {this.toPercentage(userData.completedVotes, userData.totalVotesWithConsensus)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
+                  {this.toPercentage(userData.trashVotes, userData.totalVotes)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}
+                  {this.toPercentage(
+                    userData.completedVotesIgnoringTrash,
+                    userData.totalVotesWithConsensusIgnoringTrash
+                  )}
                   %
                 </DataTableCell>
                 <DataTableCell alignEnd />

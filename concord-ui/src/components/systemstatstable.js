@@ -71,60 +71,77 @@ export class SystemStatsTable extends Component {
     // For the deadlocked phrases data table
     this.element = document.createElement('canvas');
     this.context = this.element.getContext('2d');
-    this.context.font = '10pt Arial';
+    this.context.font = '12pt Arial';
 
+    const SystemStatsTable = () => {
+      return (
+        <div>
+          <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
+            System Stats
+          </Typography>
+          <DataTable style={{ width: '100%' }}>
+            <DataTableContent style={{ fontSize: '12pt' }}>
+              <DataTableHead>
+                <DataTableRow>
+                  <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Users</DataTableHeadCell>
+                  <DataTableHeadCell alignEnd>Consensus Level</DataTableHeadCell>
+                  <DataTableHeadCell />
+                </DataTableRow>
+              </DataTableHead>
+              <DataTableBody>
+                <DataTableRow>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.totalPhrases.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.completedPhrases.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.totalLabels.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.labelsUsed.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.totalVotes.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.userCount.toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell alignEnd style={{ width: '10%' }}>
+                    {data.consensusLevel.toLocaleString()}
+                  </DataTableCell>
+                </DataTableRow>
+              </DataTableBody>
+            </DataTableContent>
+          </DataTable>
+        </div>
+      );
+    };
+
+    if (this.props.loadingResolvePhrase) {
+      return (
+        <div>
+          <SystemStatsTable />
+          <div>
+            <p>loading...</p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div>
-        <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
-          System Stats
-        </Typography>
-        <DataTable style={{ width: '100%' }}>
-          <DataTableContent style={{ fontSize: '12pt' }}>
-            <DataTableHead>
-              <DataTableRow>
-                <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Completed Phrases</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Labels</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Labels Used</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Votes</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Users</DataTableHeadCell>
-                <DataTableHeadCell alignEnd>Consensus Level</DataTableHeadCell>
-                <DataTableHeadCell />
-              </DataTableRow>
-            </DataTableHead>
-            <DataTableBody>
-              <DataTableRow>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.totalPhrases.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.completedPhrases.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.totalLabels.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.labelsUsed.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.totalVotes.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.userCount.toLocaleString()}
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data.consensusLevel.toLocaleString()}
-                </DataTableCell>
-              </DataTableRow>
-            </DataTableBody>
-          </DataTableContent>
-        </DataTable>
-
+        <SystemStatsTable />
         <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
           {deadLockedPhrases.length} Deadlocked Phrases
         </Typography>
         <DataTable style={{ minWidth: '100%' }}>
-          <DataTableContent style={{ fontSize: '10pt' }}>
+          <DataTableContent style={{ fontSize: '12pt' }}>
             <DataTableBody>
               {[...Array(Math.min(20, deadLockedPhrases.length))].map((v, i) => (
                 <DataTableRow key={i}>
