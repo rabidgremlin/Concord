@@ -64,7 +64,9 @@ export class SystemStatsTable extends Component {
         </div>
       );
     }
+
     this.props.enableRefresh();
+
     const data = this.state.statsData;
     const deadLockedPhrases = data.deadLockedPhrases;
 

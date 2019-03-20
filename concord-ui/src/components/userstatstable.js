@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   DataTable,
@@ -10,8 +10,8 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
-import { getUserStats } from '../api';
-import { connect } from 'react-redux';
+import {getUserStats} from '../api';
+import {connect} from 'react-redux';
 
 export class UserStatsTable extends Component {
   constructor(props) {
@@ -78,31 +78,33 @@ export class UserStatsTable extends Component {
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
   render() {
-    if (this.props.loading || !this.props.statsData || !this.state.statsData) {
+    if (this.props.loading) {
       return (
         <div>
           <p>loading...</p>
         </div>
       );
     }
-    const data = this.state.statsData;
-    const dataLength = data.length;
-    if (dataLength <= 0) {
+
+    if (!this.props.statsData || !this.state.statsData || this.state.statsData.length <= 0) {
       return (
         <div>
           <p>No stats to display</p>
         </div>
       );
     }
+
     if (!this.state.doneFirstSort) {
       this.sortByScore(-1);
       this.setState({
         doneFirstSort: true
       });
     }
+
     this.props.enableRefresh();
+
     return (
-      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
+      <DataTable style={{ minHeight: this.state.statsData.length * 20, width: '100%' }}>
         <DataTableContent style={{ fontSize: '12pt' }}>
           <DataTableHead>
             <DataTableRow>
@@ -147,7 +149,7 @@ export class UserStatsTable extends Component {
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>
-            {data.map((userData, i) => (
+            {this.state.statsData.map((userData, i) => (
               <DataTableRow key={i}>
                 <DataTableCell>{userData.userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>

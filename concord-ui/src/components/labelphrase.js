@@ -106,6 +106,7 @@ export class LabelPhrase extends Component {
     }
 
     this.props.enableRefresh();
+
     return (
       <div>
         <div

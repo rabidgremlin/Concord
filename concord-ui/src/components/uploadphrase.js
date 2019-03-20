@@ -112,6 +112,7 @@ export class UploadPhrase extends Component {
     };
 
     this.props.enableRefresh();
+
     if (this.state.phrases.length > 0) {
       return (
         <div>
