@@ -37,7 +37,7 @@ export class UploadPhrase extends Component {
         reloadApiData: nextProps.reloadApiData
       });
       // refresh the page
-      this.clearFields();
+      this.clearAllState();
     }
   }
 
@@ -53,7 +53,7 @@ export class UploadPhrase extends Component {
         uniquePhrases.add(phrase);
         return true;
       });
-    this.setState({ textField: '', invalidData: true, phrases: phrases });
+    this.setState({ textField: phrases.join('\n'), phrases: phrases });
   };
 
   cleanText = (s) => s.trim();
@@ -66,7 +66,7 @@ export class UploadPhrase extends Component {
     this.props.dispatch(postUnlabelledPhrases(unlabelledPhrases));
   }
 
-  clearFields = () =>
+  clearAllState = () =>
     this.setState({
       submissionDialogOpen: false,
       textField: '',
@@ -87,14 +87,18 @@ export class UploadPhrase extends Component {
 
     let dialogTitle;
     let dialogContent;
+    let closeDialogFunction;
     if (this.state.submissionDialogOpen && !this.props.loading) {
       const phraseCountFormatted = `${this.state.phrases.length} phrase${this.state.phrases.length !== 1 ? 's' : ''}.`;
       if (!this.props.error) {
         dialogTitle = 'Upload Successful';
         dialogContent = `Successfully uploaded ${phraseCountFormatted}`;
+        closeDialogFunction = () => this.clearAllState();
       } else {
         dialogTitle = 'Upload Failed';
         dialogContent = `Failed to upload ${phraseCountFormatted}`;
+        // Don't clear the table if the POST request failed (user may want to retry)
+        closeDialogFunction = () => this.setState({ submissionDialogOpen: false });
       }
     }
     const SubmissionDialog = () => {
@@ -104,7 +108,7 @@ export class UploadPhrase extends Component {
             <DialogTitle>{dialogTitle || ''}</DialogTitle>
             <DialogContent>{dialogContent || ''}</DialogContent>
             <DialogActions>
-              <Button onClick={() => this.clearFields()}>OK</Button>
+              <Button onClick={closeDialogFunction}>OK</Button>
             </DialogActions>
           </Dialog>
         </div>
@@ -127,11 +131,14 @@ export class UploadPhrase extends Component {
           >
             Submit
           </Button>
-          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearFields}>
-            Retry
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={() => this.setState({ phrases: [] })}>
+            Edit
+          </Button>
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearAllState}>
+            Clear
           </Button>
           <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
-            <DataTableContent style={{ fontSize: '12pt' }}>
+            <DataTableContent style={{ fontSize: '14pt' }}>
               <DataTableHead>
                 <DataTableRow>
                   <DataTableHeadCell>Phrase</DataTableHeadCell>

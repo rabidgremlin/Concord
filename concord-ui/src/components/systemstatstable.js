@@ -73,7 +73,7 @@ export class SystemStatsTable extends Component {
     // For the deadlocked phrases data table
     this.element = document.createElement('canvas');
     this.context = this.element.getContext('2d');
-    this.context.font = '12pt Arial';
+    this.context.font = '14pt Arial';
 
     const SystemStatsTable = () => {
       return (
@@ -82,7 +82,7 @@ export class SystemStatsTable extends Component {
             System Stats
           </Typography>
           <DataTable style={{ width: '100%' }}>
-            <DataTableContent style={{ fontSize: '12pt' }}>
+            <DataTableContent style={{ fontSize: '14pt' }}>
               <DataTableHead>
                 <DataTableRow>
                   <DataTableHeadCell alignEnd>Phrases</DataTableHeadCell>
@@ -143,7 +143,7 @@ export class SystemStatsTable extends Component {
           {deadLockedPhrases.length} Deadlocked Phrases
         </Typography>
         <DataTable style={{ minWidth: '100%' }}>
-          <DataTableContent style={{ fontSize: '12pt' }}>
+          <DataTableContent style={{ fontSize: '14pt' }}>
             <DataTableBody>
               {[...Array(Math.min(20, deadLockedPhrases.length))].map((v, i) => (
                 <DataTableRow key={i}>

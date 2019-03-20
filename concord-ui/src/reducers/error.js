@@ -47,8 +47,6 @@ const errorReducer = (state = { hasError: false }, action) => {
 
     case 'CALL_POST_PHRASES':
       return { hasError: false };
-    case 'CALL_POST_PHRASES_FAILED':
-      return { hasError: true, msg: 'Failed to upload phrases' };
 
     default:
       return state;

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   DataTable,
@@ -10,8 +10,8 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
-import {getUserStats} from '../api';
-import {connect} from 'react-redux';
+import { getUserStats } from '../api';
+import { connect } from 'react-redux';
 
 export class UserStatsTable extends Component {
   constructor(props) {
@@ -105,7 +105,7 @@ export class UserStatsTable extends Component {
 
     return (
       <DataTable style={{ minHeight: this.state.statsData.length * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '12pt' }}>
+        <DataTableContent style={{ fontSize: '14pt' }}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
