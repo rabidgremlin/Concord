@@ -77,6 +77,14 @@ export class UploadPhrase extends Component {
   handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 
   render() {
+    if (this.state.submissionDialogOpen && this.props.loading) {
+      return (
+        <div>
+          <p>loading...</p>
+        </div>
+      );
+    }
+
     let dialogTitle;
     let dialogContent;
     if (this.state.submissionDialogOpen && !this.props.loading) {
@@ -104,7 +112,6 @@ export class UploadPhrase extends Component {
     };
 
     this.props.enableRefresh();
-
     if (this.state.phrases.length > 0) {
       return (
         <div>

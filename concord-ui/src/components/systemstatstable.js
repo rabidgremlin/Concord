@@ -49,14 +49,15 @@ export class SystemStatsTable extends Component {
   }
 
   render() {
-    if (this.props.loading || !this.props.statsData || !this.state.statsData) {
+    if (this.props.loading) {
       return (
         <div>
           <p>loading...</p>
         </div>
       );
     }
-    if (Object.keys(this.state.statsData).length <= 0) {
+
+    if (!this.props.statsData || !this.state.statsData || Object.keys(this.state.statsData).length <= 0) {
       return (
         <div>
           <p>No stats to display</p>
@@ -129,14 +130,14 @@ export class SystemStatsTable extends Component {
                 <DataTableRow key={i}>
                   <DataTableCell style={{ width: '50%' }}>
                     <div>
-                      {this.splitPhrase(deadLockedPhrases[i].phrase.text).map((line) => (
-                        <div>{line}</div>
+                      {this.splitPhrase(deadLockedPhrases[i].phrase.text).map((line, j) => (
+                        <div key={`${i}.${j}`}>{line}</div>
                       ))}
                     </div>
                   </DataTableCell>
                   <DataTableCell style={{ width: '20%' }}>
-                    {deadLockedPhrases[i].labelsInVoteOrder.map((label) => (
-                      <div>
+                    {deadLockedPhrases[i].labelsInVoteOrder.map((label, j) => (
+                      <div key={`${i}.${j}`}>
                         <Button
                           unelevated
                           style={{
