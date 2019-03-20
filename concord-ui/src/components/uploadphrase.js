@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Button} from '@rmwc/button';
-import {TextField} from '@rmwc/textfield';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Button } from '@rmwc/button';
+import { TextField } from '@rmwc/textfield';
+import { connect } from 'react-redux';
 import {
   DataTable,
   DataTableBody,
@@ -12,8 +12,8 @@ import {
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
-import {Dialog, DialogActions, DialogContent, DialogTitle} from '@rmwc/dialog';
-import {postUnlabelledPhrases} from '../api';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@rmwc/dialog';
+import { postUnlabelledPhrases } from '../api';
 
 export class UploadPhrase extends Component {
   constructor(props) {
@@ -74,7 +74,6 @@ export class UploadPhrase extends Component {
       phrases: []
     });
 
-
   handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 
   render() {
@@ -91,19 +90,17 @@ export class UploadPhrase extends Component {
       }
     }
     const SubmissionDialog = () => {
-        return (
-          <div>
-            <Dialog open={this.state.submissionDialogOpen && !this.props.loading}>
-              <DialogTitle>{dialogTitle || ''}</DialogTitle>
-              <DialogContent>{dialogContent || ''}</DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.clearFields()}>
-                  OK
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        );
+      return (
+        <div>
+          <Dialog open={this.state.submissionDialogOpen && !this.props.loading}>
+            <DialogTitle>{dialogTitle || ''}</DialogTitle>
+            <DialogContent>{dialogContent || ''}</DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.clearFields()}>OK</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
     };
 
     this.props.enableRefresh();
@@ -112,10 +109,14 @@ export class UploadPhrase extends Component {
       return (
         <div>
           <SubmissionDialog />
-          <Button style={{margin: '0.5rem 0.5rem 0.5rem 0rem'}} raised onClick={evt => {
-            this.submitPhrases();
-            this.setState({submissionDialogOpen: true});
-          }}>
+          <Button
+            style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }}
+            raised
+            onClick={(evt) => {
+              this.submitPhrases();
+              this.setState({ submissionDialogOpen: true });
+            }}
+          >
             Submit
           </Button>
           <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearFields}>
