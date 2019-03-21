@@ -197,6 +197,19 @@ export class SystemStatsTable extends Component {
                         Trash
                       </Button>
                     </div>
+                    <div>
+                      <Button
+                        unelevated
+                        style={{
+                          backgroundColor: '#E0E0E0',
+                          color: 'black',
+                          marginBottom: '0.5rem'
+                        }}
+                        onClick={() => this.resolvePhrase(deadLockedPhrases[i].phrase.phraseId, 'SKIPPED')}
+                      >
+                        Skip
+                      </Button>
+                    </div>
                   </DataTableCell>
                   <DataTableCell />
                 </DataTableRow>
