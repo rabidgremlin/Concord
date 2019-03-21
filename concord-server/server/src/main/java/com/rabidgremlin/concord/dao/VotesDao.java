@@ -26,8 +26,8 @@ public interface VotesDao
   List<PhraseLabel> getVotesMadeByUser(@Bind("user") String user);
 
   /**
-   * This query returns incomplete phrases with the top 2 votes for each. Note that there will be only one row for those
-   * only have one voted label.
+   * @return incomplete phrases with the top 2 vote labels for each. Note that there will be only one row for those who
+   *         only have one voted label.
    */
   @SqlQuery("SELECT " +
       "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +
@@ -38,7 +38,7 @@ public interface VotesDao
       "            t.label," +
       "            t.voteCount," +
       "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
-      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount,@maxVote,t.voteCount), t.voteCount) AS maxVote," +
+      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount, @maxVote,t.voteCount), t.voteCount) AS maxVote," +
       "            @current_phraseId:=t.phraseId" +
       "    FROM" +
       "        (SELECT " +
@@ -48,16 +48,20 @@ public interface VotesDao
       "    JOIN votes v ON p.phraseId = v.phraseId" +
       "    WHERE" +
       "        p.completed = FALSE" +
-      "    GROUP BY p.phraseId , p.text , v.label" +
-      "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
+      "    GROUP BY p.phraseId, p.text, v.label" +
+      "    ORDER BY p.phraseId, p.text, voteCount DESC) AS t" +
       "    ) r" +
       " WHERE" +
       "    r.voteRank <= 2")
   @RegisterBeanMapper(GroupedPhraseVote.class)
   List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrasesInVoteCountOrder();
 
+  /**
+   * @return incomplete phrases with all vote labels for each. Note the most recent vote time is the same for each
+   *         phrase label.
+   */
   @SqlQuery("SELECT" +
-      "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank, r.maxTime" +
+      "    r.phraseId, r.text, r.label, r.voteCount, r.maxTime" +
       "    FROM" +
       "    (SELECT" +
       "        t.phraseId," +
@@ -65,13 +69,11 @@ public interface VotesDao
       "            t.label," +
       "            t.voteCount," +
       "            t.latestVoteTime," +
-      "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
-      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount,@maxVote,t.voteCount), t.voteCount) AS maxVote," +
-      "            @maxTime:=IF(@current_phraseId = t.phraseId, IF(@maxTime >= t.latestVoteTime,@maxTime,t.latestVoteTime), t.latestVoteTime) AS maxTime," +
+      "            @maxTime:=IF(@current_phraseId = t.phraseId, IF(@maxTime >= t.latestVoteTime, @maxTime, t.latestVoteTime), t.latestVoteTime) AS maxTime," +
       "            @current_phraseId:=t.phraseId" +
       "    FROM" +
       "        (SELECT" +
-      "        p.phraseId, p.text, v.label, COUNT(v.userId) AS voteCount, max(v.lastModifiedTimestamp) as latestVoteTime" +
+      "        p.phraseId, p.text, v.label, COUNT(v.userId) AS voteCount, MAX(v.lastModifiedTimestamp) AS latestVoteTime" +
       "    FROM" +
       "        phrases p" +
       "    JOIN votes v ON p.phraseId = v.phraseId" +
@@ -80,6 +82,6 @@ public interface VotesDao
       "    GROUP BY p.phraseId , p.text , v.label) AS t" +
       "    ) r")
   @RegisterBeanMapper(GroupedPhraseVoteWithMostRecentVoteTime.class)
-  List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesInVoteCountOrderWithMostRecentVoteTime();
+  List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesWithMostRecentVoteTime();
 
 }
