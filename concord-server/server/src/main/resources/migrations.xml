@@ -87,4 +87,10 @@
             label = 'TRASH'
         </sql>
     </changeSet>
+    <changeSet id="6" author="wilmol">
+        <comment>Users should not have duplicate votes for a given phrase</comment>
+        <sql dbms="mysql">
+            ALTER TABLE votes DROP PRIMARY KEY , ADD PRIMARY KEY ( phraseId, userId )
+        </sql>
+    </changeSet>
 </databaseChangeLog>
