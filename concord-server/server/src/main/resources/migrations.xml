@@ -88,7 +88,32 @@
         </sql>
     </changeSet>
     <changeSet id="6" author="wilmol">
-        <comment>Users should not have duplicate votes for a given phrase</comment>
+        <comment>
+            - Users should not have duplicate votes for a given phrase (changing votes PK to [phraseId, userId]).
+            - First query deletes all but the most recent vote for a given [phraseId, userId] pair (this will be the
+            behaviour with new PK constraints).
+            - Second query deletes all the votes violating the new PK constraints (for the cases where timestamps were
+            not yet deployed - we cannot determine the most recent vote).
+        </comment>
+        <sql dbms="mysql">
+            DELETE FROM votes WHERE EXISTS
+            (
+            SELECT r.phraseId, r.userId, r.label, r.maxTime FROM
+            (SELECT t.phraseId, t.userId, t.label, v.maxTime
+            FROM votes t JOIN
+            (SELECT phraseId, userId, COUNT(*), MAX(lastModifiedTimestamp) AS maxTime FROM votes GROUP BY phraseId, userId) v
+            ON t.phraseId = v.phraseId AND t.userId = v.userId) r
+            WHERE votes.phraseId = r.phraseId AND votes.userId = r.userId AND votes.lastModifiedTimestamp != r.maxTime
+            )
+        </sql>
+        <sql dbms="mysql">
+            DELETE FROM votes WHERE EXISTS
+            (
+            SELECT * FROM (
+            SELECT phraseId, userId, COUNT(*) FROM votes GROUP BY phraseId, userId HAVING COUNT(*) > 1
+            ) r WHERE votes.userId = r.userId AND votes.phraseId = r.phraseId
+            )
+        </sql>
         <sql dbms="mysql">
             ALTER TABLE votes DROP PRIMARY KEY , ADD PRIMARY KEY ( phraseId, userId )
         </sql>
