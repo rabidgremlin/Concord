@@ -30,7 +30,7 @@ public interface VotesDao
    *         only have one voted label.
    */
   @SqlQuery("SELECT " +
-      "    r.phraseId, r.text, r.label, r.voteCount, r.voteRank" +
+      "    r.phraseId, r.text, r.label, r.voteCount" +
       " FROM" +
       "    (SELECT " +
       "        t.phraseId," +
@@ -38,7 +38,6 @@ public interface VotesDao
       "            t.label," +
       "            t.voteCount," +
       "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
-      "            @maxVote:=IF(@current_phraseId = t.phraseId, IF(@maxVote >= t.voteCount, @maxVote,t.voteCount), t.voteCount) AS maxVote," +
       "            @current_phraseId:=t.phraseId" +
       "    FROM" +
       "        (SELECT " +
@@ -48,13 +47,12 @@ public interface VotesDao
       "    JOIN votes v ON p.phraseId = v.phraseId" +
       "    WHERE" +
       "        p.completed = FALSE" +
-      "    GROUP BY p.phraseId, p.text, v.label" +
-      "    ORDER BY p.phraseId, p.text, voteCount DESC) AS t" +
-      "    ) r" +
+      "    GROUP BY p.phraseId, p.text, v.label) AS t" +
+      "    ) AS r" +
       " WHERE" +
       "    r.voteRank <= 2")
   @RegisterBeanMapper(GroupedPhraseVote.class)
-  List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrasesInVoteCountOrder();
+  List<GroupedPhraseVote> getTop2LabelsForUncompletedPhrases();
 
   /**
    * @return incomplete phrases with all vote labels for each. Note the most recent vote time is the same for each
