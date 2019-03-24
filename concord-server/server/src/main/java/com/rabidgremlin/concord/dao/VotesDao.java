@@ -47,7 +47,8 @@ public interface VotesDao
       "    JOIN votes v ON p.phraseId = v.phraseId" +
       "    WHERE" +
       "        p.completed = FALSE" +
-      "    GROUP BY p.phraseId, p.text, v.label) AS t" +
+      "    GROUP BY p.phraseId, p.text, v.label" +
+      "    ORDER BY p.phraseId , p.text , voteCount DESC) AS t" +
       "    ) AS r" +
       " WHERE" +
       "    r.voteRank <= 2")
