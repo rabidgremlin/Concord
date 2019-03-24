@@ -3,6 +3,7 @@ package com.rabidgremlin.concord.resources;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -117,7 +118,7 @@ public class StatsResourceTest
     when(systemStatsDao.getCountOfLabelsUsed()).thenReturn(30);
     when(systemStatsDao.getCountOfVotes()).thenReturn(1000);
     when(systemStatsDao.getCountOfLabels()).thenReturn(60);
-    when(systemStatsDao.getCountOfUsers()).thenReturn(7);
+    when(systemStatsDao.getCountOfActiveUsers(any())).thenReturn(7);
 
     // When
     Response response = statsResource.getSystemStats(caller);

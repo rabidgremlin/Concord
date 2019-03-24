@@ -18,7 +18,7 @@ public class SystemStats
 
   private final int totalLabels;
 
-  private final int userCount;
+  private final int activeUserCount;
 
   private final int consensusLevel;
 

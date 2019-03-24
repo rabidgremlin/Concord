@@ -2,6 +2,8 @@ package com.rabidgremlin.concord.resources;
 
 import static java.util.stream.Collectors.toList;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -112,15 +114,16 @@ public class StatsResource
     int labelsUsed = systemStatsDao.getCountOfLabelsUsed();
     int totalVotes = systemStatsDao.getCountOfVotes();
     int totalLabels = systemStatsDao.getCountOfLabels();
-    int userCount = systemStatsDao.getCountOfUsers();
+    Timestamp oneMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+    int activeUserCount = systemStatsDao.getCountOfActiveUsers(oneMonthAgo);
 
     List<GroupedPhraseVoteWithMostRecentVoteTime> votedLabelsForUncompletedPhrases = votesDao
         .getLabelsForUncompletedPhrasesWithMostRecentVoteTime();
     Set<String> phraseIdsVotedOnByResolver = votesDao.getVotesMadeByUser(RESOLVER_USER_ID).stream().map(PhraseLabel::getPhraseId).collect(Collectors.toSet());
     GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(votedLabelsForUncompletedPhrases, phraseIdsVotedOnByResolver, consensusLevel);
-    List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(activeUserCount);
 
-    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, labelsUsed, totalVotes, totalLabels, userCount, consensusLevel,
+    SystemStats systemStats = new SystemStats(totalPhrases, completedPhrases, labelsUsed, totalVotes, totalLabels, activeUserCount, consensusLevel,
         deadLockedPhrases);
 
     return Response.ok().entity(systemStats).build();

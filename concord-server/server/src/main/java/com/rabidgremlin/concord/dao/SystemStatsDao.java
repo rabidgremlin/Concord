@@ -1,5 +1,8 @@
 package com.rabidgremlin.concord.dao;
 
+import java.sql.Timestamp;
+
+import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 public interface SystemStatsDao
@@ -22,7 +25,7 @@ public interface SystemStatsDao
   @SqlQuery("SELECT COUNT(*) FROM labels")
   int getCountOfLabels();
 
-  @SqlQuery("SELECT COUNT(DISTINCT userId) FROM votes " + FILTER_USERS)
-  int getCountOfUsers();
+  @SqlQuery("SELECT COUNT(DISTINCT userId) FROM votes " + FILTER_USERS + " AND lastModifiedTimestamp > :earliestVoteTime")
+  int getCountOfActiveUsers(@Bind("earliestVoteTime") Timestamp earliestVoteTime);
 
 }

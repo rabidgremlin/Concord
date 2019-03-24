@@ -160,7 +160,7 @@ export class LabelPhrase extends Component {
                 >
                   <div style={{ padding: '0 1rem 1rem 1rem' }}>
                     <Typography use='headline6' tag='h2'>
-                      {label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} />%
+                      {label.label} - <FormattedNumber value={label.score * 100} minimumFractionDigits={2} maximumFractionDigits={2} />%
                     </Typography>
                     <Typography
                       use='subtitle2'
