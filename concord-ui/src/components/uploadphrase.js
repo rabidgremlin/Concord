@@ -32,6 +32,17 @@ export class UploadPhrase extends Component {
     nextState.invalidData = !nextState.textField;
   }
 
+  componentDidMount() {
+    this.updateDimensions();
+    window.addEventListener('scroll', this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.updateDimensions);
+  }
+
+  updateDimensions = () => this.setState({ scrollYOffSet: window.pageYOffset });
+
   checkPhrases = () => {
     let uniquePhrases = new Set();
     let phrases = this.state.textField
@@ -107,17 +118,21 @@ export class UploadPhrase extends Component {
     };
 
     const ScrollUpButton = () => {
-      return (
-        <div className='tooltip'>
-          <span className='tooltiptext'>Back To Top</span>
-          <Fab
-            icon='arrow_upward'
-            className='tooltip'
-            style={{ position: 'fixed', bottom: '1rem', right: '1rem' }}
-            onClick={() => window.scrollTo(0, 0)}
-          />
-        </div>
-      );
+      if (this.state.scrollYOffSet > 0) {
+        return (
+          <div className='tooltip'>
+            <span className='tooltiptext'>Back To Top</span>
+            <Fab
+              icon='arrow_upward'
+              className='tooltip'
+              style={{ position: 'fixed', bottom: '1rem', right: '1rem' }}
+              onClick={() => window.scrollTo(0, 0)}
+            />
+          </div>
+        );
+      } else {
+        return <div />;
+      }
     };
 
     if (this.state.phrases.length > 0) {
