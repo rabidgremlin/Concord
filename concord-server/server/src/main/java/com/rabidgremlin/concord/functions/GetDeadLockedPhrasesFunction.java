@@ -39,7 +39,7 @@ public final class GetDeadLockedPhrasesFunction
     this.consensusLevel = consensusLevel;
   }
 
-  public List<DeadLockedPhrase> execute(int userCount)
+  public List<DeadLockedPhrase> execute(int activeUserCount)
   {
     Map<String, List<LabelCount>> groupedPhraseVotes = phraseVotes.stream()
         .filter(phrase -> !phrasesVotedOnByResolver.contains(phrase.getPhraseId()))
@@ -51,7 +51,7 @@ public final class GetDeadLockedPhrasesFunction
         .collect(Collectors.toMap(GroupedPhraseVote::getText, GroupedPhraseVoteWithMostRecentVoteTime::getMaxTime, (a, b) -> a));
 
     List<DeadLockedPhrase> deadLockedPhrases = groupedPhraseVotes.entrySet().stream()
-        .filter(e -> isDeadLocked(e.getValue(), consensusLevel, userCount))
+        .filter(e -> isDeadLocked(e.getValue(), consensusLevel, activeUserCount))
         .map(e -> extractDeadLockedPhrase(e.getKey(), e.getValue(), mostRecentVoteTimeForPhrases))
         .sorted(Comparator.comparing(DeadLockedPhrase::getMostRecentVoteTime).reversed())
         .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public final class GetDeadLockedPhrasesFunction
     return deadLockedPhrases;
   }
 
-  private boolean isDeadLocked(List<LabelCount> labelCounts, int consensusLevel, int userCount)
+  private boolean isDeadLocked(List<LabelCount> labelCounts, int consensusLevel, int activeUserCount)
   {
     if (labelCounts.size() < 2)
     {
@@ -73,7 +73,8 @@ public final class GetDeadLockedPhrasesFunction
     int totalVotes = labelCounts.stream().mapToInt(LabelCount::getCount).sum();
 
     int voteDifferenceBetweenTop2Labels = highestLabelVoteCount - secondHighestLabelVoteCount;
-    int possibleRemainingVotes = userCount - totalVotes;
+    // reduce minimum to 0 for the case where bulk upload voted, in that case the remaining votes could be negative
+    int possibleRemainingVotes = Math.max(activeUserCount - totalVotes, 0);
 
     return possibleRemainingVotes + voteDifferenceBetweenTop2Labels < consensusLevel;
   }

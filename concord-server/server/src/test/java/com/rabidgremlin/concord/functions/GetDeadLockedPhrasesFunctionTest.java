@@ -211,4 +211,25 @@ public class GetDeadLockedPhrasesFunctionTest
     assertThat(deadLockedPhrases.size(), is(0));
   }
 
+  @Test
+  public void shouldAccountForFilteredUsersVotes()
+  {
+    // Given
+    // 7 users but 8 votes (BULK_UPLOAD has voted)
+    final int userCount = 7;
+    final int consensusLevel = 3;
+    List<GroupedPhraseVoteWithMostRecentVoteTime> phraseVotes = new ArrayList<>();
+
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("BonJovi", "Woah, livin' on a prayer", 5, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Beyonce", "Woah, livin' on a prayer", 2, TIME_STAMP));
+    phraseVotes.add(new GroupedPhraseVoteWithMostRecentVoteTime("Elvis", "Woah, livin' on a prayer", 1, TIME_STAMP));
+
+    // When
+    GetDeadLockedPhrasesFunction function = new GetDeadLockedPhrasesFunction(phraseVotes, EMPTY_SET, consensusLevel);
+    List<DeadLockedPhrase> deadLockedPhrases = function.execute(userCount);
+
+    // Then
+    assertThat(deadLockedPhrases.size(), is(0));
+  }
+
 }

@@ -78,32 +78,34 @@ export class UserStatsTable extends Component {
   toPercentage = (n, d) => (d > 0 ? 100 * (n / d) : 0).toFixed(2);
 
   render() {
-    if (this.props.loading || !this.props.statsData || !this.state.statsData) {
+    if (this.props.loading) {
       return (
         <div>
           <p>loading...</p>
         </div>
       );
     }
-    const data = this.state.statsData;
-    const dataLength = data.length;
-    if (dataLength <= 0) {
+
+    if (!this.props.statsData || !this.state.statsData || this.state.statsData.length <= 0) {
       return (
         <div>
           <p>No stats to display</p>
         </div>
       );
     }
+
     if (!this.state.doneFirstSort) {
       this.sortByScore(-1);
       this.setState({
         doneFirstSort: true
       });
     }
+
     this.props.enableRefresh();
+
     return (
-      <DataTable style={{ minHeight: dataLength * 20, width: '100%' }}>
-        <DataTableContent style={{ fontSize: '12pt' }}>
+      <DataTable style={{ minHeight: this.state.statsData.length * 20, width: '100%' }}>
+        <DataTableContent style={{ fontSize: '14pt' }}>
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell>User</DataTableHeadCell>
@@ -147,26 +149,29 @@ export class UserStatsTable extends Component {
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>
-            {[...Array(dataLength)].map((v, i) => (
+            {this.state.statsData.map((userData, i) => (
               <DataTableRow key={i}>
-                <DataTableCell>{data[i].userId}</DataTableCell>
+                <DataTableCell>{userData.userId}</DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.computeScore(data[i]).toLocaleString()}
+                  {this.computeScore(userData).toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data[i].totalVotes.toLocaleString()}
+                  {userData.totalVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {data[i].completedVotes.toLocaleString()}
+                  {userData.completedVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].completedVotes, data[i].totalVotesWithConsensus)}%
+                  {this.toPercentage(userData.completedVotes, userData.totalVotesWithConsensus)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].trashVotes, data[i].totalVotes)}%
+                  {this.toPercentage(userData.trashVotes, userData.totalVotes)}%
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(data[i].completedVotesIgnoringTrash, data[i].totalVotesWithConsensusIgnoringTrash)}
+                  {this.toPercentage(
+                    userData.completedVotesIgnoringTrash,
+                    userData.totalVotesWithConsensusIgnoringTrash
+                  )}
                   %
                 </DataTableCell>
                 <DataTableCell alignEnd />

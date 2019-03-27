@@ -7,38 +7,41 @@ import {
   DataTableBody,
   DataTableCell,
   DataTableContent,
-  DataTableHead,
   DataTableHeadCell,
   DataTableRow
 } from '@rmwc/data-table';
 import '@rmwc/data-table/data-table.css';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@rmwc/dialog';
 import { postUnlabelledPhrases } from '../api';
+import { PhraseSplitter } from '../util/phraseSplitter';
+import { Fab } from '@rmwc/fab';
 
 export class UploadPhrase extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      reloadApiData: false,
       textField: '',
       invalidData: true,
-      phrases: []
+      phrases: [],
+      submissionDialogOpen: false
     };
+    this.phraseSplitter = new PhraseSplitter('14pt Arial', 0.85);
   }
 
   componentWillUpdate(nextProps, nextState) {
     nextState.invalidData = !nextState.textField;
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadApiData !== this.state.reloadApiData) {
-      this.setState({
-        reloadApiData: nextProps.reloadApiData
-      });
-      // refresh the page
-      this.clearFields();
-    }
+  componentDidMount() {
+    this.updateDimensions();
+    window.addEventListener('scroll', this.updateDimensions);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.updateDimensions);
+  }
+
+  updateDimensions = () => this.setState({ scrollYOffSet: window.pageYOffset });
 
   checkPhrases = () => {
     let uniquePhrases = new Set();
@@ -52,59 +55,133 @@ export class UploadPhrase extends Component {
         uniquePhrases.add(phrase);
         return true;
       });
-    this.setState({ textField: '', invalidData: true, phrases: phrases });
+    this.setState({ textField: phrases.join('\n'), phrases: phrases });
   };
 
-  cleanText = (s) => s.trim().toLowerCase();
+  cleanText = (s) => s.trim();
 
-  submitPhrases = () => {
+  submitPhrases() {
     const unlabelledPhrases = this.state.phrases.map((phrase) => ({
       text: phrase,
       possibleLabel: ''
     }));
     this.props.dispatch(postUnlabelledPhrases(unlabelledPhrases));
-    this.clearFields();
-  };
+  }
 
-  clearFields = () =>
+  clearAllState = () =>
     this.setState({
+      submissionDialogOpen: false,
       textField: '',
       invalidData: true,
       phrases: []
     });
 
+  handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
+
   render() {
-    this.props.enableRefresh();
+    if (this.state.submissionDialogOpen && this.props.loading) {
+      return (
+        <div>
+          <p>loading...</p>
+        </div>
+      );
+    }
+
+    let dialogTitle;
+    let dialogContent;
+    let closeDialogFunction;
+    if (this.state.submissionDialogOpen && !this.props.loading) {
+      const phraseCountFormatted = `${this.state.phrases.length} phrase${this.state.phrases.length !== 1 ? 's' : ''}.`;
+      if (!this.props.error) {
+        dialogTitle = 'Upload Successful';
+        dialogContent = `Successfully uploaded ${phraseCountFormatted}`;
+        closeDialogFunction = () => this.clearAllState();
+      } else {
+        dialogTitle = 'Upload Failed';
+        dialogContent = `Failed to upload ${phraseCountFormatted}`;
+        // Don't clear the table if the POST request failed (user may want to retry)
+        closeDialogFunction = () => this.setState({ submissionDialogOpen: false });
+      }
+    }
+    const SubmissionDialog = () => {
+      return (
+        <div>
+          <Dialog open={this.state.submissionDialogOpen && !this.props.loading}>
+            <DialogTitle>{dialogTitle || ''}</DialogTitle>
+            <DialogContent>{dialogContent || ''}</DialogContent>
+            <DialogActions>
+              <Button onClick={closeDialogFunction}>OK</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
+    };
+
+    const ScrollUpButton = () => {
+      if (this.state.scrollYOffSet > 0) {
+        return (
+          <div className='tooltip'>
+            <span className='tooltiptext'>Back To Top</span>
+            <Fab
+              icon='arrow_upward'
+              className='tooltip'
+              style={{ position: 'fixed', bottom: '1rem', right: '1rem' }}
+              onClick={() => window.scrollTo(0, 0)}
+            />
+          </div>
+        );
+      } else {
+        return <div />;
+      }
+    };
+
     if (this.state.phrases.length > 0) {
       return (
         <div>
-          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.submitPhrases}>
+          <SubmissionDialog />
+          <Button
+            style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }}
+            raised
+            onClick={(evt) => {
+              this.submitPhrases();
+              this.setState({ submissionDialogOpen: true });
+            }}
+          >
             Submit
           </Button>
-          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearFields}>
-            Retry
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={() => this.setState({ phrases: [] })}>
+            Edit
+          </Button>
+          <Button style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }} raised onClick={this.clearAllState}>
+            Clear
           </Button>
           <DataTable style={{ minHeight: this.state.phrases.length * 20, width: '100%' }}>
-            <DataTableContent style={{ fontSize: '10pt' }}>
-              <DataTableHead>
-                <DataTableRow>
-                  <DataTableHeadCell>Phrase</DataTableHeadCell>
-                </DataTableRow>
-              </DataTableHead>
+            <DataTableContent style={{ fontSize: '14pt' }}>
               <DataTableBody>
-                {this.state.phrases.map((phrase) => (
-                  <DataTableRow key={phrase}>
-                    <DataTableCell>{phrase}</DataTableCell>
+                {this.state.phrases.map((phrase, i) => (
+                  <DataTableRow key={i}>
+                    <DataTableHeadCell style={{ padding: '', margin: '' }}>
+                      {(i + 1).toLocaleString()}
+                    </DataTableHeadCell>
+                    <DataTableCell style={{ width: '100%' }}>
+                      <div>
+                        {this.phraseSplitter.splitPhrase(phrase).map((line, j) => (
+                          <div key={`${i}.${j}`}>{line}</div>
+                        ))}
+                      </div>
+                    </DataTableCell>
                   </DataTableRow>
                 ))}
               </DataTableBody>
             </DataTableContent>
           </DataTable>
+          <ScrollUpButton />
         </div>
       );
     }
     return (
       <div>
+        <SubmissionDialog />
         <Button
           style={{ margin: '0.5rem 0.5rem 0.5rem 0rem' }}
           raised
@@ -114,7 +191,7 @@ export class UploadPhrase extends Component {
           Check
         </Button>
         <TextField
-          style={{ minHeight: window.innerHeight, width: '100%' }}
+          style={{ height: '85vh', width: '100%' }}
           label='Enter phrases, each on a new line'
           textarea
           outlined
@@ -125,8 +202,6 @@ export class UploadPhrase extends Component {
       </div>
     );
   }
-
-  handleChange = (evt) => this.setState({ ...this.state, textField: evt.target.value });
 }
 
 export default connect((state) => ({

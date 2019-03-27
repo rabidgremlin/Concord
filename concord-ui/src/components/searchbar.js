@@ -38,7 +38,7 @@ export class Searchbar extends Component {
     if (this.props.loading) {
       return (
         <div>
-          <p>loading.....</p>
+          <p>loading...</p>
         </div>
       );
     } else {
