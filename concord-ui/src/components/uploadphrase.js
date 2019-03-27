@@ -14,6 +14,7 @@ import '@rmwc/data-table/data-table.css';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@rmwc/dialog';
 import { postUnlabelledPhrases } from '../api';
 import { PhraseSplitter } from '../util/phraseSplitter';
+import { Fab } from '@rmwc/fab';
 
 export class UploadPhrase extends Component {
   constructor(props) {
@@ -105,6 +106,20 @@ export class UploadPhrase extends Component {
       );
     };
 
+    const ScrollUpButton = () => {
+      return (
+        <div className='tooltip'>
+          <span className='tooltiptext'>Back To Top</span>
+          <Fab
+            icon='arrow_upward'
+            className='tooltip'
+            style={{ position: 'fixed', bottom: '1rem', right: '1rem' }}
+            onClick={() => window.scrollTo(0, 0)}
+          />
+        </div>
+      );
+    };
+
     if (this.state.phrases.length > 0) {
       return (
         <div>
@@ -130,7 +145,9 @@ export class UploadPhrase extends Component {
               <DataTableBody>
                 {this.state.phrases.map((phrase, i) => (
                   <DataTableRow key={i}>
-                    <DataTableHeadCell style={{ padding: '', margin: '' }}>{i + 1}</DataTableHeadCell>
+                    <DataTableHeadCell style={{ padding: '', margin: '' }}>
+                      {(i + 1).toLocaleString()}
+                    </DataTableHeadCell>
                     <DataTableCell style={{ width: '100%' }}>
                       <div>
                         {this.phraseSplitter.splitPhrase(phrase).map((line, j) => (
@@ -143,6 +160,7 @@ export class UploadPhrase extends Component {
               </DataTableBody>
             </DataTableContent>
           </DataTable>
+          <ScrollUpButton />
         </div>
       );
     }
@@ -158,7 +176,7 @@ export class UploadPhrase extends Component {
           Check
         </Button>
         <TextField
-          style={{ minHeight: window.innerHeight, width: '100%' }}
+          style={{ height: '85vh', width: '100%' }}
           label='Enter phrases, each on a new line'
           textarea
           outlined
