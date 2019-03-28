@@ -162,9 +162,9 @@ public class PhrasesResource
   {
     log.info("{} marking phrases and downloading csv of completedPhrases", caller);
 
-    log.debug("Searching for votes over margin {}...", consensusLevel);
+    log.info("Consensus level = {}", consensusLevel);
     List<GroupedPhraseVote> phraseVotes = votesDao.getTop2LabelsForUncompletedPhrases();
-    log.debug("Found {} votes over margin.", phraseVotes.size());
+    log.info("Found {} uncompleted phrase votes.", phraseVotes.size());
 
     Map<String, String> phrasesVotedOnByResolver = votesDao.getVotesMadeByUser(RESOLVER_USER_ID).stream()
         .collect(Collectors.toMap(PhraseLabel::getPhraseId, PhraseLabel::getLabel));
