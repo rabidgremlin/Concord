@@ -40,6 +40,9 @@ public interface VotesDao
       "            @voteRank:=IF(@current_phraseId = t.phraseId, @voteRank + 1, 1) AS voteRank," +
       "            @current_phraseId:=t.phraseId" +
       "    FROM" +
+      // Must set user defined variables before they are used
+      "        (SELECT @voteRank:= 1) vr," +
+      "        (SELECT @current_phraseId:= '') cp," +
       "        (SELECT " +
       "        p.phraseId, p.text, v.label, COUNT(v.userId) AS voteCount" +
       "    FROM" +
