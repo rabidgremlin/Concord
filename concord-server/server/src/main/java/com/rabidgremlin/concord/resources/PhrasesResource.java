@@ -215,13 +215,14 @@ public class PhrasesResource
 
   private void castVote(String phraseId, String label, String userId)
   {
+    int voteCountForPhrase = votesDao.getVoteCountForPhrase(phraseId);
+
     votesDao.upsert(phraseId, label, userId);
 
     // are we marking trashed phrases as completed?
     if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label))
     {
       // only if the phrase hasn't been voted on yet
-      int voteCountForPhrase = votesDao.getVoteCountForPhrase(phraseId);
       if (voteCountForPhrase <= 0)
       {
         phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
