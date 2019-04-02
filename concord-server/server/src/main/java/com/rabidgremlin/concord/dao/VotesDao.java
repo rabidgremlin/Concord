@@ -86,4 +86,7 @@ public interface VotesDao
   @RegisterBeanMapper(GroupedPhraseVoteWithMostRecentVoteTime.class)
   List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesWithMostRecentVoteTime();
 
+  @SqlQuery("SELECT COUNT(*) FROM votes WHERE phraseId = :phraseId")
+  int getVoteCountForPhrase(@Bind("phraseId") String phraseId);
+
 }

@@ -220,7 +220,12 @@ public class PhrasesResource
     // are we marking trashed phrases as completed?
     if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label))
     {
-      phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
+      // only if the phrase hasn't been voted on yet
+      int voteCountForPhrase = votesDao.getVoteCountForPhrase(phraseId);
+      if (voteCountForPhrase <= 0)
+      {
+        phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
+      }
     }
   }
 
