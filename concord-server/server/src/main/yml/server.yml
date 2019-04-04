@@ -2,7 +2,7 @@ jwtTokenSecret: jkfhgkjfdhgur8943flkds3@#$^UYGJHKJHKK
 
 consensusLevel: 3
 
-completeOnTrash: true
+completeOnFirstTrashVote: true
 
 database:
   driverClass: com.mysql.jdbc.Driver

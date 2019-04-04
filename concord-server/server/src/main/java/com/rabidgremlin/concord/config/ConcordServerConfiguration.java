@@ -31,7 +31,7 @@ public class ConcordServerConfiguration
   private PluginConfig credentialsValidator;
 
   @NotNull
-  private Boolean completeOnTrash;
+  private Boolean completeOnFirstTrashVote;
 
   @JsonProperty("jwtTokenSecret")
   public void setJwtTokenSecret(String secret)
@@ -80,15 +80,15 @@ public class ConcordServerConfiguration
     return credentialsValidator;
   }
 
-  public boolean isCompleteOnTrash()
+  public boolean isCompleteOnFirstTrashVote()
   {
-    return completeOnTrash;
+    return completeOnFirstTrashVote;
   }
 
-  @JsonProperty("completeOnTrash")
-  public void setCompleteOnTrash(boolean completeOnTrash)
+  @JsonProperty("completeOnFirstTrashVote")
+  public void setCompleteOnFirstTrashVote(boolean completeOnFirstTrashVote)
   {
-    this.completeOnTrash = completeOnTrash;
+    this.completeOnFirstTrashVote = completeOnFirstTrashVote;
   }
 
 }
