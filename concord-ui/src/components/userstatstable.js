@@ -112,13 +112,6 @@ export class UserStatsTable extends Component {
               <DataTableHeadCell alignEnd sort={this.state.scoreSortDir || null} onSortChange={this.sortByScore}>
                 Score
               </DataTableHeadCell>
-              <DataTableHeadCell
-                alignEnd
-                sort={this.state.efficiencySortDir || null}
-                onSortChange={this.sortByEfficiency}
-              >
-                Efficiency
-              </DataTableHeadCell>
               <DataTableHeadCell alignEnd sort={this.state.totalSortDir || null} onSortChange={this.sortByTotal}>
                 Total Phrases
               </DataTableHeadCell>
@@ -163,9 +156,6 @@ export class UserStatsTable extends Component {
                   {this.computeScore(userData).toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
-                  {this.toPercentage(this.computeScore(userData), userData.totalVotes).toLocaleString()}%
-                </DataTableCell>
-                <DataTableCell alignEnd style={{ width: '10%' }}>
                   {userData.totalVotes.toLocaleString()}
                 </DataTableCell>
                 <DataTableCell alignEnd style={{ width: '10%' }}>
@@ -202,8 +192,7 @@ export class UserStatsTable extends Component {
       trashSortDir: null,
       agreementRateSortDir: null,
       trashRateSortDir: null,
-      agreementRateNoTrashSortDir: null,
-      efficiencySortDir: null
+      agreementRateNoTrashSortDir: null
     });
   };
 
@@ -219,9 +208,6 @@ export class UserStatsTable extends Component {
   };
 
   sortByScore = (sortDir) => this.sortRows('scoreSortDir', sortDir, (a) => this.computeScore(a));
-
-  sortByEfficiency = (sortDir) =>
-    this.sortRows('efficiencySortDir', sortDir, (a) => this.toPercentage(this.computeScore(a), a.totalVotes));
 
   sortByTotal = (sortDir) => this.sortRows('totalSortDir', sortDir, (a) => a.totalVotes);
 
