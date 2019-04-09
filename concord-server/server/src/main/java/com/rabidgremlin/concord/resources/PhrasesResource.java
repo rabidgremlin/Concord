@@ -65,21 +65,21 @@ public class PhrasesResource
 
   private final int consensusLevel;
 
-  private final boolean completeOnTrash;
+  private final boolean completeOnFirstTrashVote;
 
   private static final String LABEL_TRASH = "TRASH";
 
   private static final String RESOLVER_USER_ID = "RESOLVER";
 
   public PhrasesResource(PhrasesDao phrasesDao, VotesDao votesDao, UploadDao uploadDao, LabelSuggester labelSuggester, int consensusLevel,
-    boolean completeOnTrash)
+    boolean completeOnFirstTrashVote)
   {
     this.phrasesDao = phrasesDao;
     this.votesDao = votesDao;
     this.uploadDao = uploadDao;
     this.labelSuggester = labelSuggester;
     this.consensusLevel = consensusLevel;
-    this.completeOnTrash = completeOnTrash;
+    this.completeOnFirstTrashVote = completeOnFirstTrashVote;
   }
 
   @GET
@@ -218,9 +218,14 @@ public class PhrasesResource
     votesDao.upsert(phraseId, label, userId);
 
     // are we marking trashed phrases as completed?
-    if (completeOnTrash && StringUtils.equals(LABEL_TRASH, label))
+    if (completeOnFirstTrashVote && StringUtils.equals(LABEL_TRASH, label))
     {
-      phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
+      // only if the phrase hasn't been voted on yet
+      int voteCountForPhrase = votesDao.getVoteCountForPhrase(phraseId);
+      if (voteCountForPhrase <= 1)
+      {
+        phrasesDao.markPhraseComplete(phraseId, LABEL_TRASH);
+      }
     }
   }
 

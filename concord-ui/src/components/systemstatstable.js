@@ -139,7 +139,7 @@ export class SystemStatsTable extends Component {
       <div>
         <SystemStatsTable />
         <Typography style={{ fontSize: '30px' }} use='subtitle1' tag='h2'>
-          {deadLockedPhrases.length} Deadlocked Phrases
+          {deadLockedPhrases.length.toLocaleString()} Deadlocked Phrases
         </Typography>
         <DataTable style={{ minWidth: '100%' }}>
           <DataTableContent style={{ fontSize: '14pt' }}>

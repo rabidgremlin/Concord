@@ -1,5 +1,7 @@
 package com.rabidgremlin.concord.dao;
 
+import static com.rabidgremlin.concord.dao.SystemStatsDao.FILTER_USERS;
+
 import java.util.List;
 
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
@@ -85,5 +87,8 @@ public interface VotesDao
       "    ) r")
   @RegisterBeanMapper(GroupedPhraseVoteWithMostRecentVoteTime.class)
   List<GroupedPhraseVoteWithMostRecentVoteTime> getLabelsForUncompletedPhrasesWithMostRecentVoteTime();
+
+  @SqlQuery("SELECT COUNT(*) FROM votes " + FILTER_USERS + " AND phraseId = :phraseId")
+  int getVoteCountForPhrase(@Bind("phraseId") String phraseId);
 
 }

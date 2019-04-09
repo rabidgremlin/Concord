@@ -148,7 +148,7 @@ public class PhrasesResourceTest
   }
 
   @Test
-  public void shouldMarkPhraseCompletedWhenTrashedAndCompleteOnTrashIsTrue()
+  public void shouldMarkPhraseCompletedWhenTrashedAndCompleteOnFirstTrashVoteIsTrue()
   {
     when(callerMock.getToken()).thenReturn("Bob");
 
@@ -169,7 +169,7 @@ public class PhrasesResourceTest
   }
 
   @Test
-  public void shouldNotMarkPhraseCompletedWhenTrashedAndCompleteOnTrashIsTrue()
+  public void shouldNotMarkPhraseCompletedWhenTrashedAndCompleteOnFirstTrashVoteIsTrue()
   {
     when(callerMock.getToken()).thenReturn("Bob");
 
