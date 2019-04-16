@@ -158,3 +158,17 @@ export const callDeleteVotesForPhraseFailed = (error) => ({
 export const callDeleteVotesForPhraseSucceeded = () => ({
   type: 'CALL_DELETE_VOTES_FOR_PHRASE_SUCCEEDED'
 });
+
+export const callDeleteLastVote = () => ({
+  type: 'CALL_DELETE_LAST_VOTE'
+});
+
+export const callDeleteLastVoteFailed = (error) => ({
+  type: 'CALL_DELETE_LAST_VOTE_FAILED',
+  error
+});
+
+export const callDeleteLastVoteSucceeded = () => ({
+  type: 'CALL_DELETE_LAST_VOTE_SUCCEEDED'
+});
+

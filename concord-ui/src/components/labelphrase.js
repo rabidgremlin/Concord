@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getNextPhrase, voteForPhraseLabel } from '../api';
+import { getNextPhrase, voteForPhraseLabel, deleteLastVote } from '../api';
 import Searchbar from './searchbar';
 
 import { Card, CardAction, CardActions, CardPrimaryAction } from '@rmwc/card';
@@ -28,7 +28,8 @@ export class LabelPhrase extends Component {
     super(props);
     this.state = {
       currentLabel: null,
-      reloadApiData: false
+      reloadApiData: false,
+      completedPhrases: []
     };
   }
 
@@ -84,8 +85,19 @@ export class LabelPhrase extends Component {
   };
 
   makeVote(label) {
-    this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
-    this.setState({ currentLabel: null });
+    let currPhraseId = this.props.phraseData.id
+    this.props.dispatch(voteForPhraseLabel(currPhraseId, label));
+    this.setState({ 
+      currentLabel: null,
+      completedPhrases: [...this.state.completedPhrases, currPhraseId]
+     });
+  }
+
+  async deleteLastVote() {
+    if(this.state.completedPhrases.length !== 0) {
+      await this.props.dispatch(deleteLastVote(this.state.completedPhrases.pop()))
+      this.props.dispatch(getNextPhrase());
+    };
   }
 
   render() {
@@ -146,7 +158,7 @@ export class LabelPhrase extends Component {
               icon='undo'
               className='tooltip'
               onClick={() => {
-                console.log("hi there");
+                this.deleteLastVote()
               }}
             />
           </div>

@@ -25,7 +25,10 @@ import {
   callResolveForPhraseLabelSucceeded,
   callVoteForPhraseLabel,
   callVoteForPhraseLabelFailed,
-  callVoteForPhraseLabelSucceeded
+  callVoteForPhraseLabelSucceeded,
+  callDeleteLastVote,
+  callDeleteLastVoteSucceeded,
+  callDeleteLastVoteFailed
 } from './actions';
 import request from 'superagent';
 
@@ -135,5 +138,16 @@ export function deleteVotesForPhrase(phraseId) {
       .set('Accept', 'application/json')
       .then(() => dispatch(callDeleteVotesForPhraseSucceeded()))
       .catch((err) => dispatch(callDeleteVotesForPhraseFailed(err)));
+  };
+}
+
+export function deleteLastVote(phraseId) {
+  return (dispatch) => {
+    dispatch(callDeleteLastVote());
+    request
+      .delete('/api/phrases/' + phraseId + '/delete')
+      .set('Accept', 'application/json')
+      .then(() => dispatch(callDeleteLastVoteSucceeded()))
+      .catch((err) => dispatch(callDeleteLastVoteFailed(err)));
   };
 }

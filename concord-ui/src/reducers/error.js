@@ -29,6 +29,10 @@ const errorReducer = (state = { hasError: false }, action) => {
       return { hasError: false };
     case 'CALL_DELETE_VOTES_FOR_PHRASE_FAILED':
       return { hasError: true, msg: 'Failed to delete votes for phrase' };
+    case 'CALL_DELETE_LAST_VOTE':
+      return { hasError: false};
+    case 'CALL_DELETE_LAST_VOTE_FAILED':
+      return { hasError: true, msg: 'Failed to delete last phrase vote' };    
 
     case 'CALL_GET_ALL_LABELS':
       return { hasError: false };
