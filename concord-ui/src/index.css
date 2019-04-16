@@ -12,12 +12,13 @@ h1.phrase-msg {
 .tooltip {
     position: relative;
     display: inline-block;
+    margin: 5px;
 }
 
 .tooltip .tooltiptext {
     visibility: hidden;
     width: 60px;
-    background-color: darkgray;
+    background-color: #6200ee;
     color: #fff;
     text-align: center;
     padding: 5px 0;
@@ -25,8 +26,7 @@ h1.phrase-msg {
     font-size: 12px;
     position: absolute;
     z-index: 1;
-    left: -70px;
-    top: 10px;
+    top: -30px;
 }
 
 .tooltip:hover .tooltiptext {

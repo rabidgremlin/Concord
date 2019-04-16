@@ -123,26 +123,34 @@ export class LabelPhrase extends Component {
             <Fab
               icon='delete'
               className='tooltip'
-              style={{ bottom: '0.5rem' }}
               onClick={() => {
                 this.makeVote('TRASH');
               }}
             />
           </div>
 
-          <br />
 
           <div className='tooltip'>
             <span className='tooltiptext'>Skip</span>
             <Fab
               icon='skip_next'
-              mini
               onClick={() => {
                 this.makeVote('SKIPPED');
               }}
             />
           </div>
-        </div>
+
+        <div className='tooltip'>
+            <span className='tooltiptext'>Undo</span>
+            <Fab
+              icon='undo'
+              className='tooltip'
+              onClick={() => {
+                console.log("hi there");
+              }}
+            />
+          </div>
+          </div>
 
         <div>
           <Typography style={{ width: '100%', textAlign: 'center' }} use='headline3' tag='h1' className='phrase-msg'>
