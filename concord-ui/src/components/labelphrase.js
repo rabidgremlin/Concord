@@ -93,7 +93,7 @@ export class LabelPhrase extends Component {
      });
   }
 
-  async deleteLastVote() {
+  async deleteLastVoteAndGetNextPhrase() {
     if(this.state.completedPhrases.length !== 0) {
       await this.props.dispatch(deleteLastVote(this.state.completedPhrases.pop()))
       this.props.dispatch(getNextPhrase());
@@ -158,7 +158,7 @@ export class LabelPhrase extends Component {
               icon='undo'
               className='tooltip'
               onClick={() => {
-                this.deleteLastVote()
+                this.deleteLastVoteAndGetNextPhrase()
               }}
             />
           </div>
