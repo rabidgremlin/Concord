@@ -229,4 +229,18 @@ public class PhrasesResourceTest
     assertThat(response.getStatusInfo().toString(), is("OK"));
   }
 
+  @Test
+  public void canDeleteSpecifiedPhrase()
+  {
+    when(callerMock.getToken()).thenReturn("caller");
+
+    Response response = resource.deleteVote(callerMock, "123");
+
+    verify(votesDaoMock, times(1)).deleteVote("123", "caller");
+
+    assertThat(response, instanceOf(Response.class));
+    assertThat(response.getStatus(), is(200));
+    assertThat(response.getStatusInfo().toString(), is("OK"));
+  }
+
 }
