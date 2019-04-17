@@ -124,6 +124,33 @@ describe('actions', () => {
   });
 });
 
+describe('actions', () => {
+  it('should create an action to delete the last vote for a user', () => {
+    const expectedAction = {
+      type: 'CALL_DELETE_LAST_VOTE'
+    };
+    expect(actions.callDeleteLastVote()).toEqual(expectedAction);
+  });
+});
+
+describe('actions', () => {
+  it('should create an action for success on last vote delete', () => {
+    const expectedAction = {
+      type: 'CALL_DELETE_LAST_VOTE_SUCCEEDED'
+    };
+    expect(actions.callDeleteLastVoteSucceeded()).toEqual(expectedAction);
+  });
+});
+
+describe('actions', () => {
+  it('should create an action for failure on last vote delete', () => {
+    const expectedAction = {
+      type: 'CALL_DELETE_LAST_VOTE_FAILED'
+    };
+    expect(actions.callDeleteLastVoteFailed()).toEqual(expectedAction);
+  });
+});
+
 /**
  *  HANDLE LABELS
  */

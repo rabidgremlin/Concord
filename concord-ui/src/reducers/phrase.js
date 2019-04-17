@@ -24,6 +24,12 @@ const nextPhraseReducer = (state = { loading: true, error: false }, action) => {
       return { loading: false, error: false };
     case 'CALL_DELETE_VOTES_FOR_PHRASE_FAILED':
       return { loading: false, error: true };
+    case 'CALL_DELETE_LAST_VOTE':
+      return { loading: true, error: false };
+    case 'CALL_DELETE_LAST_VOTE_SUCCEEDED':
+      return { loading: false, error: false };
+    case 'CALL_DELETE_LAST_VOTE_FAILED':
+      return { loading: false, error: true };
     default:
       return state;
   }

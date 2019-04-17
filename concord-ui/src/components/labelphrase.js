@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getNextPhrase, voteForPhraseLabel } from '../api';
+import { getNextPhrase, voteForPhraseLabel, deleteLastVote } from '../api';
 import Searchbar from './searchbar';
 
 import { Card, CardAction, CardActions, CardPrimaryAction } from '@rmwc/card';
@@ -28,7 +28,8 @@ export class LabelPhrase extends Component {
     super(props);
     this.state = {
       currentLabel: null,
-      reloadApiData: false
+      reloadApiData: false,
+      completedPhrases: []
     };
   }
 
@@ -84,8 +85,19 @@ export class LabelPhrase extends Component {
   };
 
   makeVote(label) {
-    this.props.dispatch(voteForPhraseLabel(this.props.phraseData.id, label));
-    this.setState({ currentLabel: null });
+    let currPhraseId = this.props.phraseData.id
+    this.props.dispatch(voteForPhraseLabel(currPhraseId, label));
+    this.setState({ 
+      currentLabel: null,
+      completedPhrases: [...this.state.completedPhrases, currPhraseId]
+     });
+  }
+
+  async deleteLastVoteAndGetNextPhrase() {
+    if(this.state.completedPhrases.length !== 0) {
+      await this.props.dispatch(deleteLastVote(this.state.completedPhrases.pop()))
+      this.props.dispatch(getNextPhrase());
+    };
   }
 
   render() {
@@ -123,26 +135,34 @@ export class LabelPhrase extends Component {
             <Fab
               icon='delete'
               className='tooltip'
-              style={{ bottom: '0.5rem' }}
               onClick={() => {
                 this.makeVote('TRASH');
               }}
             />
           </div>
 
-          <br />
 
           <div className='tooltip'>
             <span className='tooltiptext'>Skip</span>
             <Fab
               icon='skip_next'
-              mini
               onClick={() => {
                 this.makeVote('SKIPPED');
               }}
             />
           </div>
-        </div>
+
+        <div className='tooltip'>
+            <span className='tooltiptext'>Undo</span>
+            <Fab
+              icon='undo'
+              className='tooltip'
+              onClick={() => {
+                this.deleteLastVoteAndGetNextPhrase()
+              }}
+            />
+          </div>
+          </div>
 
         <div>
           <Typography style={{ width: '100%', textAlign: 'center' }} use='headline3' tag='h1' className='phrase-msg'>

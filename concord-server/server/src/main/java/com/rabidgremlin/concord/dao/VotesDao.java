@@ -16,6 +16,8 @@ import com.rabidgremlin.concord.dao.model.GroupedPhraseVoteWithMostRecentVoteTim
 
 public interface VotesDao
 {
+  @SqlUpdate("DELETE FROM votes WHERE phraseId = :phraseId AND userId = :userId")
+  void deleteVote(@Bind("phraseId") String phraseId, @Bind("userId") String userId);
 
   @SqlBatch("DELETE FROM votes WHERE phraseId = :phraseId")
   void deleteAllVotesForPhrase(@Bind("phraseId") List<String> phraseId);

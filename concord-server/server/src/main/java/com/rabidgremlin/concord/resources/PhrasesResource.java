@@ -254,4 +254,17 @@ public class PhrasesResource
     return Response.ok().build();
   }
 
+  @DELETE
+  @Path("/{phraseId}/delete")
+  @Timed
+  public Response deleteVote(@ApiParam(hidden = true) @Auth Caller caller, @PathParam("phraseId") String phraseId)
+  {
+    String userId = caller.getToken();
+    log.info("{} deleting user - {}'s vote for phrase {}", caller, userId, phraseId);
+
+    votesDao.deleteVote(phraseId, userId);
+
+    return Response.noContent().build();
+  }
+
 }

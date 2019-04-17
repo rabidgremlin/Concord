@@ -31,8 +31,7 @@ function setup() {
       ]
     }
   };
-  const labelPhrase = shallow(<LabelPhrase {...props} />);
-  // console.log(labelPhrase.debug());
+  const labelPhrase = shallow(<LabelPhrase {...props} />);;
   return {
     props,
     labelPhrase
@@ -49,7 +48,7 @@ describe('labelPhrase', () => {
     expect(labelPhrase.find(Grid).containsMatchingElement(GridCell));
     expect(labelPhrase.find(GridCell).length).toBe(3);
     expect(labelPhrase.find(Card).length).toBe(3);
-    expect(labelPhrase.find(Fab).length).toBe(2);
+    expect(labelPhrase.find(Fab).length).toBe(3);
 
     let delIcon = labelPhrase.find(Fab).get(0);
     let skipIcon = labelPhrase.find(Fab).get(1);
