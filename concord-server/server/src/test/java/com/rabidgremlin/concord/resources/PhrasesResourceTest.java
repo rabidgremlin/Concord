@@ -239,8 +239,8 @@ public class PhrasesResourceTest
     verify(votesDaoMock, times(1)).deleteVote("123", "caller");
 
     assertThat(response, instanceOf(Response.class));
-    assertThat(response.getStatus(), is(200));
-    assertThat(response.getStatusInfo().toString(), is("OK"));
+    assertThat(response.getStatus(), is(204));
+    assertThat(response.getStatusInfo().toString(), is("No Content"));
   }
 
 }

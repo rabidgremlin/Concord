@@ -264,7 +264,7 @@ public class PhrasesResource
 
     votesDao.deleteVote(phraseId, userId);
 
-    return Response.ok().build();
+    return Response.noContent().build();
   }
 
 }
