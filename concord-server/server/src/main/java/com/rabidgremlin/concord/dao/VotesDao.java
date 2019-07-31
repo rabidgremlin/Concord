@@ -23,6 +23,9 @@ public interface VotesDao
   @SqlUpdate("REPLACE INTO votes(phraseId, label, userId, lastModifiedTimestamp) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
   void upsert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
 
+  @SqlUpdate("INSERT IGNORE INTO votes(phraseId, label, userId, lastModifiedTimestamp) VALUES (:phraseId, :label, :userId, CURRENT_TIMESTAMP)")
+  void insert(@Bind("phraseId") String phraseId, @Bind("label") String label, @Bind("userId") String userId);
+
   @SqlQuery("SELECT phraseId, label FROM votes WHERE userId = :user")
   @RegisterBeanMapper(PhraseLabel.class)
   List<PhraseLabel> getVotesMadeByUser(@Bind("user") String user);
