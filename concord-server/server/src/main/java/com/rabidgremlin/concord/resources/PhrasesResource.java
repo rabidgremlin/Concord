@@ -132,7 +132,8 @@ public class PhrasesResource
   @Path("bulk")
   @Consumes(MediaType.APPLICATION_JSON)
   @Timed
-  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes, UnlabelledPhrases unlabelledPhrases)
+  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes,
+    UnlabelledPhrases unlabelledPhrases)
   {
     log.info("{} uploading {} phrases as json. Replace votes : {}", caller, unlabelledPhrases.getUnlabelledPhrases().size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
@@ -148,7 +149,8 @@ public class PhrasesResource
   @Path("bulk")
   @Consumes("text/csv")
   @Timed
-  public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes, List<UnlabelledPhrase> unlabelledPhrases)
+  public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes,
+    List<UnlabelledPhrase> unlabelledPhrases)
   {
     log.info("{} uploading {} phrases as csv. Replace votes : {}", caller, unlabelledPhrases.size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
