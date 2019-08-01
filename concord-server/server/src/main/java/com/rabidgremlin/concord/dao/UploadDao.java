@@ -19,12 +19,21 @@ public interface UploadDao
   @CreateSqlObject
   PhrasesDao phrasesDao();
 
-  enum EXISTING_VOTES
+  enum ExistingVotes
   {
-    REPLACE, RETAIN
+    REPLACE, RETAIN;
+
+    public static ExistingVotes getVoteContract(String replaceVotes)
+    {
+      if (replaceVotes.equalsIgnoreCase("true"))
+      {
+        return REPLACE;
+      }
+      return RETAIN;
+    }
   }
 
-  default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases, EXISTING_VOTES voteContract)
+  default void uploadUnlabelledPhrases(List<UnlabelledPhrase> unlabelledPhrases, ExistingVotes voteContract)
   {
     List<UnlabelledPhrase> batchedPhrases = unlabelledPhrases.stream()
         .filter(unlabelledPhrase -> !unlabelledPhrase.getText().equalsIgnoreCase("text"))
@@ -34,7 +43,7 @@ public interface UploadDao
         .map(unlabelledPhrase -> Phrase.computePhraseId(unlabelledPhrase.getText()))
         .collect(Collectors.toList());
 
-    if (voteContract.equals(EXISTING_VOTES.REPLACE))
+    if (voteContract.equals(ExistingVotes.REPLACE))
     {
       uploadUnlabelledPhrasesWithReplacement(batchedPhrases, phraseIds);
     }

@@ -138,7 +138,7 @@ public class PhrasesResource
     log.info("{} uploading {} phrases as json. Replace votes : {}", caller, unlabelledPhrases.getUnlabelledPhrases().size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
 
-    UploadDao.EXISTING_VOTES voteContract = replaceVotes.equalsIgnoreCase("true") ? UploadDao.EXISTING_VOTES.REPLACE : UploadDao.EXISTING_VOTES.RETAIN;
+    UploadDao.ExistingVotes voteContract = UploadDao.ExistingVotes.getVoteContract(replaceVotes);
 
     uploadDao.uploadUnlabelledPhrases(unlabelledPhrases.getUnlabelledPhrases(), voteContract);
 
@@ -155,7 +155,7 @@ public class PhrasesResource
     log.info("{} uploading {} phrases as csv. Replace votes : {}", caller, unlabelledPhrases.size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
 
-    UploadDao.EXISTING_VOTES voteContract = replaceVotes.equalsIgnoreCase("true") ? UploadDao.EXISTING_VOTES.REPLACE : UploadDao.EXISTING_VOTES.RETAIN;
+    UploadDao.ExistingVotes voteContract = UploadDao.ExistingVotes.getVoteContract(replaceVotes);
 
     uploadDao.uploadUnlabelledPhrases(unlabelledPhrases, voteContract);
 

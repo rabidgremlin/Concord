@@ -128,7 +128,7 @@ public class PhrasesResourceTest
   {
     Response response = resource.uploadCsv(callerMock, "false", unlabelledPhrases);
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.EXISTING_VOTES.RETAIN);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.RETAIN);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
@@ -140,7 +140,7 @@ public class PhrasesResourceTest
   {
     Response response = resource.uploadCsv(callerMock, "true", unlabelledPhrases);
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.EXISTING_VOTES.REPLACE);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.REPLACE);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
@@ -152,7 +152,7 @@ public class PhrasesResourceTest
   {
     Response response = resource.addPhrases(callerMock, "false", new UnlabelledPhrases(unlabelledPhrases));
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.EXISTING_VOTES.RETAIN);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.RETAIN);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
@@ -164,7 +164,7 @@ public class PhrasesResourceTest
   {
     Response response = resource.addPhrases(callerMock, "True", new UnlabelledPhrases(unlabelledPhrases));
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.EXISTING_VOTES.REPLACE);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.REPLACE);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
