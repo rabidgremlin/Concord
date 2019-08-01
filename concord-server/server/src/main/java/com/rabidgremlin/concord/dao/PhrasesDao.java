@@ -16,6 +16,9 @@ public interface PhrasesDao
   @SqlBatch("REPLACE INTO phrases(phraseId, text, completed, lastModifiedTimestamp) VALUES (:phraseId, :text,:completed, CURRENT_TIMESTAMP)")
   void upsertBatch(@Bind("phraseId") List<String> phraseIds, @Bind("text") List<String> phrases, @Bind("completed") Boolean completed);
 
+  @SqlBatch("INSERT IGNORE INTO phrases(phraseId, text, completed, lastModifiedTimestamp) VALUES (:phraseId, :text,:completed, CURRENT_TIMESTAMP)")
+  void insertBatch(@Bind("phraseId") List<String> phraseIds, @Bind("text") List<String> phrases, @Bind("completed") Boolean completed);
+
   @SqlBatch("update phrases set completed = True, label = :label, completedTimestamp = CURRENT_TIMESTAMP, lastModifiedTimestamp = CURRENT_TIMESTAMP where phraseId = :phraseId")
   void markPhrasesComplete(@Bind("phraseId") List<String> phraseId, @Bind("label") List<String> label);
 

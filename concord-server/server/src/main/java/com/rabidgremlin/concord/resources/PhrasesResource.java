@@ -9,11 +9,13 @@ import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -130,12 +132,15 @@ public class PhrasesResource
   @Path("bulk")
   @Consumes(MediaType.APPLICATION_JSON)
   @Timed
-  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, UnlabelledPhrases unlabelledPhrases)
+  public Response addPhrases(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes,
+    UnlabelledPhrases unlabelledPhrases)
   {
-    log.info("{} uploading {} phrases as json.", caller, unlabelledPhrases.getUnlabelledPhrases().size());
+    log.info("{} uploading {} phrases as json. Replace votes : {}", caller, unlabelledPhrases.getUnlabelledPhrases().size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
 
-    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases.getUnlabelledPhrases());
+    UploadDao.ExistingVotes voteContract = UploadDao.ExistingVotes.getVoteContract(replaceVotes);
+
+    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases.getUnlabelledPhrases(), voteContract);
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }
@@ -144,12 +149,15 @@ public class PhrasesResource
   @Path("bulk")
   @Consumes("text/csv")
   @Timed
-  public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, List<UnlabelledPhrase> unlabelledPhrases)
+  public Response uploadCsv(@ApiParam(hidden = true) @Auth Caller caller, @DefaultValue("false") @QueryParam("replacevotes") String replaceVotes,
+    List<UnlabelledPhrase> unlabelledPhrases)
   {
-    log.info("{} uploading {} phrases as csv.", caller, unlabelledPhrases.size());
+    log.info("{} uploading {} phrases as csv. Replace votes : {}", caller, unlabelledPhrases.size(), replaceVotes);
     log.debug("{}", unlabelledPhrases);
 
-    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases);
+    UploadDao.ExistingVotes voteContract = UploadDao.ExistingVotes.getVoteContract(replaceVotes);
+
+    uploadDao.uploadUnlabelledPhrases(unlabelledPhrases, voteContract);
 
     return Response.created(uriInfo.getAbsolutePath()).build();
   }

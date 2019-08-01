@@ -126,9 +126,21 @@ public class PhrasesResourceTest
   @Test
   public void canUploadPhrasesAsCsv()
   {
-    Response response = resource.uploadCsv(callerMock, unlabelledPhrases);
+    Response response = resource.uploadCsv(callerMock, "false", unlabelledPhrases);
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.RETAIN);
+
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
+  }
+
+  @Test
+  public void canUploadPhrasesAsCsvWithQueryParam()
+  {
+    Response response = resource.uploadCsv(callerMock, "true", unlabelledPhrases);
+
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.REPLACE);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
@@ -138,9 +150,21 @@ public class PhrasesResourceTest
   @Test
   public void canUploadPhrasesAsJson()
   {
-    Response response = resource.addPhrases(callerMock, new UnlabelledPhrases(unlabelledPhrases));
+    Response response = resource.addPhrases(callerMock, "false", new UnlabelledPhrases(unlabelledPhrases));
 
-    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases);
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.RETAIN);
+
+    assertThat(response, instanceOf(Response.class));
+    assertEquals(201, response.getStatus());
+    assertEquals("Created", response.getStatusInfo().toString());
+  }
+
+  @Test
+  public void canUploadPhrasesAsJsonWithQueryParam()
+  {
+    Response response = resource.addPhrases(callerMock, "True", new UnlabelledPhrases(unlabelledPhrases));
+
+    verify(uploadDaoMock, times(1)).uploadUnlabelledPhrases(unlabelledPhrases, UploadDao.ExistingVotes.REPLACE);
 
     assertThat(response, instanceOf(Response.class));
     assertEquals(201, response.getStatus());
