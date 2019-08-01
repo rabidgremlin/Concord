@@ -25,11 +25,7 @@ public interface UploadDao
 
     public static ExistingVotes getVoteContract(String replaceVotes)
     {
-      if (replaceVotes.equalsIgnoreCase("true"))
-      {
-        return REPLACE;
-      }
-      return RETAIN;
+      return replaceVotes.equalsIgnoreCase("true") ? REPLACE : RETAIN;
     }
   }
 
