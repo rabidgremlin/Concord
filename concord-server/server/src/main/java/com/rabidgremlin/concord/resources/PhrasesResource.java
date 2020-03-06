@@ -180,6 +180,7 @@ public class PhrasesResource
 
     log.debug("Looking for completed phrases...");
     Set<Phrase> completedPhrases = getPhrases.execute();
+    log.info("Found {} completed phrases: {}", completedPhrases.size(), completedPhrases);
 
     log.debug("Marking phrases complete...");
     phrasesDao.markPhrasesComplete(completedPhrases.stream().map(Phrase::getPhraseId).collect(Collectors.toList()),
